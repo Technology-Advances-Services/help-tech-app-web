@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+
+<html lang="es">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/shared/css/consumer-layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HelpTechAppWeb.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - HelpTechAppWeb</title>
+    @await RenderSectionAsync("Styles", required: false)
+
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-dark navbar-expand-md" id="app-navbar">
+            <div class="container-fluid">
+
+                <a class="navbar-brand"><i class="fa fa-life-ring"></i></a>
+
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link active">Home</a></li>
+                        <li class="nav-item"><a class="nav-link">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link">Services</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - HelpTechAppWeb - All rights reserved
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/shared/js/consumer-layout.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
