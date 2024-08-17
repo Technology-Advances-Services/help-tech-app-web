@@ -22,8 +22,8 @@
 
         <form id="frmCredentials">
 
-            <p>Username</p> <input id="iptId" type="text" placeholder="Ingresar DNI" required autocomplete="off">
-            <p>Password</p> <input id="iptCode" type="password" name="" placeholder="Ingresar contraseña">
+            <p>Username</p> <input id="iptUsername" type="text" placeholder="Ingresar DNI" required autocomplete="off">
+            <p>Password</p> <input id="iptPassword" type="password" placeholder="Ingresar contraseña" required autocomplete="off">
 
             <select id="sltRole">
                 <option selected>Seleccione su roll</option>
@@ -57,9 +57,9 @@
 
                 var parameters = new FormData();
 
-                parameters.append("Id", $("#iptId").val());
-                parameters.append("Code", $("#iptCode").val());
-                parameters.append("Roll", $("#sltRole").val());
+                parameters.append("Username", $("#iptUsername").val());
+                parameters.append("Password", $("#iptPassword").val());
+                parameters.append("Role", $("#sltRole").val());
 
                 login(parameters);
 
