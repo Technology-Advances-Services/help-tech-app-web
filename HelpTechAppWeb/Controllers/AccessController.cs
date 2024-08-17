@@ -21,13 +21,13 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult RegisterNewTechnical()
+        public IActionResult RegisterTechnical()
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult RegisterNewConsumer()
+        public IActionResult RegisterConsumer()
         {
             return View();
         }
