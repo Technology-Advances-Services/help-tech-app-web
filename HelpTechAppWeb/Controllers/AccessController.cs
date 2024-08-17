@@ -6,8 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace HelpTechAppWeb.Controllers
 {
     [AllowAnonymous]
-    public class AccessController : Controller
+    public class AccessController
+        (IHttpClientFactory httpClientFactory) :
+        Controller
     {
+        private readonly HttpClient _httpClient = httpClientFactory
+            .CreateClient("HelpTechService");
+
         #region Views
 
         [HttpGet]
