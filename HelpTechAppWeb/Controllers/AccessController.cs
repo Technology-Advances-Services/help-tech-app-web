@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -11,8 +11,12 @@ namespace HelpTechAppWeb.Controllers
         #region Views
 
         [HttpGet]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Login()
         {
+            if (User?.Identity?.IsAuthenticated == true)
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 
