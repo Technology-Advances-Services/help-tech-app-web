@@ -204,7 +204,7 @@
                 parameters.append("profile", $("#iptProfile").prop("files")[0]);
                 parameters.append("criminalRecord", $("#iptCriminalRecord").prop("files")[0]);
 
-                registerNewTechnical(parameters);
+                registerTechnical(parameters);
 
                 return false;
             });
@@ -270,11 +270,11 @@
                 }
             });
         }
-        function registerNewTechnical(parameters) {
+        function registerTechnical(parameters) {
 
             jQuery.ajax({
 
-                url: 'https://localhost:44315/access/register-technical',
+                url: '@Url.Action("RegisterTechnical","Access")',
                 method: "POST",
                 data: parameters,
                 cache: false,
