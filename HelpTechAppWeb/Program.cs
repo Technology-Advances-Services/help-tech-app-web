@@ -1,8 +1,21 @@
+using HelpTechAppWeb.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+#region BaseAddress Configuration
+
+builder.Services.Configure<HttpClientSettings>(builder.Configuration.GetSection("HttpClientSettings"));
+builder.Services.AddHttpClient("HelpTechService", (sp, client) =>
+{
+    var httpClientSettings = sp.GetRequiredService<IOptions<HttpClientSettings>>().Value;
+    client.BaseAddress = new Uri(httpClientSettings.BaseAddress);
+});
+
+#endregion
 
 #region Cookie Configuration
 
