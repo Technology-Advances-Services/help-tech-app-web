@@ -1,0 +1,294 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="es-pe">
+<head>
+
+    <meta name="viewport" content="width=device-width" />
+    <link id="bootstrap-css" rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+
+    <title>Registrar nuevo tecnico - HelpTechAppWeb</title>
+
+</head>
+<body>
+
+    <div class="container">
+        <form id="frmTechnicianData" class="form-horizontal" role="form" enctype="multipart/form-data">
+
+            <h2>Registrar datos</h2>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">DNI:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptId" type="text" placeholder="Escriba su DNI" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Foto Perfil:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptProfile" type="file" class="form-control" required autocomplete="off">
+                    <span class="help-block">Subir archivo con el siguiente nombre: (Perfil-TU DNI)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Nombres:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptFirstName" type="text" placeholder="Escriba su nombre" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Apellidos:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptLastName" type="text" placeholder="Escriba su apellido" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Edad:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptAge" type="text" placeholder="Escriba su edad" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Genero:</label>
+
+                <div class="col-sm-9">
+                    <select id="sltGenre" class="form-control" required>
+
+                        <option>MASCULINO</option>
+                        <option>FEMENINO</option>
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Telefono:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptPhone" type="text" placeholder="Escriba su numero" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Correo:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptEmail" type="email" placeholder="Escriba su correo" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Contraseña:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptCode" type="password" placeholder="Escriba su contraseña" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Departamento:</label>
+
+                <div class="col-sm-9">
+                    <select id="sltDepartments" class="form-control" required></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Distrito:</label>
+
+                <div class="col-sm-9">
+                    <select id="sltDistricts" class="form-control" required></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Especialidad:</label>
+
+                <div class="col-sm-9">
+                    <select id="sltSpecialties" class="form-control" required></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">PDF Antecedentes:</label>
+
+                <div class="col-sm-9">
+                    <input id="iptPdfRecord" type="file" class="form-control" required autocomplete="off">
+                    <span class="help-block">Subir archivo con el siguiente nombre: (Antecedente-TU DNI)</span>
+                </div>
+            </div>
+
+            <button id="btnRegisterTechnical" type="submit" class="btn btn-primary btn-block">Registrar</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#btnRegisterNewTechnical").prop("disabled", false);
+            $("#btnRegisterNewTechnical").text("Registrar");
+
+            $(window).on('load', function () {
+
+                loadSpecialties();
+                loadDepartaments();
+            });
+
+            $('#sltDepartments').on("change", function () {
+
+                jQuery.ajax({
+
+                    url: 'https://localhost:44315/locations/districts-by-department?' + $(this).val(),
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        var contentHtml = '';
+
+                        if (data.length > 0) {
+
+                            for (var i = 0; i < data.length; ++i) {
+                                contentHtml +=
+                                    '<option value="' + data[i].id + '">' data[i].name + '</option>';
+                            }
+
+                            $('#sltDistricts').html(contentHtml);
+                        }
+                    },
+                    error: function () {
+
+                        var Url = "@Url.Action("Error", "Home")";
+
+                        window.open(Url, "_self");
+                    }
+                });
+            });
+
+            $("#frmTechnicianData").on("submit", function () {
+
+                $("#btnRegisterTechnical").prop("disabled", true);
+                $("#btnRegisterTechnical").text("Registrando informancion...");
+
+                var parameters = new FormData();
+
+                parameters.append("Id", $("#iptId").val());
+                parameters.append("SpecialtyId", $("#sltSpecialties").val());
+                parameters.append("DistrictId", $("#sltDistricts").val());
+                parameters.append("FirstName", $("#iptFirstName").val());
+                parameters.append("LastName", $("#iptLastName").val());
+                parameters.append("Age", $("#iptAge").val());
+                parameters.append("Genre", $("#sltGenre").val());
+                parameters.append("Phone", $("#iptPhone").val());
+                parameters.append("Email", $("#iptEmail").val());
+                parameters.append("Code", $("#iptCode").val());
+
+                parameters.append("profile", $("#iptProfile").prop("files")[0]);
+                parameters.append("pdfRecord", $("#iptPdfRecord").prop("files")[0]);
+
+                registerNewTechnical(parameters);
+
+                return false;
+            });
+        });
+
+        function loadSpecialties() {
+
+            jQuery.ajax({
+
+                url: 'https://localhost:44315/access/all-specialties',
+                method: 'GET',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    var contentHtml = '';
+
+                    if (data.length > 0) {
+
+                        for (var i = 0; i < data.length; ++i) {
+                            contentHtml +=
+                                '<option value="' + data[i].id + '">' data[i].name + '</option>';
+                        }
+
+                        $('#sltSpecialties').html(contentHtml);
+                    }
+                },
+                error: function () {
+
+                    var Url = "@Url.Action("Error", "Home")";
+
+                    window.open(Url, "_self");
+                }
+            });
+        }
+        function loadDepartaments() {
+
+            jQuery.ajax({
+
+                url: 'https://localhost:44315/locations/all-departments',
+                method: 'GET',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    var contentHtml = '';
+
+                    if (data.length > 0) {
+
+                        for (var i = 0; i < data.length; ++i) {
+                            contentHtml +=
+                                '<option value="' + data[i].id + '">' data[i].name + '</option>';
+                        }
+
+                        $('#sltDepartments').html(contentHtml);
+                    }
+                },
+                error: function () {
+
+                    var Url = "@Url.Action("Error", "Home")";
+
+                    window.open(Url, "_self");
+                }
+            });
+        }
+        function registerNewTechnical(parameters) {
+
+            jQuery.ajax({
+
+                url: 'https://localhost:44315/access/register-technical',
+                method: "POST",
+                data: parameters,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) { },
+                error: function () {
+
+                    window.open("@Url.Action("Error", "Home")", "_self");
+                }
+            });
+        }
+
+    </script>
+
+</body>
+</html>
