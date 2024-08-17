@@ -126,7 +126,7 @@
                 <label class="col-sm-3 control-label">PDF Antecedentes:</label>
 
                 <div class="col-sm-9">
-                    <input id="iptPdfRecord" type="file" class="form-control" required autocomplete="off">
+                    <input id="iptCriminalRecord" type="file" class="form-control" required autocomplete="off">
                     <span class="help-block">Subir archivo con el siguiente nombre: (Antecedente-TU DNI)</span>
                 </div>
             </div>
@@ -202,7 +202,7 @@
                 parameters.append("Code", $("#iptCode").val());
 
                 parameters.append("profile", $("#iptProfile").prop("files")[0]);
-                parameters.append("pdfRecord", $("#iptPdfRecord").prop("files")[0]);
+                parameters.append("criminalRecord", $("#iptCriminalRecord").prop("files")[0]);
 
                 registerNewTechnical(parameters);
 
