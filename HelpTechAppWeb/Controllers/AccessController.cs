@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HelpTechAppWeb.Controllers
 {
+    [AllowAnonymous]
     public class AccessController : Controller
     {
         #region Views
