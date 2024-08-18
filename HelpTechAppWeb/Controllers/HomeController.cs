@@ -6,9 +6,10 @@ namespace HelpTechAppWeb.Controllers
     [AllowAnonymous]
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        [HttpGet]
+        public IActionResult Index() => View();
+
+        [HttpGet]
+        public IActionResult Error() => View();
     }
 }
