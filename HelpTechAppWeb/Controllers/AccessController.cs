@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HelpTechAppWeb.Controllers
 {
+    [Route("access/")]
     [AllowAnonymous]
     public class AccessController
         (IHttpClientFactory httpClientFactory) :
@@ -15,6 +16,7 @@ namespace HelpTechAppWeb.Controllers
 
         #region Views
 
+        [Route("login")]
         [HttpGet]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Login()
@@ -25,12 +27,14 @@ namespace HelpTechAppWeb.Controllers
             return View();
         }
 
+        [Route("register-technical")]
         [HttpGet]
         public IActionResult RegisterTechnical()
         {
             return View();
         }
 
+        [Route("register-consumer")]
         [HttpGet]
         public IActionResult RegisterConsumer()
         {
