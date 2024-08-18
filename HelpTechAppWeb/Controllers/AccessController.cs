@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
+using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -29,17 +32,11 @@ namespace HelpTechAppWeb.Controllers
 
         [Route("register-technical")]
         [HttpGet]
-        public IActionResult RegisterTechnical()
-        {
-            return View();
-        }
+        public IActionResult RegisterTechnical() => View();
 
         [Route("register-consumer")]
         [HttpGet]
-        public IActionResult RegisterConsumer()
-        {
-            return View();
-        }
+        public IActionResult RegisterConsumer() => View();
 
         [HttpGet]
         public async Task<IActionResult> Logout()
@@ -49,6 +46,30 @@ namespace HelpTechAppWeb.Controllers
                 .AuthenticationScheme);
 
             return RedirectToAction("Login", "Access");
+        }
+
+        #endregion
+
+        #region Json
+
+        [HttpPost]
+        public async Task<IActionResult> Login
+            ([FromBody] User user)
+        {
+            var httpContent = new StringContent(JsonConvert.SerializeObject(user),
+                Encoding.UTF8, "application/json");
+
+            _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", "");
+
+            var httpResponseMessage = await _httpClient.PostAsync("", httpContent);
+
+            if (httpResponseMessage.IsSuccessStatusCode is false)
+                return RedirectToAction("Error","Home");
+
+            var result = await httpResponseMessage
+                .Content.ReadAsStringAsync();
+
+            return Content(result, "application/json");
         }
 
         #endregion
