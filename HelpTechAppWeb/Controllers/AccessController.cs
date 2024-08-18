@@ -109,7 +109,7 @@ namespace HelpTechAppWeb.Controllers
                 Encoding.UTF8, "application/json");
 
             var httpResponseMessage = await _httpClient
-                .PostAsync("register-technical", httpContent);
+                .PostAsync("access/register-technical", httpContent);
 
             if (httpResponseMessage.IsSuccessStatusCode is false)
                 return RedirectToAction("Error", "Home");
