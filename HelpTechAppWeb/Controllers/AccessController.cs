@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 using System.Text;
 using HelpTechAppWeb.Models;
-using System.Security.Claims;
-using System.Net;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -99,6 +98,23 @@ namespace HelpTechAppWeb.Controllers
             };
 
             return validation;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterTechnical
+            ([FromBody] dynamic technical)
+        {
+            var httpContent = new StringContent
+                (JsonConvert.SerializeObject(technical),
+                Encoding.UTF8, "application/json");
+
+            var httpResponseMessage = await _httpClient
+                .PostAsync("register-technical", httpContent);
+
+            if (httpResponseMessage.IsSuccessStatusCode is false)
+                return RedirectToAction("Error", "Home");
+
+            return RedirectToAction("Login", "Access");
         }
 
         #endregion
