@@ -168,7 +168,7 @@
 
                             for (var i = 0; i < data.length; ++i) {
                                 contentHtml +=
-                                    '<option value="' + data[i].id + '">' data[i].name + '</option>';
+                                    '<option value="' + data[i].id + '">' + data[i].name + '</option>';
                             }
 
                             $('#sltDistricts').html(contentHtml);
@@ -176,9 +176,7 @@
                     },
                     error: function () {
 
-                        var Url = "@Url.Action("Error", "Home")";
-
-                        window.open(Url, "_self");
+                        window.open("@Url.Action("Error", "Home")", "_self");
                     }
                 });
             });
@@ -226,7 +224,7 @@
 
                         for (var i = 0; i < data.length; ++i) {
                             contentHtml +=
-                                '<option value="' + data[i].id + '">' data[i].name + '</option>';
+                                '<option value="' + data[i].id + '">' + data[i].name + '</option>';
                         }
 
                         $('#sltSpecialties').html(contentHtml);
@@ -234,9 +232,7 @@
                 },
                 error: function () {
 
-                    var Url = "@Url.Action("Error", "Home")";
-
-                    window.open(Url, "_self");
+                    window.open("@Url.Action("Error", "Home")", "_self");
                 }
             });
         }
@@ -256,7 +252,7 @@
 
                         for (var i = 0; i < data.length; ++i) {
                             contentHtml +=
-                                '<option value="' + data[i].id + '">' data[i].name + '</option>';
+                                '<option value="' + data[i].id + '">' + data[i].name + '</option>';
                         }
 
                         $('#sltDepartments').html(contentHtml);
@@ -264,9 +260,7 @@
                 },
                 error: function () {
 
-                    var Url = "@Url.Action("Error", "Home")";
-
-                    window.open(Url, "_self");
+                    window.open("@Url.Action("Error", "Home")", "_self");
                 }
             });
         }
@@ -280,7 +274,7 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function (data) { },
+                success: function () { },
                 error: function () {
 
                     window.open("@Url.Action("Error", "Home")", "_self");

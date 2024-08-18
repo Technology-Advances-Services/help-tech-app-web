@@ -143,7 +143,7 @@
 
                             for (var i = 0; i < data.length; ++i) {
                                 contentHtml +=
-                                    '<option value="' + data[i].id + '">' data[i].name + '</option>';
+                                    '<option value="' + data[i].id + '">' + data[i].name + '</option>';
                             }
 
                             $('#sltDistricts').html(contentHtml);
@@ -151,9 +151,7 @@
                     },
                     error: function () {
 
-                        var Url = "@Url.Action("Error", "Home")";
-
-                        window.open(Url, "_self");
+                        window.open("@Url.Action("Error", "Home")", "_self");
                     }
                 });
             });
