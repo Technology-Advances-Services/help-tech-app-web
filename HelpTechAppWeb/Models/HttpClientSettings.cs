@@ -8,5 +8,10 @@
         {
             this.BaseAddress = string.Empty;
         }
+        public HttpClientSettings
+            (string baseAddress)
+        {
+            this.BaseAddress = baseAddress;
+        }
     }
 }

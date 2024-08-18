@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Firebase.Auth;
+using Firebase.Storage;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +15,8 @@ namespace HelpTechAppWeb.Controllers
     [AllowAnonymous]
     public class AccessController
         (IHttpClientFactory httpClientFactory,
-        IWebHostEnvironment webHostEnvironment) :
+        IWebHostEnvironment webHostEnvironment,
+        IConfiguration configuration) :
         Controller
     {
         private readonly HttpClient _httpClient = httpClientFactory
@@ -58,7 +61,7 @@ namespace HelpTechAppWeb.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Login
-            ([FromBody] User user)
+            ([FromBody] Models.User user)
         {
             var httpContent = new StringContent
                 (JsonConvert.SerializeObject(user),
@@ -102,14 +105,41 @@ namespace HelpTechAppWeb.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RegisterTechnical
-            ([FromBody] Technical technical)
+            ([FromBody] Technical technical, IFormFile profile,
+            IFormFile criminalRecord)
         {
+            var result = await UploadTechnicalFiles
+                (profile, criminalRecord);
+
+            if (result is null)
+                return RedirectToAction("Error", "Home");
+
+            var json = JsonConvert.SerializeObject
+                (new Technical(technical.Id, technical.SpecialtyId,
+                technical.DistrictId, result.ProfileUrl,
+                technical.Firstname, technical.Lastname,
+                technical.Age, technical.Genre, technical.Phone,
+                technical.Email, technical.Code, string.Empty));
+
             var httpContent = new StringContent
-                (JsonConvert.SerializeObject(technical),
-                Encoding.UTF8, "application/json");
+                (json, Encoding.UTF8, "application/json");
 
             var httpResponseMessage = await _httpClient
                 .PostAsync("access/register-technical", httpContent);
+
+            if (httpResponseMessage.IsSuccessStatusCode is false)
+                return RedirectToAction("Error", "Home");
+
+            json = JsonConvert.SerializeObject
+                (new CriminalRecord(technical.Id,
+                result.CriminalRecordUrl));
+
+            httpContent = new StringContent
+                (json, Encoding.UTF8, "application/json");
+
+            httpResponseMessage = await _httpClient
+                .PostAsync("access/add-criminal-record-to-technical",
+                httpContent);
 
             if (httpResponseMessage.IsSuccessStatusCode is false)
                 return RedirectToAction("Error", "Home");
@@ -132,6 +162,77 @@ namespace HelpTechAppWeb.Controllers
                 return RedirectToAction("Error", "Home");
 
             return RedirectToAction("Login", "Access");
+        }
+
+        #endregion
+
+        #region FireBase
+
+        public async Task<dynamic?> UploadTechnicalFiles
+            (IFormFile profile, IFormFile criminalRecord)
+        {
+            try
+            {
+                var email = configuration["FireBaseSettings:Email"];
+                var password = configuration["FireBaseSettings:Password"];
+                var url = configuration["FireBaseSettings:Url"];
+                var key = configuration["FireBaseSettings:Key"];
+
+                FirebaseAuthProvider firebaseAuthProvider = new(new(key));
+                CancellationTokenSource cancellationTokenSource = new();
+
+                FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider
+                    .SignInWithEmailAndPasswordAsync(email, password);
+
+                FirebaseStorageTask firebaseStorageTask;
+
+                async Task<string> UploadProfile()
+                {
+                    firebaseStorageTask = new FirebaseStorage(
+                        url,
+                        new FirebaseStorageOptions
+                        {
+                            AuthTokenAsyncFactory = () =>
+                            Task.FromResult(firebaseAuthLink.FirebaseToken),
+                            ThrowOnCancel = true
+                        })
+                    .Child("HelpTechAppWeb")
+                    .Child("Technicals-Profiles")
+                    .Child(Path.GetFileName(profile.FileName))
+                    .PutAsync(profile.OpenReadStream(),
+                    cancellationTokenSource.Token);
+
+                    return await firebaseStorageTask;
+                }
+
+                async Task<string> UploadCriminalRecord()
+                {
+                    firebaseStorageTask = new FirebaseStorage(
+                        url,
+                        new FirebaseStorageOptions
+                        {
+                            AuthTokenAsyncFactory = () =>
+                            Task.FromResult(firebaseAuthLink.FirebaseToken),
+                            ThrowOnCancel = true
+                        })
+                    .Child("HelpTechAppWeb")
+                    .Child("Criminals-Records")
+                    .Child(Path.GetFileName(criminalRecord.FileName))
+                    .PutAsync(criminalRecord.OpenReadStream(),
+                    cancellationTokenSource.Token);
+
+                    return await firebaseStorageTask;
+                }
+
+                return new
+                {
+                    ProfileUrl = await UploadProfile(),
+                    CriminalRecordUrl = await UploadCriminalRecord()
+                };
+            }
+            catch (Exception) { }
+
+            return null;
         }
 
         #endregion
