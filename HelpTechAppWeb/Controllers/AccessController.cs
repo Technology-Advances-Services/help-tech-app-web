@@ -65,7 +65,7 @@ namespace HelpTechAppWeb.Controllers
                 Encoding.UTF8, "application/json");
 
             var httpResponseMessage = await _httpClient
-                .PostAsync("access", httpContent);
+                .PostAsync("access/login", httpContent);
 
             if (httpResponseMessage.IsSuccessStatusCode is false)
                 return RedirectToAction("Error", "Home");
