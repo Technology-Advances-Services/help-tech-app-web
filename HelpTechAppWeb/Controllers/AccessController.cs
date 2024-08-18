@@ -102,7 +102,7 @@ namespace HelpTechAppWeb.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RegisterTechnical
-            ([FromBody] dynamic technical)
+            ([FromBody] Technical technical)
         {
             var httpContent = new StringContent
                 (JsonConvert.SerializeObject(technical),
