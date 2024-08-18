@@ -5,17 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 using HelpTechAppWeb.Models;
+using System.Security.Claims;
+using System.Net;
 
 namespace HelpTechAppWeb.Controllers
 {
     [Route("access/")]
     [AllowAnonymous]
     public class AccessController
-        (IHttpClientFactory httpClientFactory) :
+        (IHttpClientFactory httpClientFactory,
+        IWebHostEnvironment webHostEnvironment) :
         Controller
     {
         private readonly HttpClient _httpClient = httpClientFactory
             .CreateClient("HelpTechService");
+
+        private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
         #region Views
 
@@ -56,18 +61,35 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> Login
             ([FromBody] User user)
         {
-            var httpContent = new StringContent(JsonConvert.SerializeObject(user),
+            var httpContent = new StringContent
+                (JsonConvert.SerializeObject(user),
                 Encoding.UTF8, "application/json");
 
-            _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", "");
-
-            var httpResponseMessage = await _httpClient.PostAsync("", httpContent);
+            var httpResponseMessage = await _httpClient
+                .PostAsync("access", httpContent);
 
             if (httpResponseMessage.IsSuccessStatusCode is false)
                 return RedirectToAction("Error","Home");
 
             var result = await httpResponseMessage
                 .Content.ReadAsStringAsync();
+
+            if (string.IsNullOrEmpty(result))
+                return RedirectToAction("Error", "Home");
+
+            List<Claim> claims =
+            [
+                new(ClaimTypes.Role, user.Role),
+                new(ClaimTypes.Name, user.Username.ToString()),
+                new(ClaimTypes.Hash, result)
+            ];
+
+            ClaimsIdentity claimsIdentity = new(claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync
+                (CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
 
             return Content(result, "application/json");
         }
