@@ -69,7 +69,7 @@ namespace HelpTechAppWeb.Controllers
                 .PostAsync("access", httpContent);
 
             if (httpResponseMessage.IsSuccessStatusCode is false)
-                return RedirectToAction("Error","Home");
+                return RedirectToAction("Error", "Home");
 
             var result = await httpResponseMessage
                 .Content.ReadAsStringAsync();
@@ -79,9 +79,9 @@ namespace HelpTechAppWeb.Controllers
 
             List<Claim> claims =
             [
+                new(ClaimTypes.Hash, result),
                 new(ClaimTypes.Role, user.Role),
-                new(ClaimTypes.Name, user.Username.ToString()),
-                new(ClaimTypes.Hash, result)
+                new(ClaimTypes.Name, user.Username.ToString())
             ];
 
             ClaimsIdentity claimsIdentity = new(claims,
@@ -91,7 +91,14 @@ namespace HelpTechAppWeb.Controllers
                 (CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
 
-            return Content(result, "application/json");
+            var validation = user.Role switch
+            {
+                "TECNICO" => RedirectToAction("InterfaceTechnical", "Technical"),
+                "CONSUMIDOR" => RedirectToAction("InterfaceConsumer", "Consumer"),
+                _ => RedirectToAction("Error", "Home")
+            };
+
+            return validation;
         }
 
         #endregion
