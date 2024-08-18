@@ -117,6 +117,23 @@ namespace HelpTechAppWeb.Controllers
             return RedirectToAction("Login", "Access");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> RegisterConsumer
+            ([FromBody] Consumer consumer)
+        {
+            var httpContent = new StringContent
+                (JsonConvert.SerializeObject(consumer),
+                Encoding.UTF8, "application/json");
+
+            var httpResponseMessage = await _httpClient
+                .PostAsync("access/register-consumer", httpContent);
+
+            if (httpResponseMessage.IsSuccessStatusCode is false)
+                return RedirectToAction("Error", "Home");
+
+            return RedirectToAction("Login", "Access");
+        }
+
         #endregion
     }
 }
