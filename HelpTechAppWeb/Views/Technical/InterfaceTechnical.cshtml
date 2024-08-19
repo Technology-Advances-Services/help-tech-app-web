@@ -290,7 +290,7 @@
 
             $(window).on("load", function () {
 
-
+                loadInformationTechnical();
             });
 
             setInterval(refreshInterfaceData, 60000);
@@ -326,6 +326,33 @@
                 return false;
             });
         });
+
+        function loadInformationTechnical() {
+
+            jQuery.ajax({
+
+                url: '@Url.Action("InformationTechnical", "Technical")',
+                method: 'GET',
+                dataType: 'json',
+                contentType: "appliaction/json; charset=utf-8",
+                success: function (data) {
+
+                    $("#iProfilePhoto").attr("src", data.ProfileUrl);
+
+                    $("#pMembership").text(data.Membership);
+                    $("#pEspecialty").text(data.Specialty);
+                    $("#pFirstname").text(data.Firstname);
+                    $("#pLastname").text(data.Lastname);
+                    $("#pAge").text(data.Age);
+                    $("#pEmail").text(data.Email);
+                    $("#pPhone").text(data.Phone);
+                },
+                error: function() {
+
+                    window.open("@Url.Action("Error", "Home")", "_self");
+                }
+            });
+        }
 
         function getFormattedDate(date) {
 
