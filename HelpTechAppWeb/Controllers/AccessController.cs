@@ -61,7 +61,7 @@ namespace HelpTechAppWeb.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Login
-            ([FromBody] Models.User user)
+            (Models.User user)
         {
             var httpContent = new StringContent
                 (JsonConvert.SerializeObject(user),
@@ -105,7 +105,7 @@ namespace HelpTechAppWeb.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RegisterTechnical
-            ([FromBody] Technical technical, IFormFile profile,
+            (Technical technical, IFormFile profile,
             IFormFile criminalRecord)
         {
             var result = await UploadTechnicalFiles
@@ -149,11 +149,21 @@ namespace HelpTechAppWeb.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RegisterConsumer
-            ([FromBody] Consumer consumer)
+            (Consumer consumer, IFormFile profile)
         {
+            var result = await UploadConsumerFiles(profile);
+
+            if (string.IsNullOrEmpty(result) is false)
+                return RedirectToAction("Error", "Home");
+
+            var json = JsonConvert.SerializeObject
+                (new Consumer(consumer.Id, consumer.DistrictId,
+                result, consumer.Firstname, consumer.Lastname,
+                consumer.Age, consumer.Genre, consumer.Phone,
+                consumer.Email, consumer.Code));
+
             var httpContent = new StringContent
-                (JsonConvert.SerializeObject(consumer),
-                Encoding.UTF8, "application/json");
+                (json, Encoding.UTF8, "application/json");
 
             var httpResponseMessage = await _httpClient
                 .PostAsync("access/register-consumer", httpContent);
@@ -235,6 +245,52 @@ namespace HelpTechAppWeb.Controllers
             catch (Exception) { }
 
             return null;
+        }
+
+        public async Task<string> UploadConsumerFiles
+            (IFormFile profile)
+        {
+            try
+            {
+                var email = configuration["FireBaseSettings:Email"];
+                var password = configuration["FireBaseSettings:Password"];
+                var url = configuration["FireBaseSettings:Url"];
+                var key = configuration["FireBaseSettings:Key"];
+
+                var firebaseAuthProvider = new FirebaseAuthProvider
+                    (new FirebaseConfig(key));
+
+                var cancellationTokenSource = new CancellationTokenSource();
+
+                var firebaseAuthLink = await firebaseAuthProvider
+                    .SignInWithEmailAndPasswordAsync(email, password);
+
+                FirebaseStorageTask firebaseStorageTask;
+
+                async Task<string> UploadProfile()
+                {
+                    firebaseStorageTask = new FirebaseStorage(
+                        url,
+                        new FirebaseStorageOptions
+                        {
+                            AuthTokenAsyncFactory = () =>
+                            Task.FromResult(firebaseAuthLink.FirebaseToken),
+                            ThrowOnCancel = true
+                        })
+                    .Child("HelpTechAppWeb")
+                    .Child("Consumers-Profiles")
+                    .Child(Path.GetFileName(profile.FileName))
+                    .PutAsync(profile.OpenReadStream(),
+                    cancellationTokenSource.Token);
+
+                    return await firebaseStorageTask;
+                }
+
+                return await UploadProfile();
+            }
+            catch (Exception) { }
+
+            return string.Empty;
         }
 
         #endregion
