@@ -1,0 +1,344 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="es-pe">
+<head>
+
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <title>Interfaz de tecnicos - HelpTechAppWeb</title>
+
+</head>
+<body>
+
+    <div class="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
+
+        <nav class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 navbar-light bg-white border-bottom border-bottom-lg-0 border-end-lg" id="navbarVertical">
+            <div class="container-fluid">
+
+                <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0"> <img src="https://www.svgrepo.com/show/60912/repair.svg" width="440"> </a>
+
+                <div id="sidebarCollapse" class="collapse navbar-collapse">
+
+                    <ul class="navbar-nav">
+
+                        <li class="nav-item">
+                            <a id="btnInterfaceTechnical" class="nav-link"> <i class="bi bi-house"></i> Pagina principal </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a id="btnStatisticalReport" class="nav-link"> <i class="bi bi-bar-chart"></i> Reporte estadistico </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a id="btnReportReviews" class="nav-link"> <i class="bi bi-chat"></i> Reporte reseñas </a>
+                        </li>
+
+                    </ul>
+
+                    <div class="nav-link text-xs font-semibold text-uppercase text-muted ls-wide">Consumidores</div>
+
+                    <ul id="consumerContacts" class="navbar-nav mb-md-4"> </ul>
+
+                    <div class="mt-auto"></div>
+
+                    <ul class="navbar-nav">
+
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="modal" data-target="#mdlInformationTechnical"> <i class="bi bi-person-square"></i>Cuenta</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a id="btnLogout" class="nav-link"> <i class="bi bi-box-arrow-left"></i>Cerrar sesion</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="h-screen flex-grow-1 overflow-y-lg-auto">
+
+            <header class="bg-surface-primary border-bottom pt-6">
+                <div class="container-fluid">
+                    <div class="mb-npx">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6 col-12 mb-4 mb-sm-0">
+                                <h1 class="h2 mb-0 ls-tight">Bienvenido </h1>
+                            </div>
+
+                            <div class="col-sm-6 col-12 text-sm-end">
+                                <div class="mx-n1">
+                                    <a id="btnJobsResponses" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
+                                        <span class=" pe-2"> <i class="bi bi-pencil"></i> </span>
+                                        <span>Respuestas de trabajos</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr />
+                    </div>
+                </div>
+            </header>
+
+            <main class="py-6 bg-surface-secondary">
+                <div class="container-fluid">
+
+                    <div class="row g-6 mb-6">
+
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card shadow border-0">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col">
+                                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Ingreso</span>
+                                            <span id="spnAmountFinal" class="h3 font-bold mb-0"></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-tertiary text-white text-lg rounded-circle"> <i class="bi bi-credit-card"></i> </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card shadow border-0">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col">
+                                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Consumidores atendidos</span>
+                                            <span id="spnConsumersServed" class="h3 font-bold mb-0"></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-primary text-white text-lg rounded-circle"> <i class="bi bi-people"></i> </div>
+                                        </div>
+
+                                    </div>                                
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card shadow border-0">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col">
+                                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Tiempo de trabajo</span>
+                                            <span id="spnWorkingTime" class="h3 font-bold mb-0"></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-info text-white text-lg rounded-circle"> <i class="bi bi-clock-history"></i> </div>
+                                        </div>
+
+                                    </div>                                
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card shadow border-0">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col">
+                                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Trabajos pendientes</span>
+                                            <span id="spnWorksPendings" class="h3 font-bold mb-0"></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-warning text-white text-lg rounded-circle"> <i class="bi bi-minecart-loaded"></i> </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card shadow border-0 mb-7">
+
+                        <div id="dvSearchDate" class="card-header">
+
+                            <h5 class="mb-0">Agenda de citas</h5>
+
+                            <hr />
+
+                            <span>Buscar por fecha:</span>
+                            <input id="iptWorkDate" type="date" />
+                            <a id="btnSearchPendingsServices" class="btn btn-warning">Buscar</a>
+
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <table id="tblPendingsServices" class="table table-hover table-nowrap">
+
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">DNI</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Apellido</th>
+                                        <th scope="col">Contacto</th>
+                                        <th scope="col">Fecha</th>
+                                        <th scope="col">Tiempo</th>
+                                        <th scope="col">Mano de obra</th>
+                                        <th scope="col">Materiales</th>
+                                        <th scope="col">Monto final</th>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col">Opcion</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="tbdPendingServices"></tbody>
+
+                            </table>
+
+                        </div>
+
+                        <div class="card-footer border-0 py-5"> <span id="spnTableMessage" class="text-muted text-sm"></span> </div>
+
+                    </div>
+
+                </div>
+            </main>
+
+        </div>
+
+    </div>
+
+    <div id="mdlInformationTechnical" class="modal fade" tabindex="-1" aria-labelledby="mdlInformationTechnical" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header float-right">
+
+                    <h5>Detalles del perfil</h5>
+
+                    <div class="text-right">
+                        <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                    </div>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div>
+                        <div class="box">
+
+                            <div class="img" style="text-align: center;"> <img id="iProfileUrl"> </div> <br>
+
+                            <p id="pMembership"></p>
+                            <br>
+
+                            <p id="pEspecialty"></p>
+                            <br>
+
+                            <p id="pFirstName"></p>
+                            <br>
+
+                            <p id="pLastName"></p>
+                            <br>
+
+                            <p id="pAge"></p>
+                            <br>
+
+                            <p id="pEmail"></p>
+                            <br>
+
+                            <p id="pContact"></p>
+                            <br>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Cambiar membresia</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <input id="iptTechnicalId" type="hidden" value="@ViewBag.TechnicalId" />
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(window).on("load", function () {
+
+
+            });
+
+            setInterval(refreshInterfaceData, 60000);
+
+            $("#btnInterfaceTechnical").on("click", function () {
+
+                window.open("@Url.Action("InterfaceTechnical", "Technical")", "_self");
+
+                return false;
+            });
+            $("#btnStatisticalReport").on("click", function () {
+
+                window.open("@Url.Action("StatisticalReport", "Technical")", "_blank");
+
+                return false;
+            });
+            $("#btnReportReviews").on("click", function () {
+
+                window.open("@Url.Action("ReportReviews", "Technical")", "_blank");
+
+                return false;
+            });
+            $("#btnJobsResponses").on("click", function () {
+
+                window.open("@Url.Action("JobsResponses", "Technical")", "_blank");
+
+                return false;
+            });
+            $("#btnLogout").on("click", function () {
+
+                window.open("@Url.Action("Logout", "Access")", "_self");
+
+                return false;
+            });
+        });
+
+        function getFormattedDate(date) {
+
+            let day = String(date.getDate()).padStart(2, '0');
+            let mounth = String(date.getMonth() + 1).padStart(2, '0');
+            let year = date.getFullYear();
+            let hour = String(date.getHours()).padStart(2, '0');
+            let minutes = String(date.getMinutes()).padStart(2, '0');
+            let seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${mounth}/${year} ${hour}:${minutes}:${seconds}`;
+        }
+
+    </script>
+
+</body>
+</html>
