@@ -178,10 +178,12 @@ namespace HelpTechAppWeb.Controllers
                 var url = configuration["FireBaseSettings:Url"];
                 var key = configuration["FireBaseSettings:Key"];
 
-                FirebaseAuthProvider firebaseAuthProvider = new(new(key));
-                CancellationTokenSource cancellationTokenSource = new();
+                var firebaseAuthProvider = new FirebaseAuthProvider
+                    (new FirebaseConfig(key));
 
-                FirebaseAuthLink firebaseAuthLink = await firebaseAuthProvider
+                var cancellationTokenSource = new CancellationTokenSource();
+
+                var firebaseAuthLink = await firebaseAuthProvider
                     .SignInWithEmailAndPasswordAsync(email, password);
 
                 FirebaseStorageTask firebaseStorageTask;
