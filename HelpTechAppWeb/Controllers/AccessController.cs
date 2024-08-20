@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
 using HelpTechAppWeb.Models;
+using System.Net.Http;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -172,6 +173,21 @@ namespace HelpTechAppWeb.Controllers
                 return RedirectToAction("Error", "Home");
 
             return RedirectToAction("Login", "Access");
+        }
+
+        [Route("all-specialties")]
+        [HttpPost]
+        public async Task<IActionResult> AllSpecialties()
+        {
+            var httpResponseMessage = await _httpClient
+                .GetAsync("access/register-consumer");
+
+            if (httpResponseMessage.IsSuccessStatusCode is false)
+                return RedirectToAction("Error", "Home");
+
+            return Content(await httpResponseMessage
+                .Content.ReadAsStringAsync(),
+                "application/json");
         }
 
         #endregion
