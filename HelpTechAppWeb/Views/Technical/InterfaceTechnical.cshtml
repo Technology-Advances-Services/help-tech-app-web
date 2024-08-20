@@ -276,6 +276,43 @@
             </div>
         </div>
     </div>
+    <div id="mdlJobDetail" class="modal fade" tabindex="-1" aria-labelledby="mdlJobDetail" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header float-right">
+
+                    <h5>Detalles del trabajo</h5>
+
+                    <div class="text-right">
+                        <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                    </div>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div>
+                        <div class="box">
+
+                            <p id="pAddress"></p>
+                            <br>
+
+                            <p id="pDescription"></p>
+                            <br>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <input id="iptTechnicalId" type="hidden" value="@ViewBag.TechnicalId" />
 
@@ -284,7 +321,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
+    <script src="~/technical/js/interface-technical.js"></script>
+@*     <script type="text/javascript">
 
         $(document).ready(function () {
 
@@ -355,7 +393,7 @@
             });
             $("#uChatsMembers").on("click", "#btnChat", function () {
 
-                $(this).parents("li").find("#spnIdConsumer").each(function () {
+                $(this).parents("li").find("#spnConsumerId").each(function () {
 
                     window.open("@Url.Action("Messaging", "Communications")?Id=" + $(this).html() + "&Roll=TECNICO", "_blank");
                 });
@@ -521,7 +559,7 @@
             return `${day}/${mounth}/${year} ${hour}:${minutes}:${seconds}`;
         }
 
-    </script>
+    </script> *@
 
 </body>
 </html>

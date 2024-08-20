@@ -45,6 +45,7 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public IActionResult RegisterConsumer() => View();
 
+        [Route("logout")]
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
