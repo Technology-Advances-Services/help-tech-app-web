@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
 using HelpTechAppWeb.Models;
-using System.Net.Http;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -176,7 +175,7 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [Route("all-specialties")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> AllSpecialties()
         {
             var httpResponseMessage = await _httpClient
