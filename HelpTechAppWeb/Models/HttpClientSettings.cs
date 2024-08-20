@@ -2,16 +2,16 @@
 {
     public class HttpClientSettings
     {
-        public string BaseAddress { get; set; }
+        public string HelpTechService { get; set; }
 
         public HttpClientSettings()
         {
-            this.BaseAddress = string.Empty;
+            this.HelpTechService = string.Empty;
         }
         public HttpClientSettings
             (string baseAddress)
         {
-            this.BaseAddress = baseAddress;
+            this.HelpTechService = baseAddress;
         }
     }
 }

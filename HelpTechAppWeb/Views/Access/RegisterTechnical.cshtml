@@ -149,14 +149,14 @@
             $(window).on('load', function () {
 
                 loadSpecialties();
-                loadDepartaments();
+                loadDepartments();
             });
 
             $('#sltDepartments').on("change", function () {
 
                 jQuery.ajax({
 
-                    url: '@Url.Action("DistrictsByDepartment", "Locations")' + $(this).val(),
+                    url: '@Url.Action("DistrictsByDepartment", "Locations")' + '?departmentId=' + $(this).val(),
                     method: 'GET',
                     dataType: 'json',
                     contentType: "application/json; charset=utf-8",
@@ -236,7 +236,7 @@
                 }
             });
         }
-        function loadDepartaments() {
+        function loadDepartments() {
 
             jQuery.ajax({
 

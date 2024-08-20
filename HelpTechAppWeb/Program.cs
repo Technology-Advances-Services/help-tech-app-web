@@ -12,7 +12,7 @@ builder.Services.Configure<HttpClientSettings>(builder.Configuration.GetSection(
 builder.Services.AddHttpClient("HelpTechService", (sp, client) =>
 {
     var httpClientSettings = sp.GetRequiredService<IOptions<HttpClientSettings>>().Value;
-    client.BaseAddress = new Uri(httpClientSettings.BaseAddress);
+    client.BaseAddress = new Uri(httpClientSettings.HelpTechService);
 });
 
 #endregion

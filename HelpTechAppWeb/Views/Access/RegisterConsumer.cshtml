@@ -127,11 +127,16 @@
             $("#btnRegisterNewConsumer").prop("disabled", false);
             $("#btnRegisterNewConsumer").text("Registrar");
 
+            $(window).on('load', function () {
+
+                loadDepartments();
+            });
+
             $('#sltDepartments').on("change", function () {
 
                 jQuery.ajax({
 
-                    url: 'https://localhost:44315/locations/districts-by-department?' + $(this).val(),
+                    url: '@Url.Action("DistrictsByDepartment", "Locations")' + '?departmentId=' + $(this).val(),
                     method: 'GET',
                     dataType: 'json',
                     contentType: "application/json; charset=utf-8",
@@ -181,6 +186,34 @@
             });
         });
 
+        function loadDepartments() {
+
+            jQuery.ajax({
+
+                url: '@Url.Action("AllDepartments","Locations")',
+                method: 'GET',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    var contentHtml = '';
+
+                    if (data.length > 0) {
+
+                        for (var i = 0; i < data.length; ++i) {
+                            contentHtml +=
+                                '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                        }
+
+                        $('#sltDepartments').html(contentHtml);
+                    }
+                },
+                error: function () {
+
+                    window.open("@Url.Action("Error", "Home")", "_self");
+                }
+            });
+        }
         function registerConsumer(parameters) {
 
             jQuery.ajax({

@@ -29,13 +29,13 @@ namespace HelpTechAppWeb.Controllers
                 "application/json");
         }
 
-        [Route("districts-by-Department")]
+        [Route("districts-by-department")]
         [HttpGet]
         public async Task<IActionResult> DistrictsByDepartment
             (int departmentId)
         {
             var httpResponseMessage = await _httpClient
-                .GetAsync("locations/districts-by-department?" + departmentId);
+                .GetAsync("locations/districts-by-department?departmentId=" + departmentId);
 
             if (httpResponseMessage.IsSuccessStatusCode is false)
                 return RedirectToAction("Error", "Home");
