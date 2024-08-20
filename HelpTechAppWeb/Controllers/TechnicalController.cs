@@ -4,6 +4,7 @@ using System.Security.Claims;
 
 namespace HelpTechAppWeb.Controllers
 {
+    [Route("technical/")]
     [Authorize(Roles = "TECNICO")]
     public class TechnicalController : Controller
     {
