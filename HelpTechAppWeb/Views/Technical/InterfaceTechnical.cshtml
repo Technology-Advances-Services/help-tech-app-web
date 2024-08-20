@@ -296,7 +296,7 @@
 
                 jobs = loadJobsByTechnical();
 
-                fillTableJobs(jobs);
+                loadTableJobs(jobs);
             });
 
             setInterval(refreshInterfaceData, 60000);
@@ -443,7 +443,7 @@
                 }
             });
         }
-        function fillTableJobs(jobs) {
+        function loadTableJobs(jobs) {
         
             if (jobs.length === 0){
 
