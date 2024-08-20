@@ -180,7 +180,7 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> AllSpecialties()
         {
             var httpResponseMessage = await _httpClient
-                .GetAsync("access/register-consumer");
+                .GetAsync("access/all-specialties");
 
             if (httpResponseMessage.IsSuccessStatusCode is false)
                 return RedirectToAction("Error", "Home");
