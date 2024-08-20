@@ -12,6 +12,7 @@
         public decimal? Time { get; private set; }
         public decimal? LaborBudget { get; private set; }
         public decimal? MaterialBudget { get; private set; }
+        public decimal? AmountFinal { get; private set; }
         public string JobState { get; private set; }
 
         public Job()
@@ -21,6 +22,7 @@
             this.ConsumerId = 0;
             this.Address = string.Empty;
             this.Description = string.Empty;
+            this.AmountFinal = 0;
             this.JobState = string.Empty;
         }
         public Job
@@ -40,6 +42,7 @@
             this.Time = time;
             this.LaborBudget = laborBudget;
             this.MaterialBudget = materialBudget;
+            this.AmountFinal = laborBudget + materialBudget;
             this.JobState = jobState;
         }
     }
