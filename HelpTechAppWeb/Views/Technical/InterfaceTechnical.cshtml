@@ -103,7 +103,7 @@
 
                                         <div class="col">
                                             <span class="h6 font-semibold text-muted text-sm d-block mb-2">Ingreso</span>
-                                            <span id="spnAmountFinal" class="h3 font-bold mb-0"></span>
+                                            <span id="spnTotalIncome" class="h3 font-bold mb-0"></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-tertiary text-white text-lg rounded-circle"> <i class="bi bi-credit-card"></i> </div>
@@ -121,7 +121,7 @@
 
                                         <div class="col">
                                             <span class="h6 font-semibold text-muted text-sm d-block mb-2">Consumidores atendidos</span>
-                                            <span id="spnConsumersServed" class="h3 font-bold mb-0"></span>
+                                            <span id="spnTotalConsumersServed" class="h3 font-bold mb-0"></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-primary text-white text-lg rounded-circle"> <i class="bi bi-people"></i> </div>
@@ -139,7 +139,7 @@
 
                                         <div class="col">
                                             <span class="h6 font-semibold text-muted text-sm d-block mb-2">Tiempo de trabajo</span>
-                                            <span id="spnWorkingTime" class="h3 font-bold mb-0"></span>
+                                            <span id="spnTotalWorkTime" class="h3 font-bold mb-0"></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-info text-white text-lg rounded-circle"> <i class="bi bi-clock-history"></i> </div>
@@ -157,7 +157,7 @@
 
                                         <div class="col">
                                             <span class="h6 font-semibold text-muted text-sm d-block mb-2">Trabajos pendientes</span>
-                                            <span id="spnWorksPendings" class="h3 font-bold mb-0"></span>
+                                            <span id="spnTotalPendingsJobs" class="h3 font-bold mb-0"></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-warning text-white text-lg rounded-circle"> <i class="bi bi-minecart-loaded"></i> </div>
@@ -248,10 +248,10 @@
                             <p id="pEspecialty"></p>
                             <br>
 
-                            <p id="pFirstName"></p>
+                            <p id="pFirstname"></p>
                             <br>
 
-                            <p id="pLastName"></p>
+                            <p id="pLastname"></p>
                             <br>
 
                             <p id="pAge"></p>
@@ -260,7 +260,7 @@
                             <p id="pEmail"></p>
                             <br>
 
-                            <p id="pContact"></p>
+                            <p id="pPhone"></p>
                             <br>
 
                         </div>
@@ -327,6 +327,73 @@
             });
         });
 
+        function refreshInterfaceData() {
+
+            jQuery.ajax({
+
+                url: '@Url.Action("GeneralTechnicalStatistic", "Technical")',
+                method: 'GET',
+                dataType: 'json',
+                contentType: "appliaction/json; charset=utf-8",
+                success: function(data) {
+
+                    $("#spnTotalIncome").text(data.TotalIncome);
+                    $("#spnTotalConsumersServed").text(data.TotalConsumersServed);
+                    $("#spnTotalWorkTime").text(data.TotalWorkTime);
+                    $("#spnTotalPendingsJobs").text(data.TotalPendingsJobs);
+                },
+                error: function() {
+
+                    window.open("@Url.Action("Error", "Home")", "_self");
+                }
+            });
+
+            jQuery.ajax({
+
+                url: '@Url.Action("ChatsMembersByTechnical", "Communications")',
+                method: 'GET',
+                dataType: 'json',
+                contentType: "appliaction/json; charset=utf-8",
+                success: function (data) {
+
+                    var contentHtml = '';
+
+                    if (data.length > 0) {
+
+                        for (var i = 0; i < data.length; ++i) {
+
+                            contentHtml +=
+                                '<li>' +
+                                    '<a id="btnChat" class="nav-link d-flex align-items-center">' +
+                                        '<div class="me-4">' +
+                                            '<div class="position-relative d-inline-block text-white">' +
+                                                '<img alt="Image Placeholder" src="' + data[i].ProfileUrl + '" class="avatar rounded-circle">' +
+                                                '<span class="position-absolute bottom-2 end-2 transform translate-x-1/2 translate-y-1/2 border-2 border-solid border-current w-3 h-3 bg-success rounded-circle"></span>' +
+                                            '</div>' +
+                                        '</div>' +
+                                        '<div>' +
+                                            '<span class="d-block text-sm font-semibold">' + data[i].Firstname + '</span>' +
+                                            '<span class="d-block text-xs text-muted font-regular">' + data[i].Lastname + '</span>' +
+                                            '<span id="spnConsumerId" style="Display:none;">' + data[i].ConsumerId + '</span>' +
+                                        '</div>' +
+                                        '<div class="ms-auto"> <i class="bi bi-chat"></i> </div>' +
+                                    '</a>' +
+                                '</li>';
+                        }
+
+                        $("#consumerContacts").html(contentHtml);
+                    }
+                    else {
+
+                        $("#consumerContacts").html(contentHtml);
+                    }
+                },
+                error: function () {
+
+                    window.open("@Url.Action("Error", "Home")", "_self");
+                }
+            });
+        }
         function loadInformationTechnical() {
 
             jQuery.ajax({
