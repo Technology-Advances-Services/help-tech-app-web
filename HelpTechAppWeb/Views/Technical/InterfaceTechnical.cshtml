@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="~/technical/interface-technical.css" />
+    <link rel="stylesheet" href="~/technical/css/interface-technical.css" />
     <title>Interfaz de tecnicos - HelpTechAppWeb</title>
 
 </head>
@@ -180,7 +180,7 @@
 
                             <span>Buscar por fecha:</span>
                             <input id="iptWorkDate" type="date" />
-                            <a id="btnSearchPendingsServices" class="btn btn-warning">Buscar</a>
+                            <a id="btnSearchPendingsJobs" class="btn btn-warning">Buscar</a>
 
                         </div>
 
@@ -328,6 +328,37 @@
             $("#btnLogout").on("click", function () {
 
                 window.open("@Url.Action("Logout", "Access")", "_self");
+
+                return false;
+            });
+
+            $("#dvSearchDate").on("click", "#btnSearchPendingsJobs", function () {
+
+                fillTableJobs(jobs.filter(j => j.WorkDate === $("#iptWorkDate").val() && j.JobState == "PENDIENTE"));
+            });
+            $("#tblPendingsJobs").on("click", "#btnDetailJob", function () {
+
+                var Url = "@Url.Action("WorkInterface", "Technical")";
+
+                window.open(Url, "_blank");
+
+                return false;
+            });
+            $("#tblPendingsJobs").on("click", "#btnChat", function () {
+
+                $(this).parents("tr").find("#tConsumerId").each(function () {
+
+                    window.open("@Url.Action("Messaging", "Communications")?Id=" + $(this).html() + "&Roll=TECNICO", "_blank");
+                });
+
+                return false;
+            });
+            $("#uChatsMembers").on("click", "#btnChat", function () {
+
+                $(this).parents("li").find("#spnIdConsumer").each(function () {
+
+                    window.open("@Url.Action("Messaging", "Communications")?Id=" + $(this).html() + "&Roll=TECNICO", "_blank");
+                });
 
                 return false;
             });
