@@ -51,6 +51,7 @@ document.getElementById("btnLogout").addEventListener("click", function () {
     return false;
 });
 
+
 document.getElementById("dvSearchDate").addEventListener("click", function (event) {
 
     if (event.target && event.target.id === "btnSearchPendingsJobs") {
