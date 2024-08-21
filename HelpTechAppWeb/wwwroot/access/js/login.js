@@ -23,7 +23,9 @@ document.getElementById("frmCredentials").addEventListener("submit", function (e
 
 function login(credentials) {
 
-    fetch("access/login", {
+    const resource = url + 'access/login';
+
+    fetch(resource, {
 
         method: "POST",
         body: credentials,
