@@ -118,7 +118,7 @@ function refreshInterfaceData() {
 
         if (!response.ok) {
 
-            throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok.');
         }
 
         return response.json();
@@ -132,7 +132,7 @@ function refreshInterfaceData() {
     })
     .catch(() => {
 
-        window.open(url + '/Home/Error', '_self');
+        window.open(url + 'home/error', '_self');
     });
 
     resource = url + 'communications/chats-members-by-technical';
@@ -148,7 +148,7 @@ function refreshInterfaceData() {
 
         if (!response.ok) {
 
-            throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok.');
         }
 
         return response.json();
@@ -183,7 +183,7 @@ function refreshInterfaceData() {
     })
     .catch(() => {
 
-        window.open(url + '/Home/Error', '_self');
+        window.open(url + 'home/error', '_self');
     });
 }
 function loadInformationTechnical() {
@@ -219,7 +219,7 @@ function loadInformationTechnical() {
     })
     .catch(error => {
 
-        window.open(url + '/Home/Error', '_self');
+        window.open(url + 'home/error', '_self');
     });
 }
 function loadJobsByTechnical() {
@@ -237,7 +237,7 @@ function loadJobsByTechnical() {
 
         if (!response.ok) {
 
-            throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok.');
         }
 
         return response.json();
@@ -253,7 +253,7 @@ function loadJobsByTechnical() {
     })
     .catch(() => {
 
-        window.open(url + '/Home/Error', '_self');
+        window.open(url + 'home/error', '_self');
     });
 }
 function fillTableJobs(jobs) {
