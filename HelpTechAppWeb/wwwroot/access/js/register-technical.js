@@ -1,10 +1,11 @@
 ﻿const url = 'https://localhost:44310/';
 
-document.getElementById("btnRegisterConsumer").disabled = false;
-document.getElementById("btnRegisterConsumer").textContent = "Registrar";
+document.getElementById("btnRegisterTechnical").disabled = false;
+document.getElementById("btnRegisterTechnical").textContent = "Registrar";
 
 window.addEventListener('load', function () {
 
+    loadSpecialties();
     loadDepartments();
 });
 
@@ -44,11 +45,11 @@ document.getElementById('sltDepartments').addEventListener("change", function ()
     });
 });
 
-document.getElementById("frmConsumerData").addEventListener("submit", function (event) {
+document.getElementById("frmTechnicianData").addEventListener("submit", function (event) {
 
     event.preventDefault();
 
-    const btnRegister = document.getElementById("btnRegisterConsumer");
+    const btnRegister = document.getElementById("btnRegisterTechnical");
 
     btnRegister.disabled = true;
     btnRegister.textContent = "Registrando información...";
@@ -56,9 +57,10 @@ document.getElementById("frmConsumerData").addEventListener("submit", function (
     const parameters = new FormData();
 
     parameters.append("Id", document.getElementById("iptId").value);
+    parameters.append("SpecialtyId", document.getElementById("sltSpecialties").value);
     parameters.append("DistrictId", document.getElementById("sltDistricts").value);
-    parameters.append("FirstName", document.getElementById("iptFirstName").value);
-    parameters.append("LastName", document.getElementById("iptLastName").value);
+    parameters.append("Firstname", document.getElementById("iptFirstName").value);
+    parameters.append("Lastname", document.getElementById("iptLastName").value);
     parameters.append("Age", document.getElementById("iptAge").value);
     parameters.append("Genre", document.getElementById("sltGenre").value);
     parameters.append("Phone", document.getElementById("iptPhone").value);
@@ -72,9 +74,52 @@ document.getElementById("frmConsumerData").addEventListener("submit", function (
         parameters.append("profile", profile);
     }
 
-    registerConsumer(parameters);
+    const criminalRecord = document.getElementById("iptCriminalRecord").files[0];
+
+    if (criminalRecord) {
+
+        parameters.append("criminalRecord", criminalRecord);
+    }
+
+    registerTechnical(parameters);
 });
 
+function loadSpecialties() {
+
+    const resource = url + 'access/all-specialties';
+
+    fetch(resource, {
+
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        }
+    })
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error("Network response was not ok.");
+        }
+
+        return response.json();
+    })
+    .then(data => {
+
+        let contentHtml = '';
+
+        for (const item of data) {
+
+            contentHtml += `<option value="${item.id}">${item.name}</option>`;
+        }
+
+        document.getElementById('sltSpecialties').innerHTML = contentHtml;
+    })
+    .catch(() => {
+
+        window.open(url + "home/error", "_self");
+    });
+}
 function loadDepartments() {
 
     const resource = url + 'locations/all-departments';
@@ -111,9 +156,9 @@ function loadDepartments() {
         window.open(url + "home/error", "_self");
     });
 }
-function registerConsumer(parameters) {
+function registerTechnical(parameters) {
 
-    const resource = url + 'access/register-consumer';
+    const resource = url + 'access/register-technical';
 
     fetch(resource, {
 
