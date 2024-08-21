@@ -2,9 +2,9 @@
 {
     public class User
     {
-        public int Username { get; private set; }
-        public string Password { get; private set; }
-        public string Role { get; private set; }
+        public int Username { get; set; }
+        public string Password { get; set; }
+        public string Role { get; set; }
 
         public User()
         {

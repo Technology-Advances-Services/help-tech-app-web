@@ -2,18 +2,18 @@
 {
     public class Job
     {
-        public int Id { get; private set; }
-        public int AgendaId { get; private set; }
-        public int ConsumerId { get; private set; }
-        public DateTime? AnswerDate { get; private set; }
-        public DateTime? WorkDate { get; private set; }
-        public string Address { get; private set; }
-        public string Description { get; private set; }
-        public decimal? Time { get; private set; }
-        public decimal? LaborBudget { get; private set; }
-        public decimal? MaterialBudget { get; private set; }
-        public decimal? AmountFinal { get; private set; }
-        public string JobState { get; private set; }
+        public int Id { get; set; }
+        public int AgendaId { get; set; }
+        public int ConsumerId { get; set; }
+        public DateTime? AnswerDate { get; set; }
+        public DateTime? WorkDate { get; set; }
+        public string Address { get; set; }
+        public string Description { get; set; }
+        public decimal? Time { get; set; }
+        public decimal? LaborBudget { get; set; }
+        public decimal? MaterialBudget { get; set; }
+        public decimal? AmountFinal { get; set; }
+        public string JobState { get; set; }
 
         public Job()
         {

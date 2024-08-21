@@ -2,9 +2,9 @@
 {
     public class District
     {
-        public int Id { get; private set; }
-        public int DepartmentId { get; private set; }
-        public string Name { get; private set; }
+        public int Id { get; set; }
+        public int DepartmentId { get; set; }
+        public string Name { get; set; }
 
         public District()
         {

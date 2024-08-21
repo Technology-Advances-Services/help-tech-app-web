@@ -2,8 +2,8 @@
 {
     public class CriminalRecord
     {
-        public int TechnicalId { get; private set; }
-        public string FileUrl { get; private set; }
+        public int TechnicalId { get; set; }
+        public string FileUrl { get; set; }
 
         public CriminalRecord()
         {

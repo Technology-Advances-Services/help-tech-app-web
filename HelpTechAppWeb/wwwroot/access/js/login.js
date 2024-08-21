@@ -16,7 +16,7 @@ document.getElementById("frmCredentials").addEventListener("submit", function (e
 
     credentials.append("Username", document.getElementById("iptUsername").value);
     credentials.append("Password", document.getElementById("iptPassword").value);
-    credentials.append("Role", document.getElementById("sltRole").value);
+    credentials.append("Role", document.getElementById("sltRoles").value);
 
     login(credentials);
 });

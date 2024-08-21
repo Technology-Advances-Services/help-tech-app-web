@@ -2,11 +2,11 @@
 {
     public class Review
     {
-        public int TechnicalId { get; private set; }
-        public int ConsumerId { get; private set; }
-        public int Score { get; private set; }
-        public string Opinion { get; private set; }
-        public string ReviewState { get; private set; }
+        public int TechnicalId { get; set; }
+        public int ConsumerId { get; set; }
+        public int Score { get; set; }
+        public string Opinion { get; set; }
+        public string ReviewState { get; set; }
 
         public Review()
         {

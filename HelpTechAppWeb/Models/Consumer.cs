@@ -2,16 +2,16 @@
 {
     public class Consumer
     {
-        public int Id { get; private set; }
-        public int DistrictId { get; private set; }
-        public string ProfileUrl { get; private set; }
-        public string Firstname { get; private set; }
-        public string Lastname { get; private set; }
-        public int Age { get; private set; }
-        public string Genre { get; private set; }
-        public int Phone { get; private set; }
-        public string Email { get; private set; }
-        public string Code { get; private set; }
+        public int Id { get; set; }
+        public int DistrictId { get; set; }
+        public string ProfileUrl { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public int Age { get; set; }
+        public string Genre { get; set; }
+        public int Phone { get; set; }
+        public string Email { get; set; }
+        public string Code { get; set; }
 
         public Consumer()
         {

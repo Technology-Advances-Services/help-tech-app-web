@@ -2,11 +2,11 @@
 {
     public class Chat
     {
-        public int ChatRoomId { get; private set; }
-        public int PersonId { get; private set; }
-        public DateTime ShippingDate { get; private set; }
-        public string Sender { get; private set; }
-        public string Message { get; private set; }
+        public int ChatRoomId { get; set; }
+        public int PersonId { get; set; }
+        public DateTime ShippingDate { get; set; }
+        public string Sender { get; set; }
+        public string Message { get; set; }
 
         public Chat()
         {

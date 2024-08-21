@@ -2,10 +2,10 @@
 {
     public class Membership
     {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
-        public decimal Price { get; private set; }
-        public string Policies { get; private set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public string Policies { get; set; }
 
         public Membership()
         {

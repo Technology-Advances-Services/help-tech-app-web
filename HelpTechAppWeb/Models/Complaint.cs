@@ -2,12 +2,12 @@
 {
     public class Complaint
     {
-        public int TypeComplaintId { get; private set; }
-        public int JobId { get; private set; }
-        public string Sender { get; private set; }
-        public DateTime RegistrationDate { get; private set; }
-        public string Description { get; private set; }
-        public string ComplaintState { get; private set; }
+        public int TypeComplaintId { get; set; }
+        public int JobId { get; set; }
+        public string Sender { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        public string Description { get; set; }
+        public string ComplaintState { get; set; }
 
         public Complaint()
         {

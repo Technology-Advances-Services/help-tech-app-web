@@ -2,13 +2,13 @@
 {
     public class Contract
     {
-        public int Id { get; private set; }
-        public int MembershipId { get; private set; }
-        public int? TechnicalId { get; private set; }
-        public int? ConsumerId { get; private set; }
-        public DateTime StartDate { get; private set; }
-        public DateTime FinalDate { get; private set; }
-        public string ContractState { get; private set; }
+        public int Id { get; set; }
+        public int MembershipId { get; set; }
+        public int? TechnicalId { get; set; }
+        public int? ConsumerId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime FinalDate { get; set; }
+        public string ContractState { get; set; }
 
         public Contract()
         {

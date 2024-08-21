@@ -2,9 +2,9 @@
 {
     public class ChatMember
     {
-        public int ChatRoomId { get; private set; }
-        public int? TechnicalId { get; private set; }
-        public int? ConsumerId { get; private set; }
+        public int ChatRoomId { get; set; }
+        public int? TechnicalId { get; set; }
+        public int? ConsumerId { get; set; }
 
         public ChatMember()
         {

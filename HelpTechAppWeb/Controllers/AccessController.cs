@@ -60,6 +60,7 @@ namespace HelpTechAppWeb.Controllers
 
         #region Json
 
+        [Route("login")]
         [HttpPost]
         public async Task<IActionResult> Login
             (Models.User user)
@@ -104,6 +105,7 @@ namespace HelpTechAppWeb.Controllers
             return validation;
         }
 
+        [Route("register-technical")]
         [HttpPost]
         public async Task<IActionResult> RegisterTechnical
             (Technical technical, IFormFile profile,
@@ -148,6 +150,7 @@ namespace HelpTechAppWeb.Controllers
             return RedirectToAction("Login", "Access");
         }
 
+        [Route("register-consumer")]
         [HttpPost]
         public async Task<IActionResult> RegisterConsumer
             (Consumer consumer, IFormFile profile)
