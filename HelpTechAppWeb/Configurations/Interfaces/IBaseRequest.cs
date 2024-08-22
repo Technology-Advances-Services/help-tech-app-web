@@ -1,4 +1,4 @@
-﻿namespace HelpTechAppWeb.Configuration.Interfaces
+﻿namespace HelpTechAppWeb.Configurations.Interfaces
 {
     public interface IBaseRequest<T> where T : class
     {

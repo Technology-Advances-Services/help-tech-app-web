@@ -1,4 +1,4 @@
-﻿namespace HelpTechAppWeb.Configuration.Request
+﻿namespace HelpTechAppWeb.Configurations.Requests
 {
     public class HttpClientSettings
     {

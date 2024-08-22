@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using HelpTechAppWeb.Configuration.Interfaces;
+using HelpTechAppWeb.Configurations.Interfaces;
 
-namespace HelpTechAppWeb.Configuration.Request
+namespace HelpTechAppWeb.Configurations.Requests
 {
     internal abstract class BaseRequest<T>
         (IHttpClientFactory httpClientFactory) :
