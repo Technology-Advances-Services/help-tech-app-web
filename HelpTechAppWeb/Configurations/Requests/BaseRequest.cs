@@ -5,7 +5,7 @@ using HelpTechAppWeb.Configurations.Interfaces;
 
 namespace HelpTechAppWeb.Configurations.Requests
 {
-    internal abstract class BaseRequest<T>
+    internal class BaseRequest<T>
         (IHttpClientFactory httpClientFactory) :
         IBaseRequest<T>
         where T : class

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
+using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Configurations.Requests;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
         options.SlidingExpiration = true;
     });
+
+#endregion
+
+#region Dependencies Injections
+
+builder.Services.AddScoped(typeof(IBaseRequest<>), typeof(BaseRequest<>));
 
 #endregion
 
