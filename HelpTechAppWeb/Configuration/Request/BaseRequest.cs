@@ -65,7 +65,8 @@ namespace HelpTechAppWeb.Configuration.Request
         }
 
         public async Task<T?> PostAsync
-            (string resource, string token, object content)
+            (string resource, string token,
+            object content)
         {
             _httpClient.DefaultRequestHeaders
                 .Authorization = new AuthenticationHeaderValue
