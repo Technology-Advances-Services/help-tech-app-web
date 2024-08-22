@@ -9,9 +9,9 @@
             HelpTechService = string.Empty;
         }
         public HttpClientSettings
-            (string baseAddress)
+            (string helpTechService)
         {
-            HelpTechService = baseAddress;
+            this.HelpTechService = helpTechService;
         }
     }
 }

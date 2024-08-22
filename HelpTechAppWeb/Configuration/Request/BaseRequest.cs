@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using HelpTechAppWeb.Configuration.Interfaces;
 
 namespace HelpTechAppWeb.Configuration.Request
 {
     internal class BaseRequest<T>
-        (IHttpClientFactory httpClientFactory)
+        (IHttpClientFactory httpClientFactory) :
+        IBaseRequest<T>
         where T : class
     {
         private readonly HttpClient _httpClient = httpClientFactory
