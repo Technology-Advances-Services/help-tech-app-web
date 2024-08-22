@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int AgendaId { get; set; }
-        public int ConsumerId { get; set; }
+        public string ConsumerId { get; set; }
         public DateTime? AnswerDate { get; set; }
         public DateTime? WorkDate { get; set; }
         public string Address { get; set; }
@@ -19,14 +19,14 @@
         {
             this.Id = 0;
             this.AgendaId = 0;
-            this.ConsumerId = 0;
+            this.ConsumerId = string.Empty;
             this.Address = string.Empty;
             this.Description = string.Empty;
             this.AmountFinal = 0;
             this.JobState = string.Empty;
         }
         public Job
-            (int id, int agendaId, int consumerId,
+            (int id, int agendaId, string consumerId,
             DateTime? answerDate, DateTime? workDate,
             string address, string description,
             decimal? time, decimal? laborBudget,
