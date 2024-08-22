@@ -3,8 +3,8 @@
     public class ChatMember
     {
         public int ChatRoomId { get; set; }
-        public int? TechnicalId { get; set; }
-        public int? ConsumerId { get; set; }
+        public string? TechnicalId { get; set; }
+        public string? ConsumerId { get; set; }
 
         public ChatMember()
         {
@@ -13,8 +13,8 @@
             this.ConsumerId = null;
         }
         public ChatMember
-            (int chatRoomId, int? technicalId,
-            int? consumerId)
+            (int chatRoomId, string? technicalId,
+            string? consumerId)
         {
             this.ChatRoomId = chatRoomId;
             this.TechnicalId = technicalId;
