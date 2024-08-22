@@ -1,32 +1,32 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using HelpTechAppWeb.Configurations.Interfaces;
+using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
     [Route("locations/")]
     [AllowAnonymous]
     public class LocationsController
-        (IHttpClientFactory httpClientFactory) :
+        (IBaseRequest<Department> baseRequestDepartment,
+        IBaseRequest<District> baseRequestDistrict) :
         Controller
     {
-        private readonly HttpClient _httpClient = httpClientFactory
-            .CreateClient("HelpTechService");
-
         #region Json
 
         [Route("all-departments")]
         [HttpGet]
         public async Task<IActionResult> AllDepartments()
         {
-            var httpResponseMessage = await _httpClient
+            var result = await baseRequestDepartment
                 .GetAsync("locations/all-departments");
 
-            if (httpResponseMessage.IsSuccessStatusCode is false)
+            if (result is null)
                 return RedirectToAction("Error", "Home");
 
-            return Content(await httpResponseMessage
-                .Content.ReadAsStringAsync(),
-                "application/json");
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
         }
 
         [Route("districts-by-department")]
@@ -34,15 +34,14 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> DistrictsByDepartment
             (int departmentId)
         {
-            var httpResponseMessage = await _httpClient
+            var result = await baseRequestDistrict
                 .GetAsync("locations/districts-by-department?departmentId=" + departmentId);
 
-            if (httpResponseMessage.IsSuccessStatusCode is false)
+            if (result is null)
                 return RedirectToAction("Error", "Home");
 
-            return Content(await httpResponseMessage
-                .Content.ReadAsStringAsync(),
-                "application/json");
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
         }
 
         #endregion
