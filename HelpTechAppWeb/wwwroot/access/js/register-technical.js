@@ -86,7 +86,7 @@ document.getElementById("frmTechnicianData").addEventListener("submit", function
 
 function loadSpecialties() {
 
-    const resource = url + 'access/all-specialties';
+    const resource = url + 'specialties/all-specialties';
 
     fetch(resource, {
 

@@ -178,21 +178,6 @@ namespace HelpTechAppWeb.Controllers
             return RedirectToAction("Login", "Access");
         }
 
-        [Route("all-specialties")]
-        [HttpGet]
-        public async Task<IActionResult> AllSpecialties()
-        {
-            var httpResponseMessage = await _httpClient
-                .GetAsync("access/all-specialties");
-
-            if (httpResponseMessage.IsSuccessStatusCode is false)
-                return RedirectToAction("Error", "Home");
-
-            return Content(await httpResponseMessage
-                .Content.ReadAsStringAsync(),
-                "application/json");
-        }
-
         #endregion
 
         #region FireBase
