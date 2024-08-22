@@ -2,22 +2,22 @@
 {
     public class Review
     {
-        public int TechnicalId { get; set; }
-        public int ConsumerId { get; set; }
+        public string TechnicalId { get; set; }
+        public string ConsumerId { get; set; }
         public int Score { get; set; }
         public string Opinion { get; set; }
         public string ReviewState { get; set; }
 
         public Review()
         {
-            this.TechnicalId = 0;
-            this.ConsumerId = 0;
+            this.TechnicalId = string.Empty;
+            this.ConsumerId = string.Empty;
             this.Score = 0;
             this.Opinion = string.Empty;
             this.ReviewState = string.Empty;
         }
         public Review
-            (int technicalId, int consumerId,
+            (string technicalId, string consumerId,
             int score, string opinion,
             string reviewState)
         {
