@@ -2,16 +2,16 @@
 {
     public class CriminalRecord
     {
-        public int TechnicalId { get; set; }
+        public string TechnicalId { get; set; }
         public string FileUrl { get; set; }
 
         public CriminalRecord()
         {
-            this.TechnicalId = 0;
+            this.TechnicalId = string.Empty;
             this.FileUrl = string.Empty;
         }
         public CriminalRecord
-            (int technicalId, string fileUrl)
+            (string technicalId, string fileUrl)
         {
             this.TechnicalId = technicalId;
             this.FileUrl = fileUrl;
