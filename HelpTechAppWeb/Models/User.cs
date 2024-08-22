@@ -2,18 +2,18 @@
 {
     public class User
     {
-        public int Username { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
 
         public User()
         {
-            this.Username = 0;
+            this.Username = string.Empty;
             this.Password = string.Empty;
             this.Role = string.Empty;
         }
         public User
-            (int username, string password,
+            (string username, string password,
             string role)
         {
             this.Username = username;
