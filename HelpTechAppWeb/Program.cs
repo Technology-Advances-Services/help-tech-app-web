@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
-using HelpTechAppWeb.Models;
+using HelpTechAppWeb.Configuration.Request;
 
 var builder = WebApplication.CreateBuilder(args);
 

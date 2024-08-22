@@ -32,7 +32,7 @@ namespace HelpTechAppWeb.Controllers
         public IActionResult Login()
         {
             if (User?.Identity?.IsAuthenticated == true)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("InterfaceTechnical", "Technical");
 
             return View();
         }

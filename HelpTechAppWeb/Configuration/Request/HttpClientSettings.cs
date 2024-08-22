@@ -1,4 +1,4 @@
-﻿namespace HelpTechAppWeb.Models
+﻿namespace HelpTechAppWeb.Configuration.Request
 {
     public class HttpClientSettings
     {
@@ -6,12 +6,12 @@
 
         public HttpClientSettings()
         {
-            this.HelpTechService = string.Empty;
+            HelpTechService = string.Empty;
         }
         public HttpClientSettings
             (string baseAddress)
         {
-            this.HelpTechService = baseAddress;
+            HelpTechService = baseAddress;
         }
     }
 }

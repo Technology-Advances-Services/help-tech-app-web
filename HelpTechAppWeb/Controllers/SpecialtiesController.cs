@@ -12,6 +12,8 @@ namespace HelpTechAppWeb.Controllers
         private readonly HttpClient _httpClient = httpClientFactory
             .CreateClient("HelpTechService");
 
+        #region Json
+
         [Route("all-specialties")]
         [HttpGet]
         public async Task<IActionResult> AllSpecialties()
@@ -26,5 +28,7 @@ namespace HelpTechAppWeb.Controllers
                 .Content.ReadAsStringAsync(),
                 "application/json");
         }
+
+        #endregion
     }
 }
