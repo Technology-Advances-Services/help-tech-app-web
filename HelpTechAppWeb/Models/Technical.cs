@@ -2,7 +2,7 @@
 {
     public class Technical
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int SpecialtyId { get; set; }
         public int DistrictId { get; set; }
         public string ProfileUrl { get; set; }
@@ -17,7 +17,7 @@
 
         public Technical()
         {
-            this.Id = 0;
+            this.Id = string.Empty;
             this.SpecialtyId = 0;
             this.DistrictId = 0;
             this.ProfileUrl = string.Empty;
@@ -32,7 +32,7 @@
         }
 
         public Technical
-            (int id, int specialtyId, int districtId,
+            (string id, int specialtyId, int districtId,
             string profileUrl, string firstname,
             string lastname, int age, string genre,
             int phone, string email, string code,
