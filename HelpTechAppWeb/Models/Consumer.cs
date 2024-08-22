@@ -2,7 +2,7 @@
 {
     public class Consumer
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int DistrictId { get; set; }
         public string ProfileUrl { get; set; }
         public string Firstname { get; set; }
@@ -15,7 +15,7 @@
 
         public Consumer()
         {
-            this.Id = 0;
+            this.Id = string.Empty;
             this.DistrictId = 0;
             this.ProfileUrl = string.Empty;
             this.Firstname = string.Empty;
@@ -28,7 +28,7 @@
         }
 
         public Consumer
-            (int id, int districtId, string profileUrl,
+            (string id, int districtId, string profileUrl,
             string firstname,string lastname, int age,
             string genre, int phone, string email,
             string code)
