@@ -38,7 +38,7 @@ app.UseCors(
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/home/error");
     app.UseHsts();
 }
 
