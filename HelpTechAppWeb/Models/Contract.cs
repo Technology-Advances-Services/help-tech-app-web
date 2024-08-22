@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
         public int MembershipId { get; set; }
-        public int? TechnicalId { get; set; }
-        public int? ConsumerId { get; set; }
+        public string? TechnicalId { get; set; }
+        public string? ConsumerId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinalDate { get; set; }
         public string ContractState { get; set; }
@@ -14,15 +14,15 @@
         {
             this.Id = 0;
             this.MembershipId = 0;
-            this.TechnicalId = 0;
-            this.ConsumerId = 0;
+            this.TechnicalId = string.Empty;
+            this.ConsumerId = string.Empty;
             this.StartDate = DateTime.MinValue;
             this.FinalDate = DateTime.MinValue;
             this.ContractState = string.Empty;
         }
         public Contract
             (int id, int membershipId,
-            int? technicalId, int? consumerId,
+            string? technicalId, string? consumerId,
             DateTime startDate, DateTime finalDate,
             string contractState)
         {
