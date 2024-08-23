@@ -2,15 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using HelpTechAppWeb.Configurations.Interfaces;
-using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
     [Route("locations/")]
     [AllowAnonymous]
     public class LocationsController
-        (IBaseRequest<Department> baseRequestDepartment,
-        IBaseRequest<District> baseRequestDistrict) :
+        (IBaseRequest baseRequest) :
         Controller
     {
         #region Json
@@ -19,8 +17,8 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> AllDepartments()
         {
-            var result = await baseRequestDepartment
-                .GetAsync("locations/all-departments");
+            var result = await baseRequest.GetAsync
+                ("locations/all-departments");
 
             if (result is null)
                 return RedirectToAction("Error", "Home");
@@ -34,8 +32,9 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> DistrictsByDepartment
             (int departmentId)
         {
-            var result = await baseRequestDistrict
-                .GetAsync("locations/districts-by-department?departmentId=" + departmentId);
+            var result = await baseRequest.GetAsync
+                ("locations/districts-by-department?departmentId=" +
+                departmentId);
 
             if (result is null)
                 return RedirectToAction("Error", "Home");

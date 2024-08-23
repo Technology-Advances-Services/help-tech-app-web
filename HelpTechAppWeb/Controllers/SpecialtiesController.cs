@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using HelpTechAppWeb.Configurations.Interfaces;
-using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
     [Route("specialties/")]
     [AllowAnonymous]
     public class SpecialtiesController
-        (IBaseRequest<Specialty> baseRequestSpecialty) :
+        (IBaseRequest baseRequest) :
         Controller
     {
         #region Json
@@ -18,7 +17,7 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> AllSpecialties()
         {
-            var result = await baseRequestSpecialty
+            var result = await baseRequest
                 .GetAsync("specialties/all-specialties");
 
             if (result is null)
