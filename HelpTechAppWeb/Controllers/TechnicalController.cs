@@ -14,6 +14,7 @@ namespace HelpTechAppWeb.Controllers
         Controller
     {
         private string _token = string.Empty;
+        private string _technicalId = string.Empty;
         private ClaimsPrincipal? _claimsPrincipal;
 
         #region Views
@@ -38,22 +39,21 @@ namespace HelpTechAppWeb.Controllers
 
         #region Json
 
-        public async Task<IActionResult> JobsByTechnical
-            (string technicalId)
+        public async Task<IActionResult> JobsByTechnical()
         {
             _claimsPrincipal = HttpContext.User;
 
-            if (_claimsPrincipal.FindFirst
-                (ClaimTypes.Name)?.Value == null)
-                return RedirectToAction("Error", "Home");
-
             _token = _claimsPrincipal
+                .FindFirst(ClaimTypes.Hash)?
+                .Value.ToString() ?? string.Empty;
+
+            _technicalId = _claimsPrincipal
                 .FindFirst(ClaimTypes.Name)?
-                .Value.ToString() ?? "";
+                .Value.ToString() ?? string.Empty;
 
             var jobs = await baseRequest.GetAsync<Job>
                 ("jobs/jobs-by-technical?technicalId=" +
-                technicalId, _token);
+                _technicalId, _token);
 
             if (jobs is null)
                 return RedirectToAction("Error", "Home");
@@ -100,6 +100,29 @@ namespace HelpTechAppWeb.Controllers
 
             return Content(JsonConvert.SerializeObject
                 (queryAsync), "application/json");
+        }
+
+        public async Task<IActionResult> GeneralTechnicalStatistic()
+        {
+            _claimsPrincipal = HttpContext.User;
+
+            _token = _claimsPrincipal
+                .FindFirst(ClaimTypes.Hash)?
+                .Value.ToString() ?? string.Empty;
+
+            _technicalId = _claimsPrincipal
+                .FindFirst(ClaimTypes.Name)?
+                .Value.ToString() ?? string.Empty;
+
+            var result = await baseRequest.GetSingleAsync
+                <dynamic>("statistics/general-technical-statistic?technicalId=" +
+                _technicalId, _token);
+
+            if (result is null)
+                return RedirectToAction("Error", "Home");
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
         }
 
         #endregion
