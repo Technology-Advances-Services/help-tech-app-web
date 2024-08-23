@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using HelpTechAppWeb.Configurations.Interfaces;
+using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -18,7 +19,8 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> AllSpecialties()
         {
             var result = await baseRequest
-                .GetAsync("specialties/all-specialties");
+                .GetAsync<IEnumerable<Specialty>>
+                ("specialties/all-specialties");
 
             if (result is null)
                 return RedirectToAction("Error", "Home");
