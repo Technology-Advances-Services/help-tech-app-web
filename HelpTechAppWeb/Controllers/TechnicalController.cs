@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
+using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -50,6 +51,7 @@ namespace HelpTechAppWeb.Controllers
                 .Value.ToString() ?? "";
 
             var jobs = await baseRequest.GetAsync
+                <IEnumerable<Job>>
                 ("jobs/jobs-by-technical?technicalId=" +
                 technicalId, _token);
 
