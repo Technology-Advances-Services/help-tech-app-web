@@ -18,28 +18,28 @@ setInterval(refreshInterfaceData, 60000);
 
 document.getElementById("btnInterfaceTechnical").addEventListener("click", function () {
 
-    window.location.href = url + 'technical/interface-technical';
+    window.location.href = url + 'technicals/interface-technical';
 
     return false;
 });
 
-document.getElementById("btnStatisticalReport").addEventListener("click", function () {
+document.getElementById("btnStatisticReport").addEventListener("click", function () {
 
-    window.open(url + 'technical/statistical-report', '_blank');
+    window.open(url + 'technicals/statisticl-report', '_blank');
 
     return false;
 });
 
 document.getElementById("btnReportReviews").addEventListener("click", function () {
 
-    window.open(url + 'technical/report-reviews', '_blank');
+    window.open(url + 'technicals/report-reviews', '_blank');
 
     return false;
 });
 
 document.getElementById("btnJobsResponses").addEventListener("click", function () {
 
-    window.open('technical/jobs-responses', '_blank');
+    window.open('technicals/jobs-responses', '_blank');
 
     return false;
 });
@@ -105,7 +105,7 @@ document.getElementById("uChatsMembers").addEventListener("click", function (eve
 
 function refreshInterfaceData() {
 
-    let resource = url + 'technical/general-technical-statistic';
+    let resource = url + 'technicals/general-technical-statistic';
 
     fetch(resource, {
 
@@ -190,7 +190,7 @@ function refreshInterfaceData() {
 }
 function loadInformationTechnical() {
 
-    const resource = url + 'techninal/information-technical';
+    const resource = url + 'techninals/information-technical';
 
     fetch(resource, {
 

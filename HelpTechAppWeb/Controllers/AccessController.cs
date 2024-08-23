@@ -83,8 +83,8 @@ namespace HelpTechAppWeb.Controllers
 
             var validation = user.Role switch
             {
-                "TECNICO" => RedirectToAction("InterfaceTechnical", "Technical"),
-                "CONSUMIDOR" => RedirectToAction("InterfaceConsumer", "Consumer"),
+                "TECNICO" => RedirectToAction("InterfaceTechnical", "Technicals"),
+                "CONSUMIDOR" => RedirectToAction("InterfaceConsumer", "Consumers"),
                 _ => RedirectToAction("Error", "Home")
             };
 
