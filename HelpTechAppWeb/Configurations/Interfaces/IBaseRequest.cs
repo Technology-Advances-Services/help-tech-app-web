@@ -1,17 +1,17 @@
 ﻿namespace HelpTechAppWeb.Configurations.Interfaces
 {
-    public interface IBaseRequest<T> where T : class
+    public interface IBaseRequest
     {
-        Task<T?> GetAsync
+        Task<dynamic?> GetAsync
             (string resource);
 
-        Task<T?> GetAsync
+        Task<dynamic?> GetAsync
             (string resource, string token);
 
-        Task<T?> PostAsync
+        Task<dynamic?> PostAsync
             (string resource, object content);
 
-        Task<T?> PostAsync
+        Task<dynamic?> PostAsync
             (string resource, string token,
             object content);
     }

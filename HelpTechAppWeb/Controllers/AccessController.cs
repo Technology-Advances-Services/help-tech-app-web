@@ -4,24 +4,20 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Security.Claims;
-using System.Text;
 using HelpTechAppWeb.Models;
+using HelpTechAppWeb.Configurations.Interfaces;
 
 namespace HelpTechAppWeb.Controllers
 {
     [Route("access/")]
     [AllowAnonymous]
     public class AccessController
-        (IHttpClientFactory httpClientFactory,
+        (IBaseRequest baseRequest,
         IWebHostEnvironment webHostEnvironment,
         IConfiguration configuration) :
         Controller
     {
-        private readonly HttpClient _httpClient = httpClientFactory
-            .CreateClient("HelpTechService");
-
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
         #region Views
@@ -65,18 +61,8 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> Login
             (Models.User user)
         {
-            var httpContent = new StringContent
-                (JsonConvert.SerializeObject(user),
-                Encoding.UTF8, "application/json");
-
-            var httpResponseMessage = await _httpClient
-                .PostAsync("access/login", httpContent);
-
-            if (httpResponseMessage.IsSuccessStatusCode is false)
-                return RedirectToAction("Error", "Home");
-
-            var result = await httpResponseMessage
-                .Content.ReadAsStringAsync();
+            var result = await baseRequest.PostAsync
+                ("access/login", user);
 
             if (string.IsNullOrEmpty(result))
                 return RedirectToAction("Error", "Home");
@@ -117,34 +103,28 @@ namespace HelpTechAppWeb.Controllers
             if (result is null)
                 return RedirectToAction("Error", "Home");
 
-            var json = JsonConvert.SerializeObject
-                (new Technical(technical.Id, technical.SpecialtyId,
-                technical.DistrictId, result.ProfileUrl,
+            var profileUrl = result.ProfileUrl;
+            var criminalRecordUrl = result.CriminalRecordUrl;
+
+            technical = new Technical
+                (technical.Id, technical.SpecialtyId,
+                technical.DistrictId, profileUrl,
                 technical.Firstname, technical.Lastname,
                 technical.Age, technical.Genre, technical.Phone,
-                technical.Email, technical.Code, string.Empty));
+                technical.Email, technical.Code, string.Empty);
 
-            var httpContent = new StringContent
-                (json, Encoding.UTF8, "application/json");
+            result = baseRequest.PostAsync
+                ("access/register-technical", technical);
 
-            var httpResponseMessage = await _httpClient
-                .PostAsync("access/register-technical", httpContent);
-
-            if (httpResponseMessage.IsSuccessStatusCode is false)
+            if (result is false)
                 return RedirectToAction("Error", "Home");
 
-            json = JsonConvert.SerializeObject
-                (new CriminalRecord(technical.Id,
-                result.CriminalRecordUrl));
+            result = await baseRequest.PostAsync
+                ("access/add-criminal-record-to-technical",
+                new CriminalRecord(technical.Id,
+                criminalRecordUrl));
 
-            httpContent = new StringContent
-                (json, Encoding.UTF8, "application/json");
-
-            httpResponseMessage = await _httpClient
-                .PostAsync("access/add-criminal-record-to-technical",
-                httpContent);
-
-            if (httpResponseMessage.IsSuccessStatusCode is false)
+            if (result is false)
                 return RedirectToAction("Error", "Home");
 
             return RedirectToAction("Login", "Access");
@@ -155,24 +135,21 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> RegisterConsumer
             (Consumer consumer, IFormFile profile)
         {
-            var result = await UploadConsumerFiles(profile);
+            dynamic? result = await UploadConsumerFiles(profile);
 
             if (string.IsNullOrEmpty(result) is false)
                 return RedirectToAction("Error", "Home");
 
-            var json = JsonConvert.SerializeObject
-                (new Consumer(consumer.Id, consumer.DistrictId,
+            consumer = new Consumer
+                (consumer.Id, consumer.DistrictId,
                 result, consumer.Firstname, consumer.Lastname,
                 consumer.Age, consumer.Genre, consumer.Phone,
-                consumer.Email, consumer.Code));
+                consumer.Email, consumer.Code);
 
-            var httpContent = new StringContent
-                (json, Encoding.UTF8, "application/json");
+            result = await baseRequest.PostAsync
+                ("access/register-consumer", consumer);
 
-            var httpResponseMessage = await _httpClient
-                .PostAsync("access/register-consumer", httpContent);
-
-            if (httpResponseMessage.IsSuccessStatusCode is false)
+            if (result is false)
                 return RedirectToAction("Error", "Home");
 
             return RedirectToAction("Login", "Access");

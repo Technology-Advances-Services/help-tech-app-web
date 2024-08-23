@@ -5,15 +5,14 @@ using HelpTechAppWeb.Configurations.Interfaces;
 
 namespace HelpTechAppWeb.Configurations.Requests
 {
-    internal class BaseRequest<T>
+    internal class BaseRequest
         (IHttpClientFactory httpClientFactory) :
-        IBaseRequest<T>
-        where T : class
+        IBaseRequest
     {
         private readonly HttpClient _httpClient = httpClientFactory
             .CreateClient("HelpTechService");
 
-        public async Task<T?> GetAsync
+        public async Task<dynamic?> GetAsync
             (string resource)
         {
             var httpResponseMessage = await _httpClient
@@ -22,13 +21,13 @@ namespace HelpTechAppWeb.Configurations.Requests
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return default;
 
-            var result = JsonConvert.DeserializeObject<T>
+            var result = JsonConvert.DeserializeObject<dynamic?>
                 (await httpResponseMessage.Content.ReadAsStringAsync());
 
             return result;
         }
 
-        public async Task<T?> GetAsync
+        public async Task<dynamic?> GetAsync
             (string resource, string token)
         {
             _httpClient.DefaultRequestHeaders
@@ -41,13 +40,13 @@ namespace HelpTechAppWeb.Configurations.Requests
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return default;
 
-            var result = JsonConvert.DeserializeObject<T>
+            var result = JsonConvert.DeserializeObject<dynamic?>
                 (await httpResponseMessage.Content.ReadAsStringAsync());
 
             return result;
         }
 
-        public async Task<T?> PostAsync
+        public async Task<dynamic?> PostAsync
             (string resource, object content)
         {
             var stringContent = new StringContent
@@ -60,13 +59,13 @@ namespace HelpTechAppWeb.Configurations.Requests
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return default;
 
-            var result = JsonConvert.DeserializeObject<T>
+            var result = JsonConvert.DeserializeObject<dynamic?>
                 (await httpResponseMessage.Content.ReadAsStringAsync());
 
             return result;
         }
 
-        public async Task<T?> PostAsync
+        public async Task<dynamic?> PostAsync
             (string resource, string token,
             object content)
         {
@@ -84,7 +83,7 @@ namespace HelpTechAppWeb.Configurations.Requests
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return default;
 
-            var result = JsonConvert.DeserializeObject<T>
+            var result = JsonConvert.DeserializeObject<dynamic?>
                 (await httpResponseMessage.Content.ReadAsStringAsync());
 
             return result;
