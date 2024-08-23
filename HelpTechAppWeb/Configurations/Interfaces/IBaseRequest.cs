@@ -2,7 +2,7 @@
 {
     public interface IBaseRequest
     {
-        Task<bool> PostAsync<T>
+        Task<dynamic?> PostAsync<T>
             (string resource, T content);
 
         Task<bool> PostAsync<T>

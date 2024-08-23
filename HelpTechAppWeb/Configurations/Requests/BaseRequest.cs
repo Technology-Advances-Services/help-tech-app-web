@@ -12,7 +12,7 @@ namespace HelpTechAppWeb.Configurations.Requests
         private readonly HttpClient _httpClient = httpClientFactory
             .CreateClient("HelpTechService");
 
-        public async Task<bool> PostAsync<T>
+        public async Task<dynamic?> PostAsync<T>
             (string resource, T content)
         {
             var stringContent = new StringContent
