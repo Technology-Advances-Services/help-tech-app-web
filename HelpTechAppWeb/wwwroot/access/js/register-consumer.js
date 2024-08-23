@@ -13,9 +13,11 @@ document.getElementById('sltDepartments').addEventListener("change", function ()
     const resource = url + 'locations/districts-by-department?departmentId=' + this.value;
 
     fetch(resource, {
-        method: "GET",
+
+        method: 'GET',
         headers: {
-            "Content-Type": "application/json; charset=utf-8"
+
+            'Content-Type': 'application/json; charset=utf-8'
         }
     })
     .then(response => {
@@ -33,7 +35,7 @@ document.getElementById('sltDepartments').addEventListener("change", function ()
 
         for (const item of data) {
 
-            contentHtml += `<option value="${item.id}">${item.name}</option>`;
+            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
         }
 
         document.getElementById('sltDistricts').innerHTML = contentHtml;
@@ -81,9 +83,10 @@ function loadDepartments() {
 
     fetch(resource, {
 
-        method: "GET",
+        method: 'GET',
         headers: {
-            "Content-Type": "application/json; charset=utf-8"
+
+            'Content-Type': 'application/json; charset=utf-8'
         }
     })
     .then(response => {
@@ -101,7 +104,7 @@ function loadDepartments() {
 
         for (const item of data) {
 
-            contentHtml += `<option value="${item.id}">${item.name}</option>`;
+            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
         }
 
         document.getElementById('sltDepartments').innerHTML = contentHtml;
@@ -117,7 +120,7 @@ function registerConsumer(parameters) {
 
     fetch(resource, {
 
-        method: "POST",
+        method: 'POST',
         body: parameters,
         cache: "no-cache"
     })

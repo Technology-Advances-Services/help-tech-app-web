@@ -111,7 +111,8 @@ function refreshInterfaceData() {
 
         method: 'GET',
         headers: {
-            'Accept': 'application/json'
+
+            'Content-Type': 'application/json; charset=utf-8'
         }
     })
     .then(response => {
@@ -141,7 +142,8 @@ function refreshInterfaceData() {
 
         method: 'GET',
         headers: {
-            'Accept': 'application/json'
+
+            'Content-Type': 'application/json; charset=utf-8'
         }
     })
     .then(response => {
@@ -230,7 +232,7 @@ function loadJobsByTechnical() {
 
         method: 'GET',
         headers: {
-            'Accept': 'application/json'
+            'Content-Type': 'application/json; charset=utf-8'
         }
     })
     .then(response => {

@@ -27,7 +27,7 @@ function login(credentials) {
 
     fetch(resource, {
 
-        method: "POST",
+        method: 'POST',
         body: credentials,
         cache: "no-cache"
     })
