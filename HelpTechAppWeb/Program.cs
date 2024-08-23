@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 #region Dependencies Injections
 
-builder.Services.AddScoped(typeof(IBaseRequest<>), typeof(BaseRequest<>));
+builder.Services.AddScoped<IBaseRequest, BaseRequest>();
 
 #endregion
 
