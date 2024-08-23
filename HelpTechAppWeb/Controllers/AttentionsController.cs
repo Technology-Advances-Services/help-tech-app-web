@@ -13,8 +13,6 @@ namespace HelpTechAppWeb.Controllers
         (IBaseRequest baseRequest) :
         Controller
     {
-        private string _token = string.Empty;
-        private string _technicalId = string.Empty;
         private ClaimsPrincipal? _claimsPrincipal;
 
         #region Json
@@ -23,18 +21,9 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> JobsByTechnical()
         {
-            _claimsPrincipal = HttpContext.User;
-            _token = _claimsPrincipal
-                .FindFirst(ClaimTypes.Hash)?
-                .Value.ToString() ?? string.Empty;
-
-            _technicalId = _claimsPrincipal
-                .FindFirst(ClaimTypes.Name)?
-                .Value.ToString() ?? string.Empty;
-
             var jobs = await baseRequest.GetAsync<Job>
                 ("jobs/jobs-by-technical?technicalId=" +
-                _technicalId, _token);
+                GetTechnicalId(), GetToken());
 
             if (jobs is null)
                 return RedirectToAction("Error", "Home");
@@ -47,8 +36,8 @@ namespace HelpTechAppWeb.Controllers
 
                 var consumer = await baseRequest
                     .GetSingleAsync<Consumer>
-                    ($"informations/consumer-by-id/consumerId={consumerId}",
-                    _token);
+                    ("informations/consumer-by-id/consumerId=" + consumerId,
+                    GetToken());
 
                 if (consumer is null)
                     return;
@@ -81,6 +70,28 @@ namespace HelpTechAppWeb.Controllers
 
             return Content(JsonConvert.SerializeObject
                 (queryAsync), "application/json");
+        }
+
+        #endregion
+
+        #region Cookies
+
+        private string GetToken()
+        {
+            _claimsPrincipal = HttpContext.User;
+
+            return _claimsPrincipal
+                .FindFirst(ClaimTypes.Hash)?
+                .Value.ToString() ?? string.Empty;
+        }
+
+        private string GetTechnicalId()
+        {
+            _claimsPrincipal = HttpContext.User;
+
+            return _claimsPrincipal
+                .FindFirst(ClaimTypes.Name)?
+                .Value.ToString() ?? string.Empty;
         }
 
         #endregion
