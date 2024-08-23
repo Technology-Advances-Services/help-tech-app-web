@@ -18,8 +18,7 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> AllDepartments()
         {
-            var result = await baseRequest.GetAsync
-                <IEnumerable<Department>>
+            var result = await baseRequest.GetAsync<Department>
                 ("locations/all-departments");
 
             if (result is null)
@@ -34,8 +33,7 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> DistrictsByDepartment
             (int departmentId)
         {
-            var result = await baseRequest.GetAsync
-                <IEnumerable<District>>
+            var result = await baseRequest.GetAsync<District>
                 ("locations/districts-by-department?departmentId=" +
                 departmentId);
 

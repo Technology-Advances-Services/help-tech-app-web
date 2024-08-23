@@ -19,7 +19,7 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> AllSpecialties()
         {
             var result = await baseRequest
-                .GetAsync<IEnumerable<Specialty>>
+                .GetAsync<Specialty>
                 ("specialties/all-specialties");
 
             if (result is null)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
@@ -50,15 +51,55 @@ namespace HelpTechAppWeb.Controllers
                 .FindFirst(ClaimTypes.Name)?
                 .Value.ToString() ?? "";
 
-            var jobs = await baseRequest.GetAsync
-                <IEnumerable<Job>>
+            var jobs = await baseRequest.GetAsync<Job>
                 ("jobs/jobs-by-technical?technicalId=" +
                 technicalId, _token);
 
             if (jobs is null)
                 return RedirectToAction("Error", "Home");
 
-            return Content("", "application/json");
+            var consumers = new List<Consumer>();
+
+            Parallel.ForEach(jobs, async j =>
+            {
+                var consumerId = j.ConsumerId;
+
+                var consumer = await baseRequest
+                    .GetSingleAsync<Consumer>
+                    ($"informations/consumer-by-id/consumerId={consumerId}",
+                    _token);
+
+                if (consumer is null)
+                    return;
+
+                lock (consumers)
+                    consumers.Add(consumer);
+            });
+
+            Task<dynamic> queryAsync = new(() =>
+            {
+                return
+                (from j in jobs
+                 join c in consumers
+                 on j.ConsumerId equals c.Id
+                 select new
+                 {
+                     j.Id,
+                     ConsumerId = c.Id,
+                     c.Firstname,
+                     c.Lastname,
+                     c.Phone,
+                     j.Description,
+                     j.WorkDate,
+                     j.LaborBudget,
+                     j.MaterialBudget,
+                     j.AmountFinal,
+                     j.JobState,
+                 });
+            });
+
+            return Content(JsonConvert.SerializeObject
+                (queryAsync), "application/json");
         }
 
         #endregion
