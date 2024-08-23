@@ -1,27 +1,23 @@
-﻿using HelpTechAppWeb.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
 using System.Security.Claims;
+using HelpTechAppWeb.Configurations.Interfaces;
 
 namespace HelpTechAppWeb.Controllers
 {
     [Route("technical/")]
     [Authorize(Roles = "TECNICO")]
     public class TechnicalController
-        (IHttpClientFactory httpClientFactory) :
+        (IBaseRequest baseRequest) :
         Controller
     {
-        private readonly HttpClient _httpClient = httpClientFactory
-            .CreateClient("HelpTechService");
-
         private string _token = string.Empty;
-
         private ClaimsPrincipal? _claimsPrincipal;
 
         #region Views
 
+        [Route("interface-technical")]
+        [HttpGet]
         public IActionResult InterfaceTechnical()
         {
             _claimsPrincipal = HttpContext.User;
@@ -53,18 +49,12 @@ namespace HelpTechAppWeb.Controllers
                 .FindFirst(ClaimTypes.Name)?
                 .Value.ToString() ?? "";
 
-            _httpClient.DefaultRequestHeaders
-                .Authorization = new AuthenticationHeaderValue
-                ("Bearer", _token);
+            var jobs = await baseRequest.GetAsync
+                ("jobs/jobs-by-technical?technicalId=" +
+                technicalId, _token);
 
-            var httpResponseMessage = await _httpClient.GetAsync
-                ("jobs/jobs-by-technical?technicalId=" + technicalId);
-
-            if (!httpResponseMessage.IsSuccessStatusCode)
+            if (jobs is null)
                 return RedirectToAction("Error", "Home");
-
-            var resultJob = JsonConvert.DeserializeObject<Job>
-                (await httpResponseMessage.Content.ReadAsStringAsync());
 
             return Content("", "application/json");
         }

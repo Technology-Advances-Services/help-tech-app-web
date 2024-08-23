@@ -2,17 +2,23 @@
 {
     public interface IBaseRequest
     {
-        Task<dynamic?> GetAsync
+        Task<bool> PostAsync<T>
+            (string resource, T content);
+
+        Task<bool> PostAsync<T>
+            (string resource, string token,
+            T content);
+
+        Task<IEnumerable<T>> GetAsync<T>
             (string resource);
 
-        Task<dynamic?> GetAsync
+        Task<IEnumerable<T>> GetAsync<T>
             (string resource, string token);
 
-        Task<dynamic?> PostAsync
-            (string resource, object content);
+        Task<T?> GetSingleAsync<T>
+            (string resource);
 
-        Task<dynamic?> PostAsync
-            (string resource, string token,
-            object content);
+        Task<T?> GetSingleAsync<T>
+            (string resource, string token);
     }
 }

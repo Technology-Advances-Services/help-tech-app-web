@@ -12,7 +12,86 @@ namespace HelpTechAppWeb.Configurations.Requests
         private readonly HttpClient _httpClient = httpClientFactory
             .CreateClient("HelpTechService");
 
-        public async Task<dynamic?> GetAsync
+        public async Task<bool> PostAsync<T>
+            (string resource, T content)
+        {
+            var stringContent = new StringContent
+                (JsonConvert.SerializeObject(content),
+                Encoding.UTF8, "application/json");
+
+            var httpResponseMessage = await _httpClient
+                .PostAsync(resource, stringContent);
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+                return default;
+
+            var result = JsonConvert.DeserializeObject<bool>
+                (await httpResponseMessage.Content.ReadAsStringAsync());
+
+            return result;
+        }
+
+        public async Task<bool> PostAsync<T>
+            (string resource, string token,
+            T content)
+        {
+            _httpClient.DefaultRequestHeaders
+                .Authorization = new AuthenticationHeaderValue
+                ("Bearer", token);
+
+            var stringContent = new StringContent
+                (JsonConvert.SerializeObject(content),
+                Encoding.UTF8, "application/json");
+
+            var httpResponseMessage = await _httpClient
+                .PostAsync(resource, stringContent);
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+                return default;
+
+            var result = JsonConvert.DeserializeObject<bool>
+                (await httpResponseMessage.Content.ReadAsStringAsync());
+
+            return result;
+        }
+
+        public async Task<IEnumerable<T>> GetAsync<T>
+            (string resource)
+        {
+            var httpResponseMessage = await _httpClient
+                .GetAsync(resource);
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+                return [];
+
+            var result = JsonConvert.DeserializeObject<IEnumerable<T>>
+                (await httpResponseMessage.Content
+                .ReadAsStringAsync()) ?? [];
+
+            return result;
+        }
+
+        public async Task<IEnumerable<T>> GetAsync<T>
+            (string resource, string token)
+        {
+            _httpClient.DefaultRequestHeaders
+                .Authorization = new AuthenticationHeaderValue
+                ("Bearer", token);
+
+            var httpResponseMessage = await _httpClient
+                .GetAsync(resource);
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+                return [];
+
+            var result = JsonConvert.DeserializeObject<IEnumerable<T>>
+                (await httpResponseMessage.Content
+                .ReadAsStringAsync()) ?? [];
+
+            return result;
+        }
+
+        public async Task<T?> GetSingleAsync<T>
             (string resource)
         {
             var httpResponseMessage = await _httpClient
@@ -21,13 +100,13 @@ namespace HelpTechAppWeb.Configurations.Requests
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return default;
 
-            var result = JsonConvert.DeserializeObject<dynamic?>
+            var result = JsonConvert.DeserializeObject<T?>
                 (await httpResponseMessage.Content.ReadAsStringAsync());
 
             return result;
         }
 
-        public async Task<dynamic?> GetAsync
+        public async Task<T?> GetSingleAsync<T>
             (string resource, string token)
         {
             _httpClient.DefaultRequestHeaders
@@ -40,50 +119,7 @@ namespace HelpTechAppWeb.Configurations.Requests
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return default;
 
-            var result = JsonConvert.DeserializeObject<dynamic?>
-                (await httpResponseMessage.Content.ReadAsStringAsync());
-
-            return result;
-        }
-
-        public async Task<dynamic?> PostAsync
-            (string resource, object content)
-        {
-            var stringContent = new StringContent
-                (JsonConvert.SerializeObject(content),
-                Encoding.UTF8, "application/json");
-
-            var httpResponseMessage = await _httpClient
-                .PostAsync(resource, stringContent);
-
-            if (!httpResponseMessage.IsSuccessStatusCode)
-                return default;
-
-            var result = JsonConvert.DeserializeObject<dynamic?>
-                (await httpResponseMessage.Content.ReadAsStringAsync());
-
-            return result;
-        }
-
-        public async Task<dynamic?> PostAsync
-            (string resource, string token,
-            object content)
-        {
-            _httpClient.DefaultRequestHeaders
-                .Authorization = new AuthenticationHeaderValue
-                ("Bearer", token);
-
-            var stringContent = new StringContent
-                (JsonConvert.SerializeObject(content),
-                Encoding.UTF8, "application/json");
-
-            var httpResponseMessage = await _httpClient
-                .PostAsync(resource, stringContent);
-
-            if (!httpResponseMessage.IsSuccessStatusCode)
-                return default;
-
-            var result = JsonConvert.DeserializeObject<dynamic?>
+            var result = JsonConvert.DeserializeObject<T?>
                 (await httpResponseMessage.Content.ReadAsStringAsync());
 
             return result;
