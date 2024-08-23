@@ -1,32 +1,31 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using HelpTechAppWeb.Configurations.Interfaces;
+using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
     [Route("specialties/")]
     [AllowAnonymous]
     public class SpecialtiesController
-        (IHttpClientFactory httpClientFactory) :
+        (IBaseRequest<Specialty> baseRequestSpecialty) :
         Controller
     {
-        private readonly HttpClient _httpClient = httpClientFactory
-            .CreateClient("HelpTechService");
-
         #region Json
 
         [Route("all-specialties")]
         [HttpGet]
         public async Task<IActionResult> AllSpecialties()
         {
-            var httpResponseMessage = await _httpClient
+            var result = await baseRequestSpecialty
                 .GetAsync("specialties/all-specialties");
 
-            if (httpResponseMessage.IsSuccessStatusCode is false)
+            if (result is null)
                 return RedirectToAction("Error", "Home");
 
-            return Content(await httpResponseMessage
-                .Content.ReadAsStringAsync(),
-                "application/json");
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
         }
 
         #endregion
