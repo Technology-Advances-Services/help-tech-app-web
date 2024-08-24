@@ -1,10 +1,13 @@
 ﻿const url = 'https://localhost:44310/';
 
+let specialties = [];
 let jobs = [];
 
 window.addEventListener("load", function () {
 
     loadInformationTechnical();
+
+    specialties = loadSpecialties();
 
     loadJobsByTechnical().then(data => {
 
@@ -188,6 +191,42 @@ function refreshInterfaceData() {
         window.open(url + 'home/error', '_self');
     });
 }
+function loadSpecialties() {
+
+    const resource = url + 'specialties/all-specialties';
+
+    fetch(resource, {
+
+        method: 'GET',
+        headers: {
+
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    })
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error("Network response was not ok.");
+        }
+
+        return response.json();
+    })
+    .then(data => {
+
+        if (data.length === 0) {
+
+            return [];
+        }
+
+        return data;
+
+    })
+    .catch(() => {
+
+        window.open(url + "home/error", "_self");
+    });
+}
 function loadInformationTechnical() {
 
     const resource = url + 'techninals/information-technical';
@@ -210,9 +249,11 @@ function loadInformationTechnical() {
     })
     .then(data => {
 
+        const filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
+
         document.getElementById('iProfilePhoto').src = data.ProfileUrl;
         document.getElementById('pMembership').textContent = data.Membership;
-        document.getElementById('pEspecialty').textContent = data.Specialty;
+        document.getElementById('pEspecialty').textContent = filteredSpecialties;
         document.getElementById('pFirstname').textContent = data.Firstname;
         document.getElementById('pLastname').textContent = data.Lastname;
         document.getElementById('pAge').textContent = data.Age;

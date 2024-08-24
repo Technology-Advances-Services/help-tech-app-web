@@ -74,6 +74,7 @@ namespace HelpTechAppWeb.Controllers
             {
                 technical.ProfileUrl,
                 Membership = membership.Name,
+                technical.SpecialtyId,
                 contract.StartDate,
                 contract.FinalDate,
                 technical.Firstname,
