@@ -25,8 +25,9 @@ namespace HelpTechAppWeb.Controllers
                 ("jobs/jobs-by-technical?technicalId=" +
                 GetTechnicalId(), GetToken());
 
-            if (jobs is null)
-                return RedirectToAction("Error", "Home");
+            var chatsMembers = await baseRequest.GetAsync<ChatMember>
+                ("chatsmembers/chats-members-by-technical?technicalId=" +
+                GetTechnicalId(), GetToken());
 
             var consumers = new List<Consumer>();
 
@@ -49,22 +50,25 @@ namespace HelpTechAppWeb.Controllers
             Task<dynamic> queryAsync = new(() =>
             {
                 return
-                (from j in jobs
-                 join c in consumers
-                 on j.ConsumerId equals c.Id
+                (from jo in jobs
+                 join co in consumers
+                 on jo.ConsumerId equals co.Id
+                 join cm in chatsMembers
+                 on co.Id equals cm.ConsumerId
                  select new
                  {
-                     j.Id,
-                     ConsumerId = c.Id,
-                     c.Firstname,
-                     c.Lastname,
-                     c.Phone,
-                     j.Description,
-                     j.WorkDate,
-                     j.LaborBudget,
-                     j.MaterialBudget,
-                     j.AmountFinal,
-                     j.JobState,
+                     jo.Id,
+                     cm.ChatRoomId,
+                     ConsumerId = co.Id,
+                     co.Firstname,
+                     co.Lastname,
+                     co.Phone,
+                     jo.Description,
+                     jo.WorkDate,
+                     jo.LaborBudget,
+                     jo.MaterialBudget,
+                     jo.AmountFinal,
+                     jo.JobState,
                  });
             });
 

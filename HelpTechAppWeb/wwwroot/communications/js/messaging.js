@@ -4,7 +4,6 @@ const room = document.getElementById("iptChatRoomId").value;
 const webSocket = new WebSocket('wss://localhost:44315/chat?room=' + room);
 const parameters = new FormData();
 
-let messages = [];
 let contentHtml = '';
 
 window.addEventListener("load", function () {
