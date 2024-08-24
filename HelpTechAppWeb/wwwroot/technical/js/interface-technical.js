@@ -175,9 +175,9 @@ function refreshInterfaceData() {
                             </div>
                         </div>
                         <div>
+                            <span id="spnChatRoomId" style="display:none;">${item.ChatRoomId}</span>
                             <span class="d-block text-sm font-semibold">${item.Firstname}</span>
                             <span class="d-block text-xs text-muted font-regular">${item.Lastname}</span>
-                            <span id="spnChatRoomId" style="display:none;">${item.ChatRoomId}</span>
                         </div>
                         <div class="ms-auto"> <i class="bi bi-chat"></i> </div>
                     </a>
