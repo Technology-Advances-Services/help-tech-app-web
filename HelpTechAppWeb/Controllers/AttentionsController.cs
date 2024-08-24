@@ -36,8 +36,8 @@ namespace HelpTechAppWeb.Controllers
 
                 var consumer = await baseRequest
                     .GetSingleAsync<Consumer>
-                    ("informations/consumer-by-id/consumerId=" + consumerId,
-                    GetToken());
+                    ("informations/consumer-by-id/consumerId=" +
+                    consumerId, GetToken());
 
                 if (consumer is null)
                     return;

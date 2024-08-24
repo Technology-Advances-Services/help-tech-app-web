@@ -45,13 +45,43 @@ namespace HelpTechAppWeb.Controllers
                 (result), "application/json");
         }
 
-        [Route("technical-by-id")]
+        [Route("information-technical")]
         [HttpGet]
-        public async Task<IActionResult> TechnicalById()
+        public async Task<IActionResult> InformationTechnical()
         {
-            var result = await baseRequest.GetSingleAsync<Technical>
-                ("informations/technical-by-id?technicalId=" +
+            var technical = await baseRequest.GetSingleAsync<Technical>
+                ("informations/technical-by-id?id=" +
                 GetTechnicalId(), GetToken());
+
+            if (technical is null)
+                return RedirectToAction("Error", "Home");
+
+            var contract = await baseRequest.GetSingleAsync<Contract>
+                ("contracts/contract-by-technical/technicalId=" +
+                GetTechnicalId(), GetToken());
+
+            if (contract is null)
+                return RedirectToAction("Error", "Home");
+
+            var membership = await baseRequest.GetSingleAsync<Membership>
+                ("memberships/membership-by-id?id=" + contract.MembershipId,
+                GetTechnicalId());
+
+            if (membership is null)
+                return RedirectToAction("Error", "Home");
+
+            var result = new
+            {
+                technical.ProfileUrl,
+                Membership = membership.Name,
+                contract.StartDate,
+                contract.FinalDate,
+                technical.Firstname,
+                technical.Lastname,
+                technical.Age,
+                technical.Email,
+                technical.Phone,
+            };
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
