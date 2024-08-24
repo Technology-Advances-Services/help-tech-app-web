@@ -14,11 +14,10 @@ namespace HelpTechAppWeb.Controllers
         [Route("messaging")]
         [HttpGet]
         public IActionResult Messaging
-            (int personId, string role)
+            (int chatRoomId, string role)
         {
-            ViewBag.ChatRoomId = 0;
+            ViewBag.ChatRoomId = chatRoomId;
             ViewBag.Role = role;
-            ViewBag.PersonId = personId;
 
             return View();
         }
