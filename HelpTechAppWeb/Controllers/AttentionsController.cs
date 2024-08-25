@@ -72,8 +72,10 @@ namespace HelpTechAppWeb.Controllers
                  });
             });
 
+            queryAsync.Start();
+
             return Content(JsonConvert.SerializeObject
-                (queryAsync), "application/json");
+                (await queryAsync), "application/json");
         }
 
         #endregion

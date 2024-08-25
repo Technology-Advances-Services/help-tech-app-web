@@ -87,7 +87,7 @@ document.getElementById("tblPendingsJobs").addEventListener("click", function (e
         const row = event.target.closest("tr");
         const chatRoomId = row.querySelector("#tChatRoomId").textContent.trim();
 
-        window.open(url + `communications/messaging?chatRoomId=${chatRoomId}&role=TECNICO`, "_blank");
+        window.open(url + `communications/messaging?chatRoomId=${chatRoomId}`, "_blank");
 
         event.preventDefault();
     }
@@ -100,7 +100,7 @@ document.getElementById("uChatsMembers").addEventListener("click", function (eve
         const listItem = event.target.closest("li");
         const chatRoomId = listItem.querySelector("#spnChatRoomId").textContent.trim();
 
-        window.open(url + `communications/messaging?chatRoomId=${chatRoomId}&role=TECNICO`, "_blank");
+        window.open(url + `communications/messaging?chatRoomId=${chatRoomId}`, "_blank");
 
         event.preventDefault();
     }

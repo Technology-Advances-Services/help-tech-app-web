@@ -8,7 +8,7 @@ let contentHtml = '';
 
 window.addEventListener("load", function () {
 
-    loadProfile();
+    loadInformation();
     loadChatsByChatRoom();
 });
 
@@ -60,9 +60,11 @@ webSocket.onmessage = function (event) {
     }
 };
 
-function loadProfile() {
+function loadInformation() {
 
     if (document.getElementById("iptRole").value === 'TECNICO') {
+
+        const resource = url + 'consumers/information-consumer';
 
         fetch(resource, {
 
@@ -98,6 +100,8 @@ function loadProfile() {
         })
     }
     else if (document.getElementById("iptRole").value === 'CONSUMIDOR') {
+
+        const resource = url + 'technicals/information-technical';
 
         fetch(resource, {
 
@@ -137,7 +141,7 @@ function loadProfile() {
 }
 function loadChatsByChatRoom() {
 
-    const resource = url + 'communications/chats-by-chat-room';
+    const resource = url + 'communications/chat-by-chat-room';
 
     fetch(resource, {
 
@@ -177,26 +181,22 @@ function loadChatsByChatRoom() {
                                 <span class="msg_time_send">${getFormattedDate(date)}</span>
                             </div>
                             <div class="img_cont_msg">
-                                <img src="${item.ProfileUrlTechnical}" class="rounded-circle user_img">
+                                <img src="${document.getElementById("iptProfileUrlTechnical").value}" class="rounded-circle user_img">
                             </div>
                         </div>`;
-
-                    document.getElementById("iptProfileUrlTechnical").value = item.ProfileUrlTechnical;
                 }
                 else if (!isNullOrEmpty(item.ConsumerId)) {
 
                     contentHtml +=
                         `<div class="d-flex justify-content-start mb-4">
                             <div class="img_cont_msg">
-                                <img src="${item.ProfileUrlConsumer}" class="rounded-circle user_img">
+                                <img src="${document.getElementById("iptProfileUrlConsumer").value}" class="rounded-circle user_img">
                             </div>
                             <div class="msg_cotainer">
                                 ${item.Message}
                                 <span class="msg_time">${getFormattedDate(date)}</span>
                             </div>
                         </div>`;
-
-                    document.getElementById("iptProfileUrlConsumer").value = item.ProfileUrlConsumer;
                 }
             }
         }
@@ -211,15 +211,13 @@ function loadChatsByChatRoom() {
                     contentHtml +=
                         `<div class="d-flex justify-content-start mb-4">
                             <div class="img_cont_msg">
-                                <img src="${item.ProfileUrlTechnical}" class="rounded-circle user_img">
+                                <img src="${document.getElementById("iptProfileUrlTechnical").value}" class="rounded-circle user_img">
                             </div>
                             <div class="msg_cotainer">
                                 ${item.Message}
                                 <span class="msg_time">${getFormattedDate(date)}</span>
                             </div>
                         </div>`;
-
-                    document.getElementById("iptProfileUrlTechnical").value = item.ProfileUrlTechnical;
                 }
                 else if (!isNullOrEmpty(item.ConsumerId)) {
 
@@ -230,11 +228,10 @@ function loadChatsByChatRoom() {
                                 <span class="msg_time_send">${getFormattedDate(date)}</span>
                             </div>
                             <div class="img_cont_msg">
-                                <img src="${item.ProfileUrlConsumer}" class="rounded-circle user_img">
+                                <img src="${document.getElementById("iptProfileUrlConsumer").value}" class="rounded-circle user_img">
                             </div>
                         </div>`;
 
-                    document.getElementById("iptProfileUrlConsumer").value = item.ProfileUrlConsumer;
                 }
             }
         }
@@ -278,29 +275,29 @@ function displayMessage(message) {
 
         if (message.user === 'TECNICO') {
 
-            contentHtml +=
-                '<div class="d-flex justify-content-end mb-4">' +
-                    '<div class="msg_cotainer_send">' +
-                        message.text +
-                        '<span class="msg_time_send">' + getFormattedDate(date) + '</span>' +
-                    '</div>' +
-                    '<div class="img_cont_msg">' +
-                        '<img src="' + document.getElementById("iptProfileUrlTechnical").value + '" class="rounded-circle user_img">' +
-                    '</div>' +
-                '</div>';
+            contentHtml =
+                `<div class="d-flex justify-content-end mb-4">
+                    <div class="msg_cotainer_send">
+                        ${message.text}
+                        <span class="msg_time_send">${getFormattedDate(date)}</span>
+                    </div>
+                    <div class="img_cont_msg">
+                        <img src="${document.getElementById("iptProfileUrlTechnical").value}" class="rounded-circle user_img">
+                    </div>
+                </div>`;
         }
         else if (message.user == 'CONSUMIDOR') {
 
             contentHtml +=
-                '<div class="d-flex justify-content-start mb-4">' +
-                    '<div class="img_cont_msg">' +
-                        '<img src="' + document.getElementById("iptProfileUrlConsumer").value + '" class="rounded-circle user_img">' +
-                    '</div>' +
-                    '<div class="msg_cotainer">' +
-                        message.text +
-                        '<span class="msg_time">' + getFormattedDate(date) + '</span>' +
-                    '</div>' +
-                '</div>';
+                `<div class="d-flex justify-content-start mb-4">
+                    <div class="img_cont_msg">
+                        <img src="${document.getElementById("iptProfileUrlConsumer").value}" class="rounded-circle user_img">
+                    </div>
+                    <div class="msg_cotainer">
+                        ${message.text}
+                        <span class="msg_time">${getFormattedDate(date)}</span>
+                    </div>
+                </div>`;
         }
     }
     else if (document.getElementById("iptRole").value === 'CONSUMIDOR') {
@@ -308,28 +305,30 @@ function displayMessage(message) {
         if (message.user == 'TECNICO') {
 
             contentHtml +=
-                '<div class="d-flex justify-content-start mb-4">' +
-                    '<div class="img_cont_msg">' +
-                        '<img src="' + document.getElementById("iptProfileUrlTechnical").value + '" class="rounded-circle user_img">' +
-                    '</div>' +
-                    '<div class="msg_cotainer">' +
-                        message.text +
-                        '<span class="msg_time">' + getFormattedDate(date) + '</span>' +
-                    '</div>' +
-                '</div>';
+                `<div class="d-flex justify-content-start mb-4">
+                    <div class="img_cont_msg">
+                        <img src="${document.getElementById("iptProfileUrlTechnical").value}" class="rounded-circle user_img">
+                    </div>
+                    <div class="msg_cotainer">
+                        ${message.text}
+                        <span class="msg_time">${getFormattedDate(date)}</span>
+                    </div>
+                </div>`;
+
         }
         else if (message.user == 'CONSUMIDOR') {
 
             contentHtml +=
-                '<div class="d-flex justify-content-end mb-4">' +
-                    '<div class="msg_cotainer_send">' +
-                        message.text +
-                        '<span class="msg_time_send">' + getFormattedDate(date) + '</span>' +
-                    '</div>' +
-                    '<div class="img_cont_msg">' +
-                        '<img src="' + document.getElementById("iptProfileUrlConsumer").value + '" class="rounded-circle user_img">' +
-                    '</div>' +
-                '</div>';
+                `<div class="d-flex justify-content-end mb-4">
+                    <div class="msg_cotainer_send">
+                        ${message.text}
+                        <span class="msg_time_send">${getFormattedDate(date)}</span>
+                    </div>
+                    <div class="img_cont_msg">
+                        <img src="${document.getElementById("iptProfileUrlConsumer").value}" class="rounded-circle user_img">
+                    </div>
+                </div>`;
+
         }
     }
 

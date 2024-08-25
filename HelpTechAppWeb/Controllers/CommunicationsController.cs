@@ -12,17 +12,45 @@ namespace HelpTechAppWeb.Controllers
     public class CommunicationsController
         (IBaseRequest baseRequest) : Controller
     {
+        private int _chatRoomId = 0;
         private ClaimsPrincipal? _claimsPrincipal;
 
         #region Views
 
         [Route("messaging")]
         [HttpGet]
-        public IActionResult Messaging
-            (int chatRoomId, string role)
+        public async Task<IActionResult> Messaging
+            (int chatRoomId)
         {
+            var chatMember = await baseRequest.GetSingleAsync<ChatMember>
+                ("chatsmembers/chats-members-by-chat-room?chatRoomId=" +
+                chatRoomId, GetToken());
+
+            if (chatMember == null)
+                return RedirectToAction();
+
+            var consumer = await baseRequest
+                .GetSingleAsync<Consumer>
+                ("informations/consumer-by-id/consumerId=" +
+                chatMember.ConsumerId, GetToken());
+
+            if (consumer == null)
+                return RedirectToAction("Error", "Home");
+
+            var technical = await baseRequest
+                .GetSingleAsync<Consumer>
+                ("informations/consumer-by-id/consumerId=" +
+                chatMember.ConsumerId, GetToken());
+
+            if (technical == null)
+                return RedirectToAction("Error", "Home");
+
+            this._chatRoomId = chatRoomId;
+
             ViewBag.ChatRoomId = chatRoomId;
-            ViewBag.Role = role;
+            ViewBag.Role = GetRole();
+            ViewBag.ProfileUrlTechnical = technical.ProfileUrl;
+            ViewBag.ProfileUrlConsumer = consumer.ProfileUrl;
 
             return View();
         }
@@ -37,7 +65,7 @@ namespace HelpTechAppWeb.Controllers
         {
             var chatsMembers = await baseRequest.GetAsync<ChatMember>
                 ("chatsmembers/chats-members-by-technical?technicalId=" +
-                GetTechnicalId(), GetToken());
+                GetPersonId(), GetToken());
 
             var consumers = new List<Consumer>();
 
@@ -72,8 +100,22 @@ namespace HelpTechAppWeb.Controllers
                  });
             });
 
+            queryAsync.Start();
+
             return Content(JsonConvert.SerializeObject
-                (queryAsync), "application/json");
+                (await queryAsync), "application/json");
+        }
+
+        [Route("chat-by-chat-room")]
+        [HttpGet]
+        public async Task<IActionResult> ChatByChatRoom()
+        {
+            var chat = await baseRequest.GetAsync<Chat>
+                ("chats/chat-by-chat-room?chatRoomId=" +
+                _chatRoomId, GetToken());
+
+            return Content(JsonConvert.SerializeObject
+                (chat), "application/json");
         }
 
         #endregion
@@ -89,12 +131,21 @@ namespace HelpTechAppWeb.Controllers
                 .Value.ToString() ?? string.Empty;
         }
 
-        private string GetTechnicalId()
+        private string GetPersonId()
         {
             _claimsPrincipal = HttpContext.User;
 
             return _claimsPrincipal
                 .FindFirst(ClaimTypes.Name)?
+                .Value.ToString() ?? string.Empty;
+        }
+
+        private string GetRole()
+        {
+            _claimsPrincipal = HttpContext.User;
+
+            return _claimsPrincipal
+                .FindFirst(ClaimTypes.Role)?
                 .Value.ToString() ?? string.Empty;
         }
 
