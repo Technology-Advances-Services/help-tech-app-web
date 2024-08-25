@@ -25,7 +25,7 @@ namespace HelpTechAppWeb.Configurations.Requests
             if (!httpResponseMessage.IsSuccessStatusCode)
                 return default;
 
-            var result = JsonConvert.DeserializeObject<bool>
+            var result = JsonConvert.DeserializeObject<dynamic>
                 (await httpResponseMessage.Content.ReadAsStringAsync());
 
             return result;

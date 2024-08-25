@@ -20,14 +20,14 @@ builder.Services.AddHttpClient("HelpTechService", (sp, client) =>
 
 #region Cookie Configuration
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Access/Login";
-        options.LogoutPath = "/Access/Logout";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-        options.SlidingExpiration = true;
-    });
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//    .AddCookie(options =>
+//    {
+//        options.LoginPath = "/Access/Login";
+//        options.LogoutPath = "/Access/Logout";
+//        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+//        options.SlidingExpiration = true;
+//    });
 
 #endregion
 

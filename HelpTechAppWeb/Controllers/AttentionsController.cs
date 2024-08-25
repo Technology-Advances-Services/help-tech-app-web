@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace HelpTechAppWeb.Controllers
 {
     [Route("attentions/")]
-    [Authorize(Roles = "TECNICO,CONSUMIDOR")]
+    //[Authorize(Roles = "TECNICO,CONSUMIDOR")]
     public class AttentionsController
         (IBaseRequest baseRequest) :
         Controller

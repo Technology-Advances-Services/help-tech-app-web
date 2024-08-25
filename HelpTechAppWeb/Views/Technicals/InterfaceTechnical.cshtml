@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/technical/css/interface-technical.css" />
     <title>Interfaz tecnica - HelpTechAppWeb</title>
 
@@ -19,7 +20,7 @@
 
     <div class="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
 
-        <nav class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 navbar-light bg-white border-bottom border-bottom-lg-0 border-end-lg" id="navbarVertical">
+        <nav id ="navbarVertical" class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 navbar-light bg-white border-bottom border-bottom-lg-0 border-end-lg">
             <div class="container-fluid">
 
                 <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0"> <img src="https://www.svgrepo.com/show/60912/repair.svg" width="440"> </a>
@@ -77,7 +78,7 @@
 
                             <div class="col-sm-6 col-12 text-sm-end">
                                 <div class="mx-n1">
-                                    <a id="btnJobsResponses" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
+                                    <a id="btnJobsResponses" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1" data-toggle="modal" data-target="#mdlJobsResponses">
                                         <span class=" pe-2"> <i class="bi bi-pencil"></i> </span>
                                         <span>Respuestas de trabajos</span>
                                     </a>
@@ -314,6 +315,84 @@
             </div>
         </div>
     </div>
+    <div id="mdlJobsResponses" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered justify-content-center " role="document">
+            <div class="modal-content  border-0 mx-3">
+                <div class="modal-body  p-0">
+                    <div class="card text-center">
+
+                        <div class="card-header pb-0 bg-white border-0">
+                            <div class="row">
+                                <div class="col ml-auto">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <h3>Trabajos pendientes</h3>
+
+                        </div>
+
+                        <div class="card-body px-sm-5 mb-5">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">First</th>
+                                        <th scope="col">Last</th>
+                                        <th scope="col">Handle</th>
+                                        <th scope="col">Handle</th>
+                                        <th scope="col">Handle</th>
+                                        <th scope="col">Handle</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Samso</td>
+                                        <td>Natto</td>
+                                        <td>xx</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>Tinor</td>
+                                        <td>Horton</td>
+                                        <td>xx</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td>Mythor</td>
+                                        <td>Bully</td>
+                                        <td>xx</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row justify-content-center mt-4 px-sm-5  ">
+
+                                <div class="col">
+                                    <button id="btnRegisterNewTechnical" type="submit" class="btn btn-inverse btn-block  font-weight-bold text-dark text-uppercase" data-dismiss="modal">
+                                        <span class="plan">Registrarse como tecnico</span>
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button id="btnRegisterNewConsumer" type="submit" class="btn btn-primary btn-block  text-dark font-weight-bold text-uppercase" data-dismiss="modal">
+                                        <span class="plan">Registrarse como consumidor</span>
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <input id="iptTechnicalId" type="hidden" value="@ViewBag.TechnicalId" />
 
@@ -321,8 +400,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="~/technical/js/interface-technical.js"></script>
+    <script type="text/javascript" src="~/technical/js/interface-technical.js"></script>
 
 </body>
 </html>

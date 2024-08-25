@@ -38,6 +38,13 @@ function login(credentials) {
             throw new Error("Network response was not ok.");
         }
     })
+    .then(data => {
+
+        if (data === true) {
+
+            window.location.href = url + 'technicals/interface-technical';
+        }
+    })
     .catch(() => {
 
         window.open(url + "home/error", "_self");

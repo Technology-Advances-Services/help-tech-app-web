@@ -8,7 +8,8 @@ using HelpTechAppWeb.Models;
 namespace HelpTechAppWeb.Controllers
 {
     [Route("technicals/")]
-    [Authorize(Roles = "TECNICO")]
+    [AllowAnonymous]
+    //[Authorize(Roles = "TECNICO")]
     public class TechnicalsController
         (IBaseRequest baseRequest) :
         Controller
@@ -38,9 +39,6 @@ namespace HelpTechAppWeb.Controllers
                 <dynamic>("statistics/general-technical-statistic?technicalId=" +
                 GetTechnicalId(), GetToken());
 
-            if (result is null)
-                return RedirectToAction("Error", "Home");
-
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
         }
@@ -53,22 +51,13 @@ namespace HelpTechAppWeb.Controllers
                 ("informations/technical-by-id?id=" +
                 GetTechnicalId(), GetToken());
 
-            if (technical is null)
-                return RedirectToAction("Error", "Home");
-
             var contract = await baseRequest.GetSingleAsync<Contract>
                 ("contracts/contract-by-technical/technicalId=" +
                 GetTechnicalId(), GetToken());
 
-            if (contract is null)
-                return RedirectToAction("Error", "Home");
-
             var membership = await baseRequest.GetSingleAsync<Membership>
                 ("memberships/membership-by-id?id=" + contract.MembershipId,
                 GetTechnicalId());
-
-            if (membership is null)
-                return RedirectToAction("Error", "Home");
 
             var result = new
             {

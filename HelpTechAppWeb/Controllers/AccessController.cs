@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using HelpTechAppWeb.Models;
 using HelpTechAppWeb.Configurations.Interfaces;
+using Newtonsoft.Json;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -24,11 +25,11 @@ namespace HelpTechAppWeb.Controllers
 
         [Route("login")]
         [HttpGet]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Login()
         {
-            if (User?.Identity?.IsAuthenticated == true)
-                return RedirectToAction("InterfaceTechnical", "Technical");
+            //if (User?.Identity?.IsAuthenticated == true)
+            //    return RedirectToAction("InterfaceTechnical", "Technicals");
 
             return View();
         }
@@ -49,7 +50,7 @@ namespace HelpTechAppWeb.Controllers
                 (CookieAuthenticationDefaults
                 .AuthenticationScheme);
 
-            return RedirectToAction("Login", "Access");
+            return RedirectToAction("Access", "Login");
         }
 
         #endregion
@@ -67,28 +68,22 @@ namespace HelpTechAppWeb.Controllers
             if (string.IsNullOrEmpty(result))
                 return RedirectToAction("Error", "Home");
 
-            List<Claim> claims =
-            [
-                new(ClaimTypes.Hash, result),
-                new(ClaimTypes.Role, user.Role),
-                new(ClaimTypes.Name, user.Username.ToString())
-            ];
+            //List<Claim> claims =
+            //[
+            //    new(ClaimTypes.Hash, result),
+            //    new(ClaimTypes.Role, user.Role),
+            //    new(ClaimTypes.Name, user.Username.ToString())
+            //];
 
-            ClaimsIdentity claimsIdentity = new(claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            //ClaimsIdentity claimsIdentity = new(claims,
+            //    CookieAuthenticationDefaults.AuthenticationScheme);
 
-            await HttpContext.SignInAsync
-                (CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+            //await HttpContext.SignInAsync
+            //    (CookieAuthenticationDefaults.AuthenticationScheme,
+            //    new ClaimsPrincipal(claimsIdentity));
 
-            var validation = user.Role switch
-            {
-                "TECNICO" => RedirectToAction("InterfaceTechnical", "Technicals"),
-                "CONSUMIDOR" => RedirectToAction("InterfaceConsumer", "Consumers"),
-                _ => RedirectToAction("Error", "Home")
-            };
-
-            return validation;
+            return Content(JsonConvert.SerializeObject
+                (true), "application/json");
         }
 
         [Route("register-technical")]

@@ -8,7 +8,7 @@ using HelpTechAppWeb.Models;
 namespace HelpTechAppWeb.Controllers
 {
     [Route("communications/")]
-    [Authorize(Roles = "TECNICO,CONSUMIDOR")]
+    //[Authorize(Roles = "TECNICO,CONSUMIDOR")]
     public class CommunicationsController
         (IBaseRequest baseRequest) : Controller
     {
