@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Configurations.Requests;
+using HelpTechAppWeb.Configurations.Sockets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,14 +21,14 @@ builder.Services.AddHttpClient("HelpTechService", (sp, client) =>
 
 #region Cookie Configuration
 
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(options =>
-//    {
-//        options.LoginPath = "/Access/Login";
-//        options.LogoutPath = "/Access/Logout";
-//        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-//        options.SlidingExpiration = true;
-//    });
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Access/Login";
+        options.LogoutPath = "/Access/Logout";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+        options.SlidingExpiration = true;
+    });
 
 #endregion
 
@@ -45,9 +46,24 @@ app.UseCors(
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/home/error");
+    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+#region Socket Configuration
+
+var webSocketOptions = new WebSocketOptions()
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2),
+};
+
+app.UseWebSockets(webSocketOptions);
+
+var webSocketHandler = new WebSocketHandler();
+
+app.Map("/chat", webSocketHandler.HandleWebSocketAsync);
+
+#endregion
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
