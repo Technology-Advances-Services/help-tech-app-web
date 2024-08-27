@@ -6,7 +6,6 @@ using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
-    [Route("locations/")]
     [AllowAnonymous]
     public class LocationsController
         (IBaseRequest baseRequest) :
@@ -14,34 +13,26 @@ namespace HelpTechAppWeb.Controllers
     {
         #region Json
 
-        [Route("all-departments")]
         [HttpGet]
         public async Task<IActionResult> AllDepartments()
         {
-            var result = await baseRequest.GetAsync<Department>
+            var departments = await baseRequest.GetAsync<Department>
                 ("locations/all-departments");
 
-            if (result is null)
-                return RedirectToAction("Error", "Home");
-
             return Content(JsonConvert.SerializeObject
-                (result), "application/json");
+                (departments), "application/json");
         }
 
-        [Route("districts-by-department")]
         [HttpGet]
         public async Task<IActionResult> DistrictsByDepartment
             (int departmentId)
         {
-            var result = await baseRequest.GetAsync<District>
+            var districts = await baseRequest.GetAsync<District>
                 ("locations/districts-by-department?departmentId=" +
                 departmentId);
 
-            if (result is null)
-                return RedirectToAction("Error", "Home");
-
             return Content(JsonConvert.SerializeObject
-                (result), "application/json");
+                (districts), "application/json");
         }
 
         #endregion

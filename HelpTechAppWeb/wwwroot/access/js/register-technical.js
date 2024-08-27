@@ -11,7 +11,7 @@ window.addEventListener('load', function () {
 
 document.getElementById('sltDepartments').addEventListener("change", function () {
 
-    const resource = url + 'locations/districts-by-department?departmentId=' + this.value;
+    const resource = url + 'Locations/DistrictsByDepartment?departmentId=' + this.value;
 
     fetch(resource, {
 
@@ -43,7 +43,7 @@ document.getElementById('sltDepartments').addEventListener("change", function ()
     })
     .catch(() => {
 
-        window.open(url + "home/error", "_self");
+        window.open(url + "Home/Error", "_self");
     });
 });
 
@@ -88,7 +88,7 @@ document.getElementById("frmTechnicianData").addEventListener("submit", function
 
 function loadSpecialties() {
 
-    const resource = url + 'specialties/all-specialties';
+    const resource = url + 'Specialties/AllSpecialties';
 
     fetch(resource, {
 
@@ -120,12 +120,12 @@ function loadSpecialties() {
     })
     .catch(() => {
 
-        window.open(url + "home/error", "_self");
+        window.open(url + "Home/Error", "_self");
     });
 }
 function loadDepartments() {
 
-    const resource = url + 'locations/all-departments';
+    const resource = url + 'Locations/AllDepartments';
 
     fetch(resource, {
 
@@ -157,12 +157,12 @@ function loadDepartments() {
     })
     .catch(() => {
 
-        window.open(url + "home/error", "_self");
+        window.open(url + "Home/Error", "_self");
     });
 }
 function registerTechnical(parameters) {
 
-    const resource = url + 'access/register-technical';
+    const resource = url + 'Access/RegisterTechnical';
 
     fetch(resource, {
 
@@ -179,6 +179,6 @@ function registerTechnical(parameters) {
     })
     .catch(() => {
 
-        window.open(url + "home/error", "_self");
+        window.open(url + "Home/Error", "_self");
     });
 }

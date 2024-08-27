@@ -7,8 +7,7 @@ using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
-    [Route("attentions/")]
-    //[Authorize(Roles = "TECNICO,CONSUMIDOR")]
+    [Authorize(Roles = "TECNICO,CONSUMIDOR")]
     public class AttentionsController
         (IBaseRequest baseRequest) :
         Controller
@@ -17,7 +16,6 @@ namespace HelpTechAppWeb.Controllers
 
         #region Json
 
-        [Route("jobs-by-technical")]
         [HttpGet]
         public async Task<IActionResult> JobsByTechnical()
         {
@@ -38,10 +36,7 @@ namespace HelpTechAppWeb.Controllers
                 var consumer = await baseRequest
                     .GetSingleAsync<Consumer>
                     ("informations/consumer-by-id/consumerId=" +
-                    consumerId, GetToken());
-
-                if (consumer is null)
-                    return;
+                    consumerId, GetToken()) ?? new();
 
                 lock (consumers)
                     consumers.Add(consumer);

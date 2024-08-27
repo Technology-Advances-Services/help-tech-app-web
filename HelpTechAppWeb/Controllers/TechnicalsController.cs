@@ -7,9 +7,7 @@ using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
-    [Route("technicals/")]
-    [AllowAnonymous]
-    //[Authorize(Roles = "TECNICO")]
+    [Authorize(Roles = "TECNICO")]
     public class TechnicalsController
         (IBaseRequest baseRequest) :
         Controller
@@ -18,7 +16,6 @@ namespace HelpTechAppWeb.Controllers
 
         #region Views
 
-        [Route("interface-technical")]
         [HttpGet]
         public IActionResult InterfaceTechnical()
         {
@@ -31,7 +28,6 @@ namespace HelpTechAppWeb.Controllers
 
         #region Json
 
-        [Route("general-technical-statistic")]
         [HttpGet]
         public async Task<IActionResult> GeneralTechnicalStatistic()
         {
@@ -43,21 +39,20 @@ namespace HelpTechAppWeb.Controllers
                 (result), "application/json");
         }
 
-        [Route("information-technical")]
         [HttpGet]
         public async Task<IActionResult> InformationTechnical()
         {
             var technical = await baseRequest.GetSingleAsync<Technical>
                 ("informations/technical-by-id?id=" +
-                GetTechnicalId(), GetToken());
+                GetTechnicalId(), GetToken()) ?? new();
 
             var contract = await baseRequest.GetSingleAsync<Contract>
                 ("contracts/contract-by-technical/technicalId=" +
-                GetTechnicalId(), GetToken());
+                GetTechnicalId(), GetToken()) ?? new();
 
             var membership = await baseRequest.GetSingleAsync<Membership>
                 ("memberships/membership-by-id?id=" + contract.MembershipId,
-                GetTechnicalId());
+                GetTechnicalId()) ?? new();
 
             var result = new
             {

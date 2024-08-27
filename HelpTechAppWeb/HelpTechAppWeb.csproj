@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\technical\**" />
+    <Content Remove="wwwroot\technical\**" />
+    <EmbeddedResource Remove="wwwroot\technical\**" />
+    <None Remove="wwwroot\technical\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FirebaseAuthentication.net" Version="3.7.2" />
     <PackageReference Include="FirebaseStorage.net" Version="1.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />

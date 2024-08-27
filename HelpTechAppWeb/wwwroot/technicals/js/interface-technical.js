@@ -5,51 +5,43 @@ let jobs = [];
 
 window.addEventListener("load", function () {
 
+    //refreshInterfaceData();
+
     loadInformationTechnical();
 
     specialties = loadSpecialties();
 
-    loadJobsByTechnical().then(data => {
+    jobs = loadJobsByTechnical();
 
-        jobs = data;
-
-        fillTableJobs(jobs);
-    });
+    //fillTableJobs(jobs);
 });
 
 setInterval(refreshInterfaceData, 60000);
 
 document.getElementById("btnInterfaceTechnical").addEventListener("click", function () {
 
-    window.location.href = url + 'technicals/interface-technical';
+    window.location.href = url + 'Technicals/InterfaceTechnical';
 
     return false;
 });
 
 document.getElementById("btnStatisticReport").addEventListener("click", function () {
 
-    window.open(url + 'technicals/statisticl-report', '_blank');
+    window.open(url + 'Technicals/StatisticlReport', '_blank');
 
     return false;
 });
 
 document.getElementById("btnReportReviews").addEventListener("click", function () {
 
-    window.open(url + 'technicals/report-reviews', '_blank');
-
-    return false;
-});
-
-document.getElementById("btnJobsResponses").addEventListener("click", function () {
-
-    window.open('technicals/jobs-responses', '_blank');
+    window.open(url + 'Technicals/ReportReviews', '_blank');
 
     return false;
 });
 
 document.getElementById("btnLogout").addEventListener("click", function () {
 
-    window.location.href = url + 'access/logout';
+    window.location.href = url + 'Access/Logout';
 
     return false;
 });
@@ -87,7 +79,7 @@ document.getElementById("tblPendingsJobs").addEventListener("click", function (e
         const row = event.target.closest("tr");
         const chatRoomId = row.querySelector("#tChatRoomId").textContent.trim();
 
-        window.open(url + `communications/messaging?chatRoomId=${chatRoomId}`, "_blank");
+        window.open(url + `Communications/Messaging?chatRoomId=${chatRoomId}`, "_blank");
 
         event.preventDefault();
     }
@@ -100,7 +92,7 @@ document.getElementById("uChatsMembers").addEventListener("click", function (eve
         const listItem = event.target.closest("li");
         const chatRoomId = listItem.querySelector("#spnChatRoomId").textContent.trim();
 
-        window.open(url + `communications/messaging?chatRoomId=${chatRoomId}`, "_blank");
+        window.open(url + `Communications/Messaging?chatRoomId=${chatRoomId}`, "_blank");
 
         event.preventDefault();
     }
@@ -108,7 +100,7 @@ document.getElementById("uChatsMembers").addEventListener("click", function (eve
 
 function refreshInterfaceData() {
 
-    let resource = url + 'technicals/general-technical-statistic';
+    let resource = url + 'Technicals/GeneralTechnicalStatistic';
 
     fetch(resource, {
 
@@ -136,10 +128,10 @@ function refreshInterfaceData() {
     })
     .catch(() => {
 
-        window.open(url + 'home/error', '_self');
+        window.open(url + 'Home/Error', '_self');
     });
 
-    resource = url + 'communications/chats-members-by-technical';
+    resource = url + 'Communications/ChatsMembersByTechnical';
 
     fetch(resource, {
 
@@ -167,33 +159,33 @@ function refreshInterfaceData() {
             contentHtml +=
 
                 `<li>
-                    <a id="btnChat" class="nav-link d-flex align-items-center">
-                        <div class="me-4">
-                            <div class="position-relative d-inline-block text-white">
-                                <img alt="image" src="${item.ProfileUrl}" class="avatar rounded-circle">
-                                <span class="position-absolute bottom-2 end-2 transform translate-x-1/2 translate-y-1/2 border-2 border-solid border-current w-3 h-3 bg-success rounded-circle"></span>
-                            </div>
+                <a id="btnChat" class="nav-link d-flex align-items-center">
+                    <div class="me-4">
+                        <div class="position-relative d-inline-block text-white">
+                            <img alt="image" src="${item.ProfileUrl}" class="avatar rounded-circle">
+                            <span class="position-absolute bottom-2 end-2 transform translate-x-1/2 translate-y-1/2 border-2 border-solid border-current w-3 h-3 bg-success rounded-circle"></span>
                         </div>
-                        <div>
-                            <span id="spnChatRoomId" style="display:none;">${item.ChatRoomId}</span>
-                            <span class="d-block text-sm font-semibold">${item.Firstname}</span>
-                            <span class="d-block text-xs text-muted font-regular">${item.Lastname}</span>
-                        </div>
-                        <div class="ms-auto"> <i class="bi bi-chat"></i> </div>
-                    </a>
-                </li>`;
+                    </div>
+                    <div>
+                        <span id="spnChatRoomId" style="display:none;">${item.ChatRoomId}</span>
+                        <span class="d-block text-sm font-semibold">${item.Firstname}</span>
+                        <span class="d-block text-xs text-muted font-regular">${item.Lastname}</span>
+                    </div>
+                    <div class="ms-auto"> <i class="bi bi-chat"></i> </div>
+                </a>
+            </li>`;
         }
 
         document.getElementById('uChatsMembers').innerHTML = contentHtml;
     })
     .catch(() => {
 
-        window.open(url + 'home/error', '_self');
+        window.open(url + 'Home/Error', '_self');
     });
 }
 function loadSpecialties() {
 
-    const resource = url + 'specialties/all-specialties';
+    const resource = url + 'Specialties/AllSpecialties';
 
     fetch(resource, {
 
@@ -224,12 +216,12 @@ function loadSpecialties() {
     })
     .catch(() => {
 
-        window.open(url + "home/error", "_self");
+        window.open(url + "Home/Error", "_self");
     });
 }
 function loadInformationTechnical() {
 
-    const resource = url + 'techninals/information-technical';
+    const resource = url + 'Techninals/InformationTechnical';
 
     fetch(resource, {
 
@@ -262,12 +254,12 @@ function loadInformationTechnical() {
     })
     .catch(() => {
 
-        window.open(url + 'home/error', '_self');
+        window.open(url + 'Home/Error', '_self');
     });
 }
 function loadJobsByTechnical() {
 
-    const resource = url + 'attentions/jobs-by-technical';
+    const resource = url + 'Attentions/JobsByTechnical';
 
     fetch(resource, {
 
@@ -277,26 +269,26 @@ function loadJobsByTechnical() {
         }
     })
     .then(response => {
-
+    
         if (!response.ok) {
-
+    
             throw new Error('Network response was not ok.');
         }
-
+    
         return response.json();
     })
     .then(data => {
-
+    
         if (data.length === 0) {
-
+    
             return [];
         }
-
+    
         return data;
     })
     .catch(() => {
-
-        window.open(url + 'home/error', '_self');
+    
+        window.open(url + 'Home/Error', '_self');
     });
 }
 function fillTableJobs(jobs) {
@@ -318,7 +310,7 @@ function fillTableJobs(jobs) {
         const workDate = new Date(item.WorkDate);
 
         contentHtml +=
-            
+
             `<tr>
                 <td id="tId">${item.Id}</td>
                 <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>

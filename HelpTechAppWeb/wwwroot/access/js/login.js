@@ -23,7 +23,7 @@ document.getElementById("frmCredentials").addEventListener("submit", function (e
 
 function login(credentials) {
 
-    const resource = url + 'access/login';
+    const resource = url + 'Access/Login';
 
     fetch(resource, {
 
@@ -38,15 +38,8 @@ function login(credentials) {
             throw new Error("Network response was not ok.");
         }
     })
-    .then(data => {
-
-        if (data === true) {
-
-            window.location.href = url + 'technicals/interface-technical';
-        }
-    })
     .catch(() => {
 
-        window.open(url + "home/error", "_self");
+        window.open(url + "Home/Error", "_self");
     });
 }

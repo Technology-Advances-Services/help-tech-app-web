@@ -7,8 +7,7 @@ using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
-    [Route("communications/")]
-    //[Authorize(Roles = "TECNICO,CONSUMIDOR")]
+    [Authorize(Roles = "TECNICO,CONSUMIDOR")]
     public class CommunicationsController
         (IBaseRequest baseRequest) : Controller
     {
@@ -17,33 +16,23 @@ namespace HelpTechAppWeb.Controllers
 
         #region Views
 
-        [Route("messaging")]
         [HttpGet]
         public async Task<IActionResult> Messaging
             (int chatRoomId)
         {
             var chatMember = await baseRequest.GetSingleAsync<ChatMember>
                 ("chatsmembers/chats-members-by-chat-room?chatRoomId=" +
-                chatRoomId, GetToken());
-
-            if (chatMember == null)
-                return RedirectToAction();
+                chatRoomId, GetToken()) ?? new();
 
             var consumer = await baseRequest
                 .GetSingleAsync<Consumer>
                 ("informations/consumer-by-id/consumerId=" +
-                chatMember.ConsumerId, GetToken());
-
-            if (consumer == null)
-                return RedirectToAction("Error", "Home");
+                chatMember.ConsumerId, GetToken()) ?? new();
 
             var technical = await baseRequest
                 .GetSingleAsync<Consumer>
                 ("informations/consumer-by-id/consumerId=" +
-                chatMember.ConsumerId, GetToken());
-
-            if (technical == null)
-                return RedirectToAction("Error", "Home");
+                chatMember.ConsumerId, GetToken()) ?? new();
 
             this._chatRoomId = chatRoomId;
 
@@ -59,7 +48,6 @@ namespace HelpTechAppWeb.Controllers
 
         #region Json
 
-        [Route("chats-members-by-technical")]
         [HttpGet]
         public async Task<IActionResult> ChatsMembersByTechnical()
         {
@@ -76,10 +64,7 @@ namespace HelpTechAppWeb.Controllers
                 var consumer = await baseRequest
                     .GetSingleAsync<Consumer>
                     ("informations/consumer-by-id/consumerId=" +
-                    consumerId, GetToken());
-
-                if (consumer is null)
-                    return;
+                    consumerId, GetToken()) ?? new();
 
                 lock (consumers)
                     consumers.Add(consumer);
@@ -106,7 +91,6 @@ namespace HelpTechAppWeb.Controllers
                 (await queryAsync), "application/json");
         }
 
-        [Route("chat-by-chat-room")]
         [HttpGet]
         public async Task<IActionResult> ChatByChatRoom()
         {

@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using HelpTechAppWeb.Models;
 using HelpTechAppWeb.Configurations.Interfaces;
-using Newtonsoft.Json;
 
 namespace HelpTechAppWeb.Controllers
 {
-    [Route("access/")]
     [AllowAnonymous]
     public class AccessController
         (IBaseRequest baseRequest,
@@ -23,26 +21,22 @@ namespace HelpTechAppWeb.Controllers
 
         #region Views
 
-        [Route("login")]
         [HttpGet]
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Login()
         {
-            //if (User?.Identity?.IsAuthenticated == true)
-            //    return RedirectToAction("InterfaceTechnical", "Technicals");
+            if (User?.Identity?.IsAuthenticated == true)
+                return RedirectToAction("InterfaceTechnical", "Technicals");
 
             return View();
         }
 
-        [Route("register-technical")]
         [HttpGet]
         public IActionResult RegisterTechnical() => View();
 
-        [Route("register-consumer")]
         [HttpGet]
         public IActionResult RegisterConsumer() => View();
 
-        [Route("logout")]
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
@@ -57,7 +51,6 @@ namespace HelpTechAppWeb.Controllers
 
         #region Json
 
-        [Route("login")]
         [HttpPost]
         public async Task<IActionResult> Login
             (Models.User user)
@@ -68,25 +61,23 @@ namespace HelpTechAppWeb.Controllers
             if (string.IsNullOrEmpty(result))
                 return RedirectToAction("Error", "Home");
 
-            //List<Claim> claims =
-            //[
-            //    new(ClaimTypes.Hash, result),
-            //    new(ClaimTypes.Role, user.Role),
-            //    new(ClaimTypes.Name, user.Username.ToString())
-            //];
+            List<Claim> claims =
+            [
+                new(ClaimTypes.Hash, result),
+                new(ClaimTypes.Role, user.Role),
+                new(ClaimTypes.Name, user.Username.ToString())
+            ];
 
-            //ClaimsIdentity claimsIdentity = new(claims,
-            //    CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsIdentity claimsIdentity = new(claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
 
-            //await HttpContext.SignInAsync
-            //    (CookieAuthenticationDefaults.AuthenticationScheme,
-            //    new ClaimsPrincipal(claimsIdentity));
+            await HttpContext.SignInAsync
+                (CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
 
-            return Content(JsonConvert.SerializeObject
-                (true), "application/json");
+            return RedirectToAction("InterfaceTechnical", "Technicals");
         }
 
-        [Route("register-technical")]
         [HttpPost]
         public async Task<IActionResult> RegisterTechnical
             (Technical technical, IFormFile profile,
@@ -125,7 +116,6 @@ namespace HelpTechAppWeb.Controllers
             return RedirectToAction("Login", "Access");
         }
 
-        [Route("register-consumer")]
         [HttpPost]
         public async Task<IActionResult> RegisterConsumer
             (Consumer consumer, IFormFile profile)
