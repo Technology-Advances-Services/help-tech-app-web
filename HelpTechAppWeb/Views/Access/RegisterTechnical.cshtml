@@ -143,10 +143,10 @@
 
         $(document).ready(function () {
 
-            $('#btnRegisterConsumer').prop("disabled", false);
-            $('#btnRegisterConsumer').text("Registrar");
+            $('#btnRegisterConsumer').prop('disabled', false);
+            $('#btnRegisterConsumer').text('Registrar');
 
-            $(window).on("load", function () {
+            $(window).on('load', function () {
 
                 loadSpecialties();
                 loadDepartments();
@@ -185,19 +185,19 @@
 
                 var information = new FormData();
 
-                information.append("Id", $('#iptId').val());
-                information.append("SpecialtyId", $('#sltSpecialties').val());
-                information.append("DistrictId", $('#sltDistricts').val());
-                information.append("FirstName", $('#iptFirstName').val());
-                information.append("LastName", $('#iptLastName').val());
-                information.append("Age", $('#iptAge').val());
-                information.append("Genre", $('#sltGenre').val());
-                information.append("Phone", $('#iptPhone').val());
-                information.append("Email", $('#iptEmail').val());
-                information.append("Code", $('#iptCode').val());
+                information.append('Id', $('#iptId').val());
+                information.append('SpecialtyId', $('#sltSpecialties').val());
+                information.append('DistrictId', $('#sltDistricts').val());
+                information.append('FirstName', $('#iptFirstName').val());
+                information.append('LastName', $('#iptLastName').val());
+                information.append('Age', $('#iptAge').val());
+                information.append('Genre', $('#sltGenre').val());
+                information.append('Phone', $('#iptPhone').val());
+                information.append('Email', $('#iptEmail').val());
+                information.append('Code', $('#iptCode').val());
 
-                information.append("profile", $("#iptProfile").prop("files")[0]);
-                information.append("criminalRecord", $("#iptCriminalRecord").prop("files")[0]);
+                information.append('profile', $('#iptProfile').prop('files')[0]);
+                information.append('criminalRecord', $('#iptCriminalRecor').prop('files')[0]);
 
                 registerTechnical(information);
 

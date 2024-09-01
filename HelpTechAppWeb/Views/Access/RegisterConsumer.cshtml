@@ -165,17 +165,17 @@
 
                 var information = new FormData();
 
-                information.append("Id", $('#iptId').val());
-                information.append("DistrictId", $('#sltDistricts').val());
-                information.append("FirstName", $('#iptFirstName').val());
-                information.append("LastName", $('#iptLastName').val());
-                information.append("Age", $('#iptAge').val());
-                information.append("Genre", $('#sltGenre').val());
-                information.append("Phone", $('#iptPhone').val());
-                information.append("Email", $('#iptEmail').val());
-                information.append("Code", $('#iptCode').val());
+                information.append('Id"', $('#iptId').val());
+                information.append('DistrictId', $('#sltDistricts').val());
+                information.append('FirstName', $('#iptFirstName').val());
+                information.append('LastName', $('#iptLastName').val());
+                information.append('Age', $('#iptAge').val());
+                information.append('Genre', $('#sltGenre').val());
+                information.append('Phone', $('#iptPhone').val());
+                information.append('Email', $('#iptEmail').val());
+                information.append('Code', $('#iptCode').val());
 
-                information.append("profile", $("#iptProfile").prop("files")[0]);
+                information.append('profile', $('#iptProfile').prop('files')[0]);
 
                 registerConsumer(information);
 

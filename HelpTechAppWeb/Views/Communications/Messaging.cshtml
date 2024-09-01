@@ -107,7 +107,7 @@
 
             webSocket.onopen = function (event) {
 
-                console.log("Connected to WebSocket server");
+                console.log('Connected to WebSocket server.');
             };
 
             webSocket.onmessage = function (event) {
@@ -134,7 +134,7 @@
                         contentType: 'application/json; charset=utf-8',
                         success: function (data) {
 
-                            contentHtml =`
+                            contentHtml = `
                                 <div class="img_cont">
                                     <img src="${data.ProfileUrl}" class="rounded-circle user_img">
                                     <span class="online_icon"></span>
@@ -279,13 +279,13 @@
             }
             function sendMessage() {
 
-                const role = document.getElementById("iptRole");
-                const message = document.getElementById("txaMessage");
+                const role = document.getElementById('iptRole');
+                const message = document.getElementById('txaMessage');
 
                 const user = role.value;
                 const message = message.value;
 
-                if (message.trim() !== "") {
+                if (message.trim() !== '') {
 
                     const messageObject = {
 
