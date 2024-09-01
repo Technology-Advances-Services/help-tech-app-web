@@ -82,9 +82,23 @@
 
                         if ($('sltRoles').val() === 'TECNICO' && data === true) {
 
+                            Swal.fire({
+
+                                icon: 'success',
+                                title: 'Credenciales correctas!',
+                                text: 'Se inicio sesion correctamente, recuerde que su sesion expira en 1 hora.'
+                            });
+
                             window.open('@Url.Action("InterfaceTechnical", "Technicals")', "_self");
                         }
                         else if ($('sltRoles').val() === 'CONSUMIDOR' && data === true) {
+
+                            Swal.fire({
+
+                                icon: 'success',
+                                title: 'Credenciales correctas!',
+                                text: 'Se inicio sesion correctamente, recuerde que su sesion expira en 1 hora.'
+                            });
 
                             window.open('@Url.Action("InterfaceConsumer", "Consumers")', "_self");
                         }
@@ -93,8 +107,8 @@
                             Swal.fire({
 
                                 icon: 'error',
-                                title: 'Notificacion!',
-                                text: 'Se produjo un error.'
+                                title: 'Credenciales incorrectas!',
+                                text: 'Ocurrio un error al validar sus credenciales, vuelva a escribir.'
                             });
                         }
                     },
