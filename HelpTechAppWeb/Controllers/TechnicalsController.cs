@@ -82,6 +82,17 @@ namespace HelpTechAppWeb.Controllers
                 (result), "application/json");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ReviewStatistic()
+        {
+            var result = await baseRequest.GetSingleAsync<dynamic>
+                ("informations/review-statistic?technicalId=" +
+                GetTechnicalId(), GetToken());
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
+        }
+
         #endregion
 
         #region Cookies
