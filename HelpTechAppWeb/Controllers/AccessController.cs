@@ -26,7 +26,7 @@ namespace HelpTechAppWeb.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Login()
         {
-            if (User?.Identity?.IsAuthenticated == true)
+            if (User?.Identity?.IsAuthenticated is true)
                 return RedirectToAction("InterfaceTechnical", "Technicals");
 
             return View();

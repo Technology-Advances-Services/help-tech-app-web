@@ -48,6 +48,7 @@ namespace HelpTechAppWeb.Configurations.Sockets
             else
                 context.Response.StatusCode = 400;
         }
+
         private async Task ReceiveMessages
             (WebSocket webSocket, string room)
         {
@@ -69,6 +70,7 @@ namespace HelpTechAppWeb.Configurations.Sockets
                     CancellationToken.None);
             }
         }
+
         private async Task BroadcastMessage
             (string message, WebSocket senderWebSocket, string room)
         {

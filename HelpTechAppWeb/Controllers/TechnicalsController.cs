@@ -70,6 +70,18 @@ namespace HelpTechAppWeb.Controllers
                 (result), "application/json");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DetailedTechnicalStatistic
+            (string typeStatistic)
+        {
+            var result = await baseRequest.GetSingleAsync<dynamic>
+                ("informations/detailed-technical-statistic?technicalId=" +
+                GetTechnicalId() + "&typeStatistic=" + typeStatistic, GetToken());
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
+        }
+
         #endregion
 
         #region Cookies
