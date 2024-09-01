@@ -120,120 +120,114 @@
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="~/access/js/register-consumer.js"></script>
-@*     <script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
 
-            $("#btnRegisterConsumer").prop("disabled", false);
-            $("#btnRegisterConsumer").text("Registrar");
+            $('#btnRegisterConsumer').prop("disabled", false);
+            $('#btnRegisterConsumer').text("Registrar");
 
-            $(window).on('load', function () {
+            $(window).on("load", function () {
 
                 loadDepartments();
             });
 
-            $('#sltDepartments').on("change", function () {
+            $('#sltDepartments').on('change', function () {
 
                 jQuery.ajax({
 
                     url: '@Url.Action("DistrictsByDepartment", "Locations")' + '?departmentId=' + $(this).val(),
                     method: 'GET',
                     dataType: 'json',
-                    contentType: "application/json; charset=utf-8",
+                    contentType: 'application/json; charset=utf-8',
                     success: function (data) {
 
                         var contentHtml = '';
 
-                        if (data.length > 0) {
+                        for (const item of data) {
 
-                            for (var i = 0; i < data.length; ++i) {
-                                contentHtml +=
-                                    '<option value="' + data[i].id + '">' + data[i].name + '</option>';
-                            }
-
-                            $('#sltDistricts').html(contentHtml);
+                            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
                         }
+
+                        $('#sltDistricts').html(contentHtml);
                     },
                     error: function () {
 
-                        window.open("@Url.Action("Error", "Home")", "_self");
+                        //window.open('@Url.Action("Error", "Home")', '_self');
                     }
                 });
             });
 
-            $("#frmConsumerData").on("submit", function () {
+            $('#frmConsumerData').on('submit', function () {
 
-                $("#btnRegisterConsumer").prop("disabled", true);
-                $("#btnRegisterConsumer").text("Registrando informancion...");
+                $('#btnRegisterConsumer').prop('disabled', true);
+                $('#btnRegisterConsumer').text('Registrando informancion...');
 
-                var parameters = new FormData();
+                var information = new FormData();
 
-                parameters.append("Id", $("#iptId").val());
-                parameters.append("DistrictId", $("#sltDistricts").val());
-                parameters.append("FirstName", $("#iptFirstName").val());
-                parameters.append("LastName", $("#iptLastName").val());
-                parameters.append("Age", $("#iptAge").val());
-                parameters.append("Genre", $("#sltGenre").val());
-                parameters.append("Phone", $("#iptPhone").val());
-                parameters.append("Email", $("#iptEmail").val());
-                parameters.append("Code", $("#iptCode").val());
+                information.append("Id", $('#iptId').val());
+                information.append("DistrictId", $('#sltDistricts').val());
+                information.append("FirstName", $('#iptFirstName').val());
+                information.append("LastName", $('#iptLastName').val());
+                information.append("Age", $('#iptAge').val());
+                information.append("Genre", $('#sltGenre').val());
+                information.append("Phone", $('#iptPhone').val());
+                information.append("Email", $('#iptEmail').val());
+                information.append("Code", $('#iptCode').val());
 
-                parameters.append("profile", $("#iptProfile").prop("files")[0]);
+                information.append("profile", $("#iptProfile").prop("files")[0]);
 
-                registerConsumer(parameters);
+                registerConsumer(information);
 
                 return false;
             });
-        });
 
-        function loadDepartments() {
+            function registerConsumer(information) {
 
-            jQuery.ajax({
+                jQuery.ajax({
 
-                url: '@Url.Action("AllDepartments","Locations")',
-                method: 'GET',
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {
+                    url: '@Url.Action("RegisterConsumer", "Access")',
+                    method: 'POST',
+                    data: information,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function () { },
+                    error: function () {
 
-                    var contentHtml = '';
+                        //window.open('@Url.Action("Error", "Home")', "_self");
+                    }
+                });
+            }
+            
+            function loadDepartments() {
 
-                    if (data.length > 0) {
+                jQuery.ajax({
 
-                        for (var i = 0; i < data.length; ++i) {
-                            contentHtml +=
-                                '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    url: '@Url.Action("AllDepartments", "Locations")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var contentHtml = '';
+
+                        for (const item of data) {
+
+                            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
                         }
 
                         $('#sltDepartments').html(contentHtml);
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
                     }
-                },
-                error: function () {
+                });
+            }
+        });
 
-                    window.open("@Url.Action("Error", "Home")", "_self");
-                }
-            });
-        }
-        function registerConsumer(parameters) {
-
-            jQuery.ajax({
-
-                url: '@Url.Action("RegisterConsumer", "Access")',
-                method: "POST",
-                data: parameters,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function () { },
-                error: function () {
-
-                    window.open("@Url.Action("Error", "Home")", "_self");
-                }
-            });
-        }
-
-    </script> *@
+    </script>
 
 </body>
 </html>

@@ -30,11 +30,11 @@ namespace HelpTechAppWeb.Configurations.Sockets
 
                 _rooms.AddOrUpdate(room, [webSocket],
                     (key, oldValue) =>
-                    {
-                        oldValue.Add(webSocket);
+                {
+                    oldValue.Add(webSocket);
 
-                        return oldValue;
-                    });
+                    return oldValue;
+                });
 
                 await ReceiveMessages(webSocket, room);
 

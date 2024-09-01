@@ -173,42 +173,28 @@
 
                     <div class="card shadow border-0 mb-7">
 
-                        <div id="dvSearchDate" class="card-header">
+                        <div id="dvSearchJobs" class="card-header">
 
                             <h5 class="mb-0">Agenda de citas</h5>
 
                             <hr />
 
-                            <span>Buscar por fecha:</span>
+                            <span>Ingresar fecha:</span>
                             <input id="iptWorkDate" type="date" />
-                            <a id="btnSearchPendingsJobs" class="btn btn-warning">Buscar</a>
+
+                            <span>Ingresar estado:</span>
+                            <select id="sltJobsStates">
+                                <option>PENDIENTE</option>
+                                <option>EN PROCESO</option>
+                            </select>
+
+                            <a id="btnSearchJobs" class="btn btn-warning">Buscar</a>
 
                         </div>
 
                         <div class="table-responsive">
 
-                            <table id="tblPendingsJobs" class="table table-hover table-nowrap">
-
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th scope="col">Id</th>
-                                        <th scope="col">DNI</th>
-                                        <th scope="col">Nombre</th>
-                                        <th scope="col">Apellido</th>
-                                        <th scope="col">Contacto</th>
-                                        <th scope="col">Fecha</th>
-                                        <th scope="col">Tiempo</th>
-                                        <th scope="col">Mano de obra</th>
-                                        <th scope="col">Materiales</th>
-                                        <th scope="col">Monto final</th>
-                                        <th scope="col">Estado</th>
-                                        <th scope="col">Opcion</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody id="tbdPendingsJobs"></tbody>
-
-                            </table>
+                            <table id="tblJobs" class="table table-hover table-nowrap"></table>
 
                         </div>
 
@@ -240,32 +226,7 @@
                 <div class="modal-body">
 
                     <div>
-                        <div class="box">
-
-                            <div class="img" style="text-align: center;"> <img id="iProfileUrl"> </div> <br>
-
-                            <p id="pMembership"></p>
-                            <br>
-
-                            <p id="pEspecialty"></p>
-                            <br>
-
-                            <p id="pFirstname"></p>
-                            <br>
-
-                            <p id="pLastname"></p>
-                            <br>
-
-                            <p id="pAge"></p>
-                            <br>
-
-                            <p id="pEmail"></p>
-                            <br>
-
-                            <p id="pPhone"></p>
-                            <br>
-
-                        </div>
+                        <div id="dvInformationTechnical" class="box"></div>
                     </div>
 
                 </div>
@@ -315,81 +276,51 @@
             </div>
         </div>
     </div>
-    <div id="mdlJobsResponses" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered justify-content-center" role="document">
-            <div class="modal-content border-0 mx-3">
-                <div class="modal-body p-0">
-                    <div class="card text-center">
+    <div id="mdlJobResponse" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-                        <div class="card-header pb-0 bg-white border-0">
-                            <div class="row">
-                                <div class="col ml-auto">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            </div>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title">Respuesta de atencion</h3>
+                </div>
 
-                            <h3>Trabajos pendientes</h3>
+                <div class="modal-body">
 
+                    <form id="frmJobDetail" class="modalForm">
+
+                        <input id="iptId" type="hidden" />
+
+                        <div class="form-group">
+                            <label>Fecha de trabajo:</label>
+                            <input id="iptWorkDate" type="datetime-local" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Tiempo estimado:</label>
+                            <input id="iptTime" type="text" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Mano de obra:</label>
+                            <input id="iptLaborBudget" type="text" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Prespuesto de materiales:</label>
+                            <input id="iptMaterialBudget" type="text" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label>Estado de trabajo:</label>
+                            <select id="sltJobState" class="form-control">
+                                <option>PENDIENTE</option>
+                                <option>DENEGADO</option>
+                            </select>
                         </div>
 
-                        <div class="card-body px-sm-5 mb-5">
-
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">First</th>
-                                            <th scope="col">Last</th>
-                                            <th scope="col">Handle</th>
-                                            <th scope="col">Handle</th>
-                                            <th scope="col">Handle</th>
-                                            <th scope="col">Handle</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Samso</td>
-                                            <td>Natto</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Tinor</td>
-                                            <td>Horton</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Mythor</td>
-                                            <td>Bully</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                            <td>xx</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-
-                    </div>
+                        <button type="submit" class="btn btn-default"><p>Registrar</p></button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <input id="iptTechnicalId" type="hidden" value="@ViewBag.TechnicalId" />
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -397,7 +328,415 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="~/technicals/js/interface-technical.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var specialties = [];
+            var jobs = [];
+
+            $(window).on('load', function () {
+
+                loadSpecialties();
+                loadJobsByTechnical();
+                refreshInterfaceData();
+                loadInformationTechnical();
+            });
+
+            $('#btInterfaceTechnical').on('click', function () {
+
+                window.open('@Url.Action("InterfaceTechnical", "Technicals")', '_self');
+
+                return false;
+            });
+            $('#frmJobDetail').on('submit', function () {
+
+                var information = new FormData();
+
+                information.append('Id', $('iptId').val());
+                information.append('WorkDate', $('iptWorkDate').val());
+                information.append('Time', $('iptTime').val());
+                information.append('LaborBudget', $('iptLaborBudget').val());
+                information.append('MaterialBudget', $('iptMaterialBudget').val());
+                information.append('JobState', $('sltJobState').val());
+                
+                assignJobDetail(information);
+
+                var index = jobs.findIndex(j => j.Id === id);
+
+                jobs[index].WorkDate = $('iptWorkDate').val();
+                jobs[index].Time = $('iptTime').val();
+                jobs[index].LaborBudget = $('iptLaborBudget').val();
+                jobs[index].MaterialBudget = $('iptMaterialBudget').val();
+                jobs[index].AmountFinal = parseFloat($('iptLaborBudget').val()) + parseFloat($('iptMaterialBudget').val());
+                jobs[index].JobState = $('sltJobState').val();
+
+                fillTableJobs(jobs, "PENDIENTE");
+            });
+            $('btnStatisticReport').on('click', function () {
+
+                window.open('@Url.Action("StatisticlReport", "Technicals")', '_self');
+
+                return false;
+            });
+            $('btnReportReviews').on('click', function () {
+
+                window.open('@Url.Action("ReportReviews", "Technicals")', '_self');
+
+                return false;
+            });
+            $('#btnLogout').on('click', function () {
+
+                window.open('@Url.Action("Logout","Access")', '_self');
+
+                return false;
+            });
+
+            $('#dvSearchJobs').on('click', '#btnSearchJobs', function () {
+
+                var filteredJobs = jobs.filter(j => j.WorkDate === $("#iptWorkDate").val() && j.JobState === $('sltJobsStates').val());
+
+                fillTableJobs(filteredJobs);
+            });
+            $('#tblJobs').on('click', '#btnJobDetail', function () {
+
+                var filteredJobs;
+
+                $(this).parents("tr").find("#tId").each(function () {
+
+                    filteredJobs = jobs.find(j => j.Id === $(this).html());
+                });
+
+                $('#pAddress').text(filteredJobs.Address);
+                $('#pDescription').text(filteredJobs.Description);
+            });
+            $('#tblJobs').on('click', '#btnJobResponse', function () {
+
+                $(this).parents("tr").find("#tId").each(function () {
+
+                    $('#iptId').val($(this).html());
+                });
+            });
+            $('#tblJobs').on('click', '#btnChat', function () {
+
+                var chatRoomId;
+
+                $(this).parents("tr").find("#tChatRoomId").each(function () {
+
+                    chatRoomId = $(this).html();
+                });
+
+                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
+            });
+            $('#uChatsMembers').on('click', '#btnChat', function () {
+
+                var chatRoomId;
+
+                $(this).parents("li").find("#spnChatRoomId").each(function () {
+
+                    chatRoomId = $(this).html();
+                });
+
+                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
+            });
+
+            function loadSpecialties() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("AllSpecialties", "Specialties")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        specialties = data;
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+            function loadJobsByTechnical() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("JobsByTechnical", "Attentions")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        jobs = data;
+
+                        fillTableJobs(jobs, 'PENDIENTE');
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+            function refreshInterfaceData() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("GeneralTechnicalStatistic", "Technicals")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        for (const item of data) {
+
+                            $('#spnTotalIncome').text(item.TotalIncome);
+                            $('#spnTotalConsumersServed').text(item.TotalConsumersServed);
+                            $('#spnTotalWorkTime').text(item.TotalWorkTime);
+                            $('#spnTotalPendingsJobs').text(item.TotalPendingsJobs);
+                        }
+                    },
+                    error: function() {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+                jQuery.ajax({
+
+                    url: '@Url.Action("ChatsMembersByTechnical", "Communications")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var contentHtml = '';
+
+                        for (const item of data) {
+
+                            contentHtml += `
+                                <li>
+                                    <a id="btnChat" class="nav-link d-flex align-items-center">
+                                        <div class="me-4">
+                                            <div class="position-relative d-inline-block text-white">
+                                                <img alt="image" src="${item.ProfileUrl}" class="avatar rounded-circle">
+                                                <span class="position-absolute bottom-2 end-2 transform translate-x-1/2 translate-y-1/2 border-2 border-solid border-current w-3 h-3 bg-success rounded-circle"></span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span id="spnChatRoomId" style="display:none;">${item.ChatRoomId}</span>
+                                            <span class="d-block text-sm font-semibold">${item.Firstname}</span>
+                                            <span class="d-block text-xs text-muted font-regular">${item.Lastname}</span>
+                                        </div>
+                                        <div class="ms-auto"> <i class="bi bi-chat"></i> </div>
+                                    </a>
+                                </li>`;
+                        }
+
+                        $('#uChatsMembers').html(contentHtml);
+                    },
+                    error: function() {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+            function loadInformationTechnical() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("InformationTechnical", "Technicals")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
+
+                        var contentHtml = `
+                            <div class="img" style="text-align: center;"> <img alt="" src=${data.ProfileUrl}> </div>
+                            <br>
+
+                            <p>Membresia: ${data.Membership}</p>
+                            <br>
+
+                            <p>Especialidad: ${filteredSpecialties.Name}</p>
+                            <br>
+
+                            <p>Nombres: ${data.Firstname}</p>
+                            <br>
+
+                            <p>Apellidos: ${data.Lastname}</p>
+                            <br>
+
+                            <p>Edad: ${data.Age}</p>
+                            <br>
+
+                            <p>Email: ${data.Email}</p>
+                            <br>
+
+                            <p>Telefono: ${data.Phone}</p>
+                            <br>`;
+
+                        $('#dvInformationTechnical').html(contentHtml);
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+            function assignJobDetail(information) {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("AssignJobDetail", "Attentions")',
+                    method: 'POST',
+                    data: information,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+
+                        if (data === true) {
+
+                            $("#mdlJobResponse").modal("hide");
+
+                            $("#mdlJobResponse").modal("hide").on('hidden.bs.modal', function () {
+                                $('.modal-backdrop').remove();
+                            });
+                        }
+                        else {
+
+                            //window.open('@Url.Action("Error", "Home")', "_self");
+                        }
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', "_self");
+                    }
+                });
+            }
+            function fillTableJobs(jobs, jobsStates) {
+
+                if (jobs.length === 0) {
+                    
+                    $('#spnTableMessage').text('Usted no cuenta con citas pendientes.');
+            
+                    return;
+                }
+            
+                var contentHtml = '';
+            
+                if (jobsStates === 'PENDIENTE') {
+
+                    contentHtml = `
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">DNI</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Contacto</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Tiempo</th>
+                                <th scope="col">Mano de obra</th>
+                                <th scope="col">Materiales</th>
+                                <th scope="col">Monto final</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbdJobs"></tbody>`;
+
+                    $('#tblJobs').html(contentHtml);
+
+                    contentHtml = '';
+
+                    for (const item of jobs) {
+
+                        var workDate = new Date(item.WorkDate);
+
+                        contentHtml += `
+                            <tr>
+                                <td id="tId">${item.Id}</td>
+                                <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
+                                <td id="tConsumerId">${item.ConsumerId}</td>
+                                <td id="tFirstname">${item.Firstname}</td>
+                                <td id="tLastname">${item.Lastname}</td>
+                                <td id="tPhone">${item.Phone}</td>
+                                <td id="tWorkDate">${getFormattedDate(workDate)}</td>
+                                <td id="tTime">${item.Time}</td>
+                                <td id="tLaborBudget">${item.LaborBudget}</td>
+                                <td id="tMaterialBudget">${item.MaterialBudget}</td>
+                                <td id="tAmountFinal">${item.AmountFinal}</td>
+                                <td id="tJobState">${item.JobState}</td>
+                                <td>
+                                    <button id="btnDetailJob" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlJobDetail">Detalle</button>
+                                    <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>
+                                </td>
+                            </tr>`;
+                    }
+                }
+                else if (jobsStates === 'EN PROCESO') {
+
+                    contentHtml = `
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">DNI</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Contacto</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbdJobs"></tbody>`;
+
+                    $('#tblJobs').html(contentHtml);
+
+                    contentHtml = '';
+
+                    for (const item of jobs) {
+
+                        var workDate = new Date(item.WorkDate);
+
+                        contentHtml += `
+                            <tr>
+                                <td id="tId">${item.Id}</td>
+                                <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
+                                <td id="tConsumerId">${item.ConsumerId}</td>
+                                <td id="tFirstname">${item.Firstname}</td>
+                                <td id="tLastname">${item.Lastname}</td>
+                                <td id="tPhone">${item.Phone}</td>
+                                <td id="tJobState">${item.JobState}</td>
+                                <td>
+                                    <button id="btnDetailJob" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#btnDetailJob">Detalle</button>
+                                    <button id="btnJobResponse" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlJobResponse">Respuesta</button>
+                                    <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>
+                                </td>
+                            </tr>`;
+                    }
+                }
+
+                $('#tbdJobs').html(contentHtml);
+                $('#spnTableMessage').text(`Se está mostrando las citas ${jobsStates}.`);
+            }
+
+            function getFormattedDate(date) {
+            
+                let day = String(date.getDate()).padStart(2, '0');
+                let mounth = String(date.getMonth() + 1).padStart(2, '0');
+                let year = date.getFullYear();
+                let hour = String(date.getHours()).padStart(2, '0');
+                let minutes = String(date.getMinutes()).padStart(2, '0');
+                let seconds = String(date.getSeconds()).padStart(2, '0');
+            
+                return `${day}/${mounth}/${year} ${hour}:${minutes}:${seconds}`;
+            }
+        });
+
+    </script>
 
 </body>
 </html>

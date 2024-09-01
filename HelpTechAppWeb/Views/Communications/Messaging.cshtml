@@ -14,7 +14,7 @@
     <link rel="stylesheet" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" />
     <link rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
     <link id="bootstrap-css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" />
-    <link rel ="stylesheet" href="~/communications/css/messaging.css" />
+    <link rel="stylesheet" href="~/communications/css/messaging.css" />
     <title>Mensajeria - HelpTechAppWeb</title>
 
 </head>
@@ -61,7 +61,338 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="~/communications/js/messaging.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var room = $('#iptChatRoomId').val();
+            var webSocket = new WebSocket('wss://localhost:44310/chat?room=' + room);
+            var information = new FormData();
+
+            var contentHtml = '';
+
+            $(window).on('load', function () {
+
+                loadInformation();
+                loadChatsByChatRoom();
+            });
+
+            $('#btnSendMessage').on('click', function () {
+
+                information = new FormData();
+
+                information.append('ChatRoomId', $('#iptChatRoomId').val());
+                information.append('Sender', $('#iptRole').val());
+                information.append('Message', $('#iptMessage').val());
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("SendMessage", "Communications")',
+                    method: 'POST',
+                    data: credentials,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function () { },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', "_self");
+                    }
+                });
+
+                sendMessage();
+
+                return false;
+            });
+
+            webSocket.onopen = function (event) {
+
+                console.log("Connected to WebSocket server");
+            };
+
+            webSocket.onmessage = function (event) {
+
+                const message = JSON.parse(event.data);
+
+                if (message.room === room) {
+
+                    displayMessage(message);
+                }
+            };
+
+            function loadInformation() {
+
+                contentHtml = '';
+
+                if ($('#iptRole').val() === 'TECNICO') {
+
+                    jQuery.ajax({
+
+                        url: '@Url.Action("InformationConsumer", "Consumers")',
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+
+                            contentHtml =`
+                                <div class="img_cont">
+                                    <img src="${data.ProfileUrl}" class="rounded-circle user_img">
+                                    <span class="online_icon"></span>
+                                </div>
+                                <div class="user_info">
+                                    <span>${data.Firstname}</span>
+                                </div>`;
+                        },
+                        error: function () {
+
+                            //window.open('@Url.Action("Error", "Home")', '_self');
+                        }
+                    });
+                }
+                else if ($('#iptRole').val() === 'CONSUMIDOR') {
+
+                    jQuery.ajax({
+
+                        url: '@Url.Action("InformationTechnical", "Technicals")',
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+
+                            contentHtml = `
+                                <div class="img_cont">
+                                    <img src="${data.ProfileUrl}" class="rounded-circle user_img">
+                                    <span class="online_icon"></span>
+                                </div>
+                                <div class="user_info">
+                                    <span>${data.Firstname}</span>
+                                </div>`;
+                        },
+                        error: function () {
+
+                            //window.open('@Url.Action("Error", "Home")', '_self');
+                        }
+                    });
+                }
+            
+                $('#dvProfile').htm(contentHtml);
+            }
+            function loadChatsByChatRoom() {
+            
+                contentHtml = '';
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("ChatByChatRoom", "Communications")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var profileUrl = '';
+                        var shippingDate;
+            
+                        if ($('#iptRole').val() === 'TECNICO') {
+            
+                            for (const item of data) {
+
+                                shippingDate = new Date(item.ShippingDate);
+            
+                                if (!isNullOrEmpty(item.TechnicalId)) {
+
+                                    profileUrl = $('#iptProfileUrlTechnical').val();
+            
+                                    contentHtml += `
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="msg_cotainer_send">
+                                                ${item.Message}
+                                                <span class="msg_time_send">${getFormattedDate(shippingDate)}</span>
+                                            </div>
+                                            <div class="img_cont_msg">
+                                                <img src="${profileUrl}" class="rounded-circle user_img">
+                                            </div>
+                                        </div>`;
+                                }
+                                else if (!isNullOrEmpty(item.ConsumerId)) {
+
+                                    profileUrl = $('#iptProfileUrlConsumer').val();
+            
+                                    contentHtml += `
+                                        <div class="d-flex justify-content-start mb-4">
+                                            <div class="img_cont_msg">
+                                                <img src="${profileUrl}" class="rounded-circle user_img">
+                                            </div>
+                                            <div class="msg_cotainer">
+                                                ${item.Message}
+                                                <span class="msg_time">${getFormattedDate(shippingDate)}</span>
+                                            </div>
+                                        </div>`;
+                                }
+                            }
+                        }
+                        else if ($('#iptRole').val() === 'CONSUMIDOR') {
+            
+                            for (const item of data) {
+            
+                                shippingDate = new Date(item.ShippingDate);
+            
+                                if (!isNullOrEmpty(item.TechnicalId)) {
+
+                                    profileUrl = $('#iptProfileUrlTechnical').val();
+            
+                                    contentHtml += `
+                                        <div class="d-flex justify-content-start mb-4">
+                                            <div class="img_cont_msg">
+                                                <img src="${profileUrl}" class="rounded-circle user_img">
+                                            </div>
+                                            <div class="msg_cotainer">
+                                                ${item.Message}
+                                                <span class="msg_time">${getFormattedDate(shippingDate)}</span>
+                                            </div>
+                                        </div>`;
+                                }
+                                else if (!isNullOrEmpty(item.ConsumerId)) {
+
+                                    profileUrl = $('#iptProfileUrlConsumer').val();
+            
+                                    contentHtml += `
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="msg_cotainer_send">
+                                                ${item.Message}
+                                                <span class="msg_time_send">${getFormattedDate(shippingDate)}</span>
+                                            </div>
+                                            <div class="img_cont_msg">
+                                                <img src="${profileUrl}" class="rounded-circle user_img">
+                                            </div>
+                                        </div>`;
+                                }
+                            }
+                        }
+            
+                        $('#dvChat').html(contentHtml);
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', "_self");
+                    }
+                });
+            }
+            function sendMessage() {
+
+                const role = document.getElementById("iptRole");
+                const message = document.getElementById("txaMessage");
+
+                const user = role.value;
+                const message = message.value;
+
+                if (message.trim() !== "") {
+
+                    const messageObject = {
+
+                        room: room,
+                        user: user,
+                        text: message
+                    };
+
+                    webSocket.send(JSON.stringify(messageObject));
+
+                    displayMessage(messageObject);
+
+                    message.value = '';
+                }
+            }
+            function displayMessage(message) {
+
+                var profileUrl = '';
+                var date = new Date();
+
+                if ($('#iptRole').val() === 'TECNICO') {
+
+                    if (message.user === 'TECNICO') {
+
+                        profileUrl = $('#iptProfileUrlTechnical').val();
+
+                        contentHtml = `
+                            <div class="d-flex justify-content-end mb-4">
+                                <div class="msg_cotainer_send">
+                                    ${message.text}
+                                    <span class="msg_time_send">${getFormattedDate(date)}</span>
+                                </div>
+                                <div class="img_cont_msg">
+                                    <img src="${profileUrl}" class="rounded-circle user_img">
+                                </div>
+                            </div>`;
+                    }
+                    else if (message.user == 'CONSUMIDOR') {
+
+                        profileUrl = $('#iptProfileUrlConsumer').val();
+
+                        contentHtml += `
+                            <div class="d-flex justify-content-start mb-4">
+                                <div class="img_cont_msg">
+                                    <img src="${profileUrl}" class="rounded-circle user_img">
+                                </div>
+                                <div class="msg_cotainer">
+                                    ${message.text}
+                                    <span class="msg_time">${getFormattedDate(date)}</span>
+                                </div>
+                            </div>`;
+                    }
+                }
+                else if ($('#iptRole').val() === 'CONSUMIDOR') {
+
+                    if (message.user == 'TECNICO') {
+
+                        profileUrl = $('#iptProfileUrlTechnical').val();
+
+                        contentHtml += `
+                            <div class="d-flex justify-content-start mb-4">
+                                <div class="img_cont_msg">
+                                    <img src="${profileUrl}" class="rounded-circle user_img">
+                                </div>
+                                <div class="msg_cotainer">
+                                    ${message.text}
+                                    <span class="msg_time">${getFormattedDate(date)}</span>
+                                </div>
+                            </div>`;
+
+                    }
+                    else if (message.user == 'CONSUMIDOR') {
+
+                        profileUrl = $('#iptProfileUrlConsumer').val();
+
+                        contentHtml += `
+                            <div class="d-flex justify-content-end mb-4">
+                                <div class="msg_cotainer_send">
+                                    ${message.text}
+                                    <span class="msg_time_send">${getFormattedDate(date)}</span>
+                                </div>
+                                <div class="img_cont_msg">
+                                    <img src="${profileUrl}" class="rounded-circle user_img">
+                                </div>
+                            </div>`;
+                    }
+                }
+
+                $('#dvChat').html(contentHtml);
+            }
+            function getFormattedDate(date) {
+
+                let day = String(date.getDate()).padStart(2, '0');
+                let mounth = String(date.getMonth() + 1).padStart(2, '0');
+                let year = date.getFullYear();
+                let hour = String(date.getHours()).padStart(2, '0');
+                let minutes = String(date.getMinutes()).padStart(2, '0');
+                let seconds = String(date.getSeconds()).padStart(2, '0');
+
+                return `${day}/${mounth}/${year} ${hour}:${minutes}:${seconds}`;
+            }
+            function isNullOrEmpty(str) {
+                return !str || str.trim() === '';
+            }
+        });
+    
+    </script>
 
 </body>
 </html>

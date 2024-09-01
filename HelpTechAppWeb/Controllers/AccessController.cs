@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Security.Claims;
-using HelpTechAppWeb.Models;
 using HelpTechAppWeb.Configurations.Interfaces;
+using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -44,7 +45,7 @@ namespace HelpTechAppWeb.Controllers
                 (CookieAuthenticationDefaults
                 .AuthenticationScheme);
 
-            return RedirectToAction("Access", "Login");
+            return RedirectToAction("Login", "Access");
         }
 
         #endregion
@@ -75,7 +76,8 @@ namespace HelpTechAppWeb.Controllers
                 (CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
 
-            return RedirectToAction("InterfaceTechnical", "Technicals");
+            return Content(JsonConvert.SerializeObject
+                (true),"application/json");
         }
 
         [HttpPost]
@@ -84,7 +86,7 @@ namespace HelpTechAppWeb.Controllers
             IFormFile criminalRecord)
         {
             var result = await UploadTechnicalFiles
-                (profile, criminalRecord);
+                (technical.Id, profile, criminalRecord);
 
             if (result is null)
                 return RedirectToAction("Error", "Home");
@@ -113,7 +115,8 @@ namespace HelpTechAppWeb.Controllers
             if (result is false)
                 return RedirectToAction("Error", "Home");
 
-            return RedirectToAction("Login", "Access");
+            return Content(JsonConvert.SerializeObject
+                (true), "application/json");
         }
 
         [HttpPost]
@@ -137,7 +140,8 @@ namespace HelpTechAppWeb.Controllers
             if (result is false)
                 return RedirectToAction("Error", "Home");
 
-            return RedirectToAction("Login", "Access");
+            return Content(JsonConvert.SerializeObject
+                (true), "application/json");
         }
 
         #endregion
@@ -145,7 +149,7 @@ namespace HelpTechAppWeb.Controllers
         #region FireBase
 
         public async Task<dynamic?> UploadTechnicalFiles
-            (IFormFile profile, IFormFile criminalRecord)
+            (string id, IFormFile profile, IFormFile criminalRecord)
         {
             try
             {
@@ -176,7 +180,7 @@ namespace HelpTechAppWeb.Controllers
                         })
                     .Child("HelpTechAppWeb")
                     .Child("Technicals-Profiles")
-                    .Child(Path.GetFileName(profile.FileName))
+                    .Child("Perfil-" + id + Path.GetExtension(profile.FileName))
                     .PutAsync(profile.OpenReadStream(),
                     cancellationTokenSource.Token);
 

@@ -19,8 +19,6 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public IActionResult InterfaceTechnical()
         {
-            ViewBag.TechnicalId = GetTechnicalId();
-
             return View();
         }
 
@@ -47,7 +45,7 @@ namespace HelpTechAppWeb.Controllers
                 GetTechnicalId(), GetToken()) ?? new();
 
             var contract = await baseRequest.GetSingleAsync<Contract>
-                ("contracts/contract-by-technical/technicalId=" +
+                ("contracts/contract-by-technical?technicalId=" +
                 GetTechnicalId(), GetToken()) ?? new();
 
             var membership = await baseRequest.GetSingleAsync<Membership>

@@ -57,22 +57,19 @@ namespace HelpTechAppWeb.Controllers
 
             var consumers = new List<Consumer>();
 
-            Parallel.ForEach(chatsMembers, async j =>
+            foreach (var item in chatsMembers)
             {
-                var consumerId = j.ConsumerId;
+                var consumerId = item.ConsumerId;
 
-                var consumer = await baseRequest
-                    .GetSingleAsync<Consumer>
-                    ("informations/consumer-by-id/consumerId=" +
-                    consumerId, GetToken()) ?? new();
+                var consumer = await baseRequest.GetSingleAsync<Consumer>
+                    ("informations/consumer-by-id?id=" + consumerId,
+                    GetToken()) ?? new();
 
                 lock (consumers)
                     consumers.Add(consumer);
-            });
+            }
 
-            Task<dynamic> queryAsync = new(() =>
-            {
-                return
+            var result =
                 (from cm in chatsMembers
                  join co in consumers
                  on cm.ConsumerId equals co.Id
@@ -83,12 +80,9 @@ namespace HelpTechAppWeb.Controllers
                      co.Firstname,
                      co.Lastname,
                  });
-            });
-
-            queryAsync.Start();
 
             return Content(JsonConvert.SerializeObject
-                (await queryAsync), "application/json");
+                (result), "application/json");
         }
 
         [HttpGet]

@@ -34,7 +34,7 @@
             <hr />
 
             <input id="iptLogin" type="submit" />
-            <a id="btnUpdateCode">Olvidaste tu contraseña?</a>
+            <a id="btnUpdateCode" href="">Olvidaste tu contraseña?</a>
 
         </form>
     </div>
@@ -43,7 +43,62 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="~/access/js/login.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#iptLogin').prop('disabled', false);
+            $('#iptLogin').val('Ingresar');
+
+            $('#frmCredentials').on('submit', function () {
+
+                $('#iptLogin').prop('disabled', true);
+                $('#iptLogin').val('Iniciando sesion...');
+
+                var credentials = new FormData();
+
+                credentials.append('Username', $('#iptUsername').val());
+                credentials.append('Password', $('#iptPassword').val());
+                credentials.append('Role', $('#sltRoles').val());
+
+                login(credentials);
+
+                return false;
+            });
+
+            function login(credentials) {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("Login", "Access")',
+                    method: 'POST',
+                    data: credentials,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+
+                        if ($('sltRoles').val() === 'TECNICO' && data === true) {
+
+                            window.open('@Url.Action("InterfaceTechnical", "Technicals")', "_self");
+                        }
+                        else if ($('sltRoles').val() === 'CONSUMIDOR' && data === true) {
+
+                            window.open('@Url.Action("InterfaceConsumer", "Consumer")', "_self");
+                        }
+                        else {
+
+                        }
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', "_self");
+                    }
+                });
+            }
+        });
+
+    </script>
 
 </body>
 </html>

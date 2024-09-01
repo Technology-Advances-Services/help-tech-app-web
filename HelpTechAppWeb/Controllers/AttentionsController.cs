@@ -21,30 +21,27 @@ namespace HelpTechAppWeb.Controllers
         {
             var jobs = await baseRequest.GetAsync<Job>
                 ("jobs/jobs-by-technical?technicalId=" +
-                GetTechnicalId(), GetToken());
+                GetPersonId(), GetToken());
 
             var chatsMembers = await baseRequest.GetAsync<ChatMember>
                 ("chatsmembers/chats-members-by-technical?technicalId=" +
-                GetTechnicalId(), GetToken());
+                GetPersonId(), GetToken());
 
             var consumers = new List<Consumer>();
 
-            Parallel.ForEach(jobs, async j =>
+            foreach (var item in chatsMembers)
             {
-                var consumerId = j.ConsumerId;
+                var consumerId = item.ConsumerId;
 
-                var consumer = await baseRequest
-                    .GetSingleAsync<Consumer>
-                    ("informations/consumer-by-id/consumerId=" +
-                    consumerId, GetToken()) ?? new();
+                var consumer = await baseRequest.GetSingleAsync<Consumer>
+                    ("informations/consumer-by-id?id=" + consumerId,
+                    GetToken()) ?? new();
 
                 lock (consumers)
                     consumers.Add(consumer);
-            });
+            }
 
-            Task<dynamic> queryAsync = new(() =>
-            {
-                return
+            var result =
                 (from jo in jobs
                  join co in consumers
                  on jo.ConsumerId equals co.Id
@@ -59,18 +56,36 @@ namespace HelpTechAppWeb.Controllers
                      co.Lastname,
                      co.Phone,
                      jo.Description,
+                     jo.Time,
                      jo.WorkDate,
                      jo.LaborBudget,
                      jo.MaterialBudget,
                      jo.AmountFinal,
                      jo.JobState,
                  });
-            });
-
-            queryAsync.Start();
 
             return Content(JsonConvert.SerializeObject
-                (await queryAsync), "application/json");
+                (result), "application/json");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignJobDetail
+            (Job job)
+        {
+            var result = await baseRequest.PostAsync
+                ("jobs/assign-job-detail", GetToken(), job);
+
+            if (result is false)
+                return RedirectToAction("Error", "Home");
+
+            result = await baseRequest.PostAsync
+                ("jobs/update-job-state", GetToken(), job);
+
+            if (result is false)
+                return RedirectToAction("Error", "Home");
+
+            return Content(JsonConvert.SerializeObject
+                (true), "application/json");
         }
 
         #endregion
@@ -86,7 +101,7 @@ namespace HelpTechAppWeb.Controllers
                 .Value.ToString() ?? string.Empty;
         }
 
-        private string GetTechnicalId()
+        private string GetPersonId()
         {
             _claimsPrincipal = HttpContext.User;
 

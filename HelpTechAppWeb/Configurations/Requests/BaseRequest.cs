@@ -101,7 +101,8 @@ namespace HelpTechAppWeb.Configurations.Requests
                 return default;
 
             var result = JsonConvert.DeserializeObject<T?>
-                (await httpResponseMessage.Content.ReadAsStringAsync());
+                (await httpResponseMessage.Content
+                .ReadAsStringAsync());
 
             return result;
         }
@@ -120,7 +121,8 @@ namespace HelpTechAppWeb.Configurations.Requests
                 return default;
 
             var result = JsonConvert.DeserializeObject<T?>
-                (await httpResponseMessage.Content.ReadAsStringAsync());
+                (await httpResponseMessage.Content
+                .ReadAsStringAsync());
 
             return result;
         }
