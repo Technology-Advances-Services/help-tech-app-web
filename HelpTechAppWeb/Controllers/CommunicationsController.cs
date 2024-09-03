@@ -26,12 +26,12 @@ namespace HelpTechAppWeb.Controllers
 
             var consumer = await baseRequest
                 .GetSingleAsync<Consumer>
-                ("informations/consumer-by-id?consumerId=" +
+                ("informations/consumer-by-id?id=" +
                 chatMember.ConsumerId, GetToken()) ?? new();
 
             var technical = await baseRequest
                 .GetSingleAsync<Consumer>
-                ("informations/consumer-by-id?consumerId=" +
+                ("informations/technical-by-id?id=" +
                 chatMember.ConsumerId, GetToken()) ?? new();
 
             this._chatRoomId = chatRoomId;
