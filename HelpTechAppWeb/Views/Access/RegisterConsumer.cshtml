@@ -204,12 +204,19 @@
                                 timer: 5000,
                                 timerProgressBar: true,
                                 willClose: () => {
+
                                     window.open('@Url.Action("Login", "Access")', "_self");
                                 }
                             });
                         }
                         else {
 
+                            Swal.fire({
+
+                                icon: 'error',
+                                title: 'Ocurrio un error al registrar!',
+                                text: 'Los datos no se registraron, asegurese de escribir correctamente sus datos.'
+                            });
                         }
                     },
                     error: function () {
