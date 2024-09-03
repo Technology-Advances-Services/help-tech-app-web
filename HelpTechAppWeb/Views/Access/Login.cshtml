@@ -80,29 +80,33 @@
                     processData: false,
                     success: function (data) {
 
-                        alert(data);
-
-                        if ($('sltRoles').val() === 'TECNICO' && data === true) {
+                        if ($('#sltRoles').val() === 'TECNICO' && data === true) {
 
                             Swal.fire({
 
                                 icon: 'success',
                                 title: 'Credenciales correctas!',
-                                text: 'Se inicio sesion correctamente, recuerde que su sesion expira en 1 hora.'
+                                text: 'Se inició sesión correctamente, recuerde que su sesión expira en 1 hora.',
+                                timer: 5000,
+                                timerProgressBar: true,
+                                willClose: () => {
+                                    window.open('@Url.Action("InterfaceTechnical", "Technicals")', "_self");
+                                }
                             });
-
-                            window.open('@Url.Action("InterfaceTechnical", "Technicals")', "_self");
                         }
-                        else if ($('sltRoles').val() === 'CONSUMIDOR' && data === true) {
+                        else if ($('#sltRoles').val() === 'CONSUMIDOR' && data === true) {
 
                             Swal.fire({
 
                                 icon: 'success',
                                 title: 'Credenciales correctas!',
-                                text: 'Se inicio sesion correctamente, recuerde que su sesion expira en 1 hora.'
+                                text: 'Se inició sesión correctamente, recuerde que su sesión expira en 1 hora.',
+                                timer: 5000,
+                                timerProgressBar: true,
+                                willClose: () => {
+                                    window.open('@Url.Action("InterfaceConsumer", "Consumers")', "_self");
+                                }
                             });
-
-                            window.open('@Url.Action("InterfaceConsumer", "Consumers")', "_self");
                         }
                         else {
 
