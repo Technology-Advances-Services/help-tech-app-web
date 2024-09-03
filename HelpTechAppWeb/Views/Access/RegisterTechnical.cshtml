@@ -283,6 +283,15 @@
                                 }
                             });
                         }
+                        else {
+
+                            Swal.fire({
+
+                                icon: 'error',
+                                title: 'Ocurrio un error al registrar!',
+                                text: 'Los datos no se registraron, asegurese de escribir correctamente sus datos.'
+                            });
+                        }
                     },
                     error: function () {
 
