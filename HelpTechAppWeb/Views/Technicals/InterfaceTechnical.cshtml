@@ -183,6 +183,8 @@
                             <span>Ingresar fecha:</span>
                             <input id="iptWorkDate" type="date" />
 
+                            <hr />
+
                             <span>Ingresar estado:</span>
                             <select id="sltJobsStates">
                                 <option>PENDIENTE</option>
@@ -337,12 +339,19 @@
             var specialties = [];
             var jobs = [];
 
-            $(window).on('load', function () {
+            $(window).on('load', async function () {
 
-                loadSpecialties();
-                loadJobsByTechnical();
-                refreshInterfaceData();
-                loadInformationTechnical();
+                try {
+
+                    await loadSpecialties(),
+                    await loadJobsByTechnical(),
+                    await refreshInterfaceData(),
+                    await loadInformationTechnical()
+
+                } catch (error) {
+
+                    console.error('Error durante la carga de datos: ', error);
+                }
             });
 
             $('#btInterfaceTechnical').on('click', function () {
@@ -364,7 +373,9 @@
 
                 assignJobDetail(information);
 
-                var index = jobs.findIndex(j => j.Id === id);
+                var id = $('#iptId').val();
+
+                var index = jobs.findIndex(j => j.Id === parseInt(id));
 
                 jobs[index].WorkDate = $('#iptWorkDate').val();
                 jobs[index].Time = $('#iptTime').val();
@@ -375,13 +386,13 @@
 
                 fillTableJobs(jobs, "PENDIENTE");
             });
-            $('btnStatisticReport').on('click', function () {
+            $('#btnStatisticReport').on('click', function () {
 
-                window.open('@Url.Action("StatisticlReport", "Technicals")', '_self');
+                window.open('@Url.Action("StatisticReport", "Technicals")', '_self');
 
                 return false;
             });
-            $('btnReportReviews').on('click', function () {
+            $('#btnReportReviews').on('click', function () {
 
                 window.open('@Url.Action("ReportReviews", "Technicals")', '_self');
 
@@ -402,15 +413,15 @@
             });
             $('#tblJobs').on('click', '#btnJobDetail', function () {
 
-                var filteredJobs;
-
                 $(this).parents("tr").find("#tId").each(function () {
 
-                    filteredJobs = jobs.find(j => j.Id === $(this).html());
-                });
+                    var id = $(this).html();
 
-                $('#pAddress').text(filteredJobs.Address);
-                $('#pDescription').text(filteredJobs.Description);
+                    var filteredJobs = jobs.find(j => j.Id === parseInt(id));
+
+                    $('#pAddress').text(`Direccion: ${filteredJobs.Address}`);
+                    $('#pDescription').text(`Descripcion: ${filteredJobs.Description}`);
+                });
             });
             $('#tblJobs').on('click', '#btnJobResponse', function () {
 
@@ -421,221 +432,220 @@
             });
             $('#tblJobs').on('click', '#btnChat', function () {
 
-                var chatRoomId;
-
                 $(this).parents("tr").find("#tChatRoomId").each(function () {
 
-                    chatRoomId = $(this).html();
+                    var chatRoomId = $(this).html();
+
+                    window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
                 });
 
-                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
+                return false;
             });
             $('#uChatsMembers').on('click', '#btnChat', function () {
 
-                var chatRoomId;
-
                 $(this).parents("li").find("#spnChatRoomId").each(function () {
 
-                    chatRoomId = $(this).html();
+                    var chatRoomId = $(this).html();
+
+                    window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
                 });
 
-                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
+                return false;
             });
 
-            function loadSpecialties() {
+            async function loadSpecialties() {
 
-                jQuery.ajax({
+                try {
 
-                    url: '@Url.Action("AllSpecialties", "Specialties")',
-                    method: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
+                    var data = await jQuery.ajax({
 
-                        specialties = data;
-                    },
-                    error: function () {
+                        url: '@Url.Action("AllSpecialties", "Specialties")',
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
 
-                        //window.open('@Url.Action("Error", "Home")', '_self');
-                    }
-                });
+                    specialties = data;
+
+                } catch (error) {
+
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
             }
-            function loadJobsByTechnical() {
 
-                jQuery.ajax({
+            async function loadJobsByTechnical() {
 
-                    url: '@Url.Action("JobsByTechnical", "Attentions")',
-                    method: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
+                try {
 
-                        jobs = data;
+                    var data = await jQuery.ajax({
 
-                        fillTableJobs(jobs, 'PENDIENTE');
-                    },
-                    error: function () {
+                        url: '@Url.Action("JobsByTechnical", "Attentions")',
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
 
-                        //window.open('@Url.Action("Error", "Home")', '_self');
-                    }
-                });
+                    jobs = data;
+
+                    fillTableJobs(jobs, 'PENDIENTE');
+
+                } catch (error) {
+
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
             }
-            function refreshInterfaceData() {
 
-                jQuery.ajax({
+            async function refreshInterfaceData() {
 
-                    url: '@Url.Action("GeneralTechnicalStatistic", "Technicals")',
-                    method: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
+                try {
 
-                        for (const item of data) {
+                    var generalTechnicalStatistic = await jQuery.ajax({
 
-                            $('#spnTotalIncome').text(item.TotalIncome);
-                            $('#spnTotalConsumersServed').text(item.TotalConsumersServed);
-                            $('#spnTotalWorkTime').text(item.TotalWorkTime);
-                            $('#spnTotalPendingsJobs').text(item.TotalPendingsJobs);
-                        }
-                    },
-                    error: function() {
+                        url: '@Url.Action("GeneralTechnicalStatistic", "Technicals")',
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
 
-                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    for (const item of generalTechnicalStatistic) {
+
+                        $('#spnTotalIncome').text(item.TotalIncome);
+                        $('#spnTotalConsumersServed').text(item.TotalConsumersServed);
+                        $('#spnTotalWorkTime').text(item.TotalWorkTime);
+                        $('#spnTotalPendingsJobs').text(item.TotalPendingsJobs);
                     }
-                });
-                jQuery.ajax({
 
-                    url: '@Url.Action("ChatsMembersByTechnical", "Communications")',
-                    method: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
+                    var chatsMembersByTechnical = await jQuery.ajax({
 
-                        var contentHtml = '';
+                        url: '@Url.Action("ChatsMembersByTechnical", "Communications")',
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
 
-                        for (const item of data) {
+                    var contentHtml = '';
 
-                            contentHtml += `
-                                <li>
-                                    <a id="btnChat" class="nav-link d-flex align-items-center">
-                                        <div class="me-4">
-                                            <div class="position-relative d-inline-block text-white">
-                                                <img alt="image" src="${item.ProfileUrl}" class="avatar rounded-circle">
-                                                <span class="position-absolute bottom-2 end-2 transform translate-x-1/2 translate-y-1/2 border-2 border-solid border-current w-3 h-3 bg-success rounded-circle"></span>
-                                            </div>
+                    for (const item of chatsMembersByTechnical) {
+
+                        contentHtml += `
+                            <li>
+                                <a id="btnChat" class="nav-link d-flex align-items-center">
+                                    <div class="me-4">
+                                        <div class="position-relative d-inline-block text-white">
+                                            <img alt="image" src="${item.ProfileUrl}" class="avatar rounded-circle">
+                                            <span class="position-absolute bottom-2 end-2 transform translate-x-1/2 translate-y-1/2 border-2 border-solid border-current w-3 h-3 bg-success rounded-circle"></span>
                                         </div>
-                                        <div>
-                                            <span id="spnChatRoomId" style="display:none;">${item.ChatRoomId}</span>
-                                            <span class="d-block text-sm font-semibold">${item.Firstname}</span>
-                                            <span class="d-block text-xs text-muted font-regular">${item.Lastname}</span>
-                                        </div>
-                                        <div class="ms-auto"> <i class="bi bi-chat"></i> </div>
-                                    </a>
-                                </li>`;
-                        }
-
-                        $('#uChatsMembers').html(contentHtml);
-                    },
-                    error: function() {
-
-                        //window.open('@Url.Action("Error", "Home")', '_self');
+                                    </div>
+                                    <div>
+                                        <span id="spnChatRoomId" style="display:none;">${item.ChatRoomId}</span>
+                                        <span class="d-block text-sm font-semibold">${item.Firstname}</span>
+                                        <span class="d-block text-xs text-muted font-regular">${item.Lastname}</span>
+                                    </div>
+                                    <div class="ms-auto"> <i class="bi bi-chat"></i> </div>
+                                </a>
+                            </li>`;
                     }
-                });
+
+                    $('#uChatsMembers').html(contentHtml);
+
+                } catch (error) {
+
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
             }
-            function loadInformationTechnical() {
 
-                jQuery.ajax({
+            async function loadInformationTechnical() {
 
-                    url: '@Url.Action("InformationTechnical", "Technicals")',
-                    method: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
+                try {
 
-                        var filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
+                    var data = await jQuery.ajax({
 
-                        var contentHtml = `
-                            <div class="img" style="text-align: center;"> <img alt="" src=${data.ProfileUrl}> </div>
-                            <br>
+                        url: '@Url.Action("InformationTechnical", "Technicals")',
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
 
-                            <p>Membresia: ${data.Membership}</p>
-                            <br>
+                    var filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
 
-                            <p>Especialidad: ${filteredSpecialties.Name}</p>
-                            <br>
+                    var contentHtml = `
+                        <div class="img" style="text-align: center;">
+                            <img alt="" src="${data.ProfileUrl}">
+                        </div>
+                        <br>
+                        <p>Membresia: ${data.Membership}</p>
+                        <br>
+                        <p>Especialidad: ${filteredSpecialties.Name}</p>
+                        <br>
+                        <p>Nombres: ${data.Firstname}</p>
+                        <br>
+                        <p>Apellidos: ${data.Lastname}</p>
+                        <br>
+                        <p>Edad: ${data.Age}</p>
+                        <br>
+                        <p>Email: ${data.Email}</p>
+                        <br>
+                        <p>Telefono: ${data.Phone}</p>
+                        <br>`;
 
-                            <p>Nombres: ${data.Firstname}</p>
-                            <br>
+                    $('#dvInformationTechnical').html(contentHtml);
 
-                            <p>Apellidos: ${data.Lastname}</p>
-                            <br>
+                } catch (error) {
 
-                            <p>Edad: ${data.Age}</p>
-                            <br>
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
+            }
 
-                            <p>Email: ${data.Email}</p>
-                            <br>
+            async function assignJobDetail(information) {
 
-                            <p>Telefono: ${data.Phone}</p>
-                            <br>`;
+                try {
 
-                        $('#dvInformationTechnical').html(contentHtml);
-                    },
-                    error: function () {
+                    var data = await jQuery.ajax({
 
-                        //window.open('@Url.Action("Error", "Home")', '_self');
+                        url: '@Url.Action("AssignJobDetail", "Attentions")',
+                        method: 'POST',
+                        data: information,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    });
+
+                    if (data === true) {
+
+                        $('#mdlJobResponse').modal('hide').on('hidden.bs.modal', function () {
+                            $('.modal-backdrop').remove();
+                        });
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Respuesta enviada!',
+                            text: 'La respuesta del trabajo se ha realizado correctamente.'
+                        });
+
+                    } else {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al enviar respuesta!',
+                            text: 'Se produjo un error al intentar enviar la respuesta de trabajo.'
+                        });
                     }
-                });
+                } catch (error) {
+
+                    console.error('Error al asignar el detalle del trabajo:', error);
+
+                    // window.open('@Url.Action("Error", "Home")', "_self");
+                }
             }
-            function assignJobDetail(information) {
 
-                jQuery.ajax({
-
-                    url: '@Url.Action("AssignJobDetail", "Attentions")',
-                    method: 'POST',
-                    data: information,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-
-                        if (data === true) {
-
-                            $('#mdlJobResponse').modal('hide');
-
-                            $('#mdlJobResponse').modal('hide').on('hidden.bs.modal', function () {
-
-                                $('.modal-backdrop').remove();
-                            });
-
-                            Swal.fire({
-
-                                icon: 'success',
-                                title: 'Respuesta enviada!',
-                                text: 'La respuesta del trabajo se ha realizado correctamente.'
-                            });
-                        }
-                        else {
-
-                            Swal.fire({
-
-                                icon: 'error',
-                                title: 'Error al enviar respuesta!',
-                                text: 'Se produjo un error al intentar enviar la respuesta de trabajo.'
-                            });
-                        }
-                    },
-                    error: function () {
-
-                        //window.open('@Url.Action("Error", "Home")', "_self");
-                    }
-                });
-            }
             function fillTableJobs(jobs, jobsStates) {
 
                 if (jobs.length === 0) {
 
                     $('#spnTableMessage').text('Usted no cuenta con citas pendientes.');
+
+                    $('#tblJobs').html('');
+                    $('#tbdJobs').html('');
 
                     return;
                 }
@@ -686,7 +696,7 @@
                                 <td id="tAmountFinal">${item.AmountFinal}</td>
                                 <td id="tJobState">${item.JobState}</td>
                                 <td>
-                                    <button id="btnDetailJob" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlJobDetail">Detalle</button>
+                                    <button id="btnJobDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlJobDetail">Detalle</button>
                                     <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>
                                 </td>
                             </tr>`;
@@ -726,7 +736,7 @@
                                 <td id="tPhone">${item.Phone}</td>
                                 <td id="tJobState">${item.JobState}</td>
                                 <td>
-                                    <button id="btnDetailJob" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#btnDetailJob">Detalle</button>
+                                    <button id="btnJobDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlJobDetail">Detalle</button>
                                     <button id="btnJobResponse" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlJobResponse">Respuesta</button>
                                     <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>
                                 </td>

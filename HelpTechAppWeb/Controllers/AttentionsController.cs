@@ -55,6 +55,7 @@ namespace HelpTechAppWeb.Controllers
                      co.Firstname,
                      co.Lastname,
                      co.Phone,
+                     jo.Address,
                      jo.Description,
                      jo.Time,
                      jo.WorkDate,
