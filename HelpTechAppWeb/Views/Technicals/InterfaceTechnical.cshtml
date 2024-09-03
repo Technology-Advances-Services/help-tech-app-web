@@ -35,7 +35,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a id="btnStatisticReport" class="nav-link"> <i class="bi bi-bar-chart"></i> Reporte estadistico </a>
+                            <a id="btnStatisticReport" class="nav-link" data-toggle="modal" data-target="#mdlTypeStatistic"> <i class="bi bi-bar-chart"></i> Reporte estadistico </a>
                         </li>
 
                         <li class="nav-item">
@@ -79,7 +79,7 @@
 
                             <div class="col-sm-6 col-12 text-sm-end">
                                 <div class="mx-n1">
-                                    <a id="btnJobsResponses" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1" data-toggle="modal" data-target="#mdlJobsResponses">
+                                    <a id="" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
                                         <span class=" pe-2"> <i class="bi bi-pencil"></i> </span>
                                         <span>Respuestas de trabajos</span>
                                     </a>
@@ -464,7 +464,7 @@
 
             $('#dvSearchJobs').on('click', '#btnSearchJobs', function () {
 
-                var workDate = new Date('#iptWorkDate').val());
+                var workDate = new Date($('#iptWorkDate').val());
 
                 var filteredJobs = jobs.filter(j => j.WorkDate === $('#iptWorkDate').val() && j.JobState === $('#sltJobsStates').val());
 
