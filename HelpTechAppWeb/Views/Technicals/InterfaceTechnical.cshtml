@@ -328,6 +328,53 @@
             </div>
         </div>
     </div>
+    <div id="mdlTypeStatistic" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered justify-content-center " role="document">
+            <div class="modal-content  border-0 mx-3">
+                <div class="modal-body  p-0">
+                    <div class="card text-center">
+                        
+                        <div class="card-header pb-0 bg-white border-0">
+
+                            <div class="row">
+                                <div class="col ml-auto">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>           
+                                </div>                               
+                            </div>
+                            
+                            <img src="https://cdn-icons-png.flaticon.com/512/6065/6065591.png" class="img-fluid mt-5" />
+                            <h3>Tipo de reporte estadistico</h3>
+                        
+                        </div>
+
+                        <div class="card-body px-sm-5 mb-5">
+
+                            <p class="text-muted mb-0">Indique el tipo de reporte que desea generar.</p>
+                            <p class="text-muted ">Los reportes estadisticos se basan a su desempeño laboral puede seleccionar un reporte de tipo mensual o total.</p>
+
+                            <div class="row justify-content-center mt-4 px-sm-5  ">
+
+                                <div class="col">
+                                    <button id="btnTotalReportStatistic" type="submit" class="btn btn-warning btn-block  font-weight-bold text-dark text-uppercase" data-dismiss="modal">
+                                        <span class="plan">Reporte total</span>                                     
+                                    </button>                                   
+                                </div>
+                                <div class="col">
+                                    <button id="btnMonthlyReportStatistic" type="submit" class="btn btn-primary btn-block  text-dark font-weight-bold text-uppercase" data-dismiss="modal">
+                                        <span class="plan">Reporte mensual</span>                                        
+                                    </button>                                  
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -390,9 +437,15 @@
 
                 fillTableJobs(jobs, "PENDIENTE");
             });
-            $('#btnStatisticReport').on('click', function () {
+            $('#btnTotalReportStatistic').on('click', function () {
 
-                window.open('@Url.Action("StatisticReport", "Technicals")', '_self');
+                //window.open('@Url.Action("StatisticReport", "Technicals")', '_self');
+
+                return false;
+            });
+            $('#btnMonthlyReportStatistic').on('click', function () {
+
+                //window.open('@Url.Action("StatisticReport", "Technicals")', '_self');
 
                 return false;
             });
