@@ -192,7 +192,26 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function () { },
+                    success: function (data){
+                        
+                        if (data === true) {
+
+                            Swal.fire({
+
+                                icon: 'success',
+                                title: 'Registro correcto!',
+                                text: 'Los datos se registraron correctamente, ahora puede iniciar sesion.',
+                                timer: 5000,
+                                timerProgressBar: true,
+                                willClose: () => {
+                                    window.open('@Url.Action("Login", "Access")', "_self");
+                                }
+                            });
+                        }
+                        else {
+
+                        }
+                    },
                     error: function () {
 
                         //window.open('@Url.Action("Error", "Home")', "_self");
