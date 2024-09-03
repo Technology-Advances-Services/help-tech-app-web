@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
+using PuppeteerSharp;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -91,6 +92,31 @@ namespace HelpTechAppWeb.Controllers
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReviewStatisticPdf()
+        {
+            var launchOptions = new LaunchOptions
+            {
+                Headless = true,
+            };
+
+            var browserFetcher = new BrowserFetcher();
+
+            await browserFetcher.DownloadAsync();
+
+            using var browser = await Puppeteer.LaunchAsync(launchOptions);
+            using var page = await browser.NewPageAsync();
+
+            var url = Url.ActionLink("ReviewStatisticPdf", "Technicals");
+
+            await page.GoToAsync(url);
+
+            var pdfStream = await page.PdfDataAsync();
+
+            return File(pdfStream, "application/pdf",
+                "estadisticas-reseñas.pdf");
         }
 
         #endregion
