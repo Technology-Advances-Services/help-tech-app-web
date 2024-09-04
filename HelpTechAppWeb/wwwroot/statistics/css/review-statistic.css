@@ -2,6 +2,12 @@
     background-color: #f9f9fa
 }
 
+#chart-line {
+
+    max-width: 100%;
+    height: auto;
+}
+
 .flex {
     -webkit-box-flex: 1;
     -ms-flex: 1 1 auto;

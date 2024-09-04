@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using PuppeteerSharp;
+using PuppeteerSharp.Media;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
-using PuppeteerSharp;
 
 namespace HelpTechAppWeb.Controllers
 {
@@ -72,29 +73,6 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DetailedTechnicalStatistic
-            (string typeStatistic)
-        {
-            var result = await baseRequest.GetSingleAsync<dynamic>
-                ("informations/detailed-technical-statistic?technicalId=" +
-                GetTechnicalId() + "&typeStatistic=" + typeStatistic, GetToken());
-
-            return Content(JsonConvert.SerializeObject
-                (result), "application/json");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ReviewStatistic()
-        {
-            var result = await baseRequest.GetSingleAsync<dynamic>
-                ("informations/review-statistic?technicalId=" +
-                GetTechnicalId(), GetToken());
-
-            return Content(JsonConvert.SerializeObject
-                (result), "application/json");
-        }
-
-        [HttpGet]
         public async Task<IActionResult> ReviewStatisticPdf()
         {
             var launchOptions = new LaunchOptions
@@ -109,11 +87,17 @@ namespace HelpTechAppWeb.Controllers
             using var browser = await Puppeteer.LaunchAsync(launchOptions);
             using var page = await browser.NewPageAsync();
 
-            var url = Url.ActionLink("ReviewStatistic", "Technicals");
+            var url = Url.ActionLink("ReviewStatistic", "Statistics");
 
-            await page.GoToAsync(url);
+            await page.GoToAsync(url, WaitUntilNavigation.Networkidle0);
 
-            var pdfStream = await page.PdfDataAsync();
+            await page.WaitForSelectorAsync("#chart-line");
+
+            var pdfStream = await page.PdfDataAsync(new PdfOptions
+            {
+                Format = PaperFormat.A4,
+                PrintBackground = true
+            });
 
             return File(pdfStream, "application/pdf",
                 "estadisticas-reseñas.pdf");
