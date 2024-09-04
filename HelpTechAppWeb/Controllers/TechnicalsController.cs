@@ -109,7 +109,7 @@ namespace HelpTechAppWeb.Controllers
             using var browser = await Puppeteer.LaunchAsync(launchOptions);
             using var page = await browser.NewPageAsync();
 
-            var url = Url.ActionLink("ReviewStatisticPdf", "Technicals");
+            var url = Url.ActionLink("ReviewStatistic", "Technicals");
 
             await page.GoToAsync(url);
 
