@@ -187,8 +187,10 @@
 
                             <span>Ingresar estado:</span>
                             <select id="sltJobsStates">
+                                <option>COMPLETADO</option>
                                 <option>PENDIENTE</option>
                                 <option>EN PROCESO</option>
+                                <option>DENEGADO</option>
                             </select>
 
                             <a id="btnSearchJobs" class="btn btn-warning">Buscar</a>
@@ -466,9 +468,9 @@
 
                 var workDate = new Date($('#iptWorkDate').val());
 
-                var filteredJobs = jobs.filter(j => j.WorkDate === $('#iptWorkDate').val() && j.JobState === $('#sltJobsStates').val());
+                var filteredJobs = jobs.filter(j => j.WorkDate.split('T')[0] === workDate.toISOString().split('T')[0] && j.JobState === $('#sltJobsStates').val());
 
-                fillTableJobs(filteredJobs);
+                fillTableJobs(filteredJobs, $('#sltJobsStates').val());
             });
             $('#tblJobs').on('click', '#btnJobDetail', function () {
 
@@ -697,9 +699,9 @@
                 }
             }
 
-            function fillTableJobs(jobs, jobsStates) {
+            function fillTableJobs(listJobs, jobsStates) {
 
-                if (jobs.length === 0) {
+                if (listJobs.length === 0) {
 
                     $('#spnTableMessage').text('Usted no cuenta con citas pendientes.');
 
@@ -711,7 +713,7 @@
 
                 var contentHtml = '';
 
-                if (jobsStates === 'PENDIENTE') {
+                if (jobsStates === 'PENDIENTE' || jobsStates === 'COMPLETADO') {
 
                     contentHtml = `
                         <thead class="thead-light">
@@ -736,7 +738,7 @@
 
                     contentHtml = '';
 
-                    for (const item of jobs) {
+                    for (const item of listJobs) {
 
                         var workDate = new Date(item.WorkDate);
 
@@ -761,7 +763,7 @@
                             </tr>`;
                     }
                 }
-                else if (jobsStates === 'EN PROCESO') {
+                else if (jobsStates === 'EN PROCESO' || jobsStates === 'DENEGADO') {
 
                     contentHtml = `
                         <thead class="thead-light">
@@ -781,7 +783,7 @@
 
                     contentHtml = '';
 
-                    for (const item of jobs) {
+                    for (const item of listJobs) {
 
                         var workDate = new Date(item.WorkDate);
 
