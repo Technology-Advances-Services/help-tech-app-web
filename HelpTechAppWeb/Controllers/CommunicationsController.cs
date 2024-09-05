@@ -11,7 +11,7 @@ namespace HelpTechAppWeb.Controllers
     public class CommunicationsController
         (IBaseRequest baseRequest) : Controller
     {
-        private int _chatRoomId = 0;
+        private static int _chatRoomId;
         private ClaimsPrincipal? _claimsPrincipal;
 
         #region Views
@@ -21,25 +21,29 @@ namespace HelpTechAppWeb.Controllers
             (int chatRoomId)
         {
             var chatMember = await baseRequest.GetSingleAsync<ChatMember>
-                ("chatsmembers/chats-members-by-chat-room?chatRoomId=" +
+                ("chatsmembers/chat-member-by-chat-room?chatRoomId=" +
                 chatRoomId, GetToken()) ?? new();
+
+            var technical = await baseRequest
+                .GetSingleAsync<Technical>
+                ("informations/technical-by-id?id=" +
+                chatMember.TechnicalId, GetToken()) ?? new();
 
             var consumer = await baseRequest
                 .GetSingleAsync<Consumer>
                 ("informations/consumer-by-id?id=" +
                 chatMember.ConsumerId, GetToken()) ?? new();
 
-            var technical = await baseRequest
-                .GetSingleAsync<Consumer>
-                ("informations/technical-by-id?id=" +
-                chatMember.ConsumerId, GetToken()) ?? new();
-
-            this._chatRoomId = chatRoomId;
+            _chatRoomId = chatRoomId;
 
             ViewBag.ChatRoomId = chatRoomId;
             ViewBag.Role = GetRole();
+
             ViewBag.ProfileUrlTechnical = technical.ProfileUrl;
+            ViewBag.FirstnameTechnical = technical.Firstname;
+
             ViewBag.ProfileUrlConsumer = consumer.ProfileUrl;
+            ViewBag.FirstnameConsumer = consumer.Firstname;
 
             return View();
         }
@@ -86,54 +90,10 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> InformationTechnical()
-        {
-            var technical = await baseRequest.GetSingleAsync<Technical>
-                ("informations/technical-by-id?id=" +
-                GetPersonId(), GetToken()) ?? new();
-
-            var contract = await baseRequest.GetSingleAsync<Contract>
-                ("contracts/contract-by-technical?technicalId=" +
-                GetPersonId(), GetToken()) ?? new();
-
-            var membership = await baseRequest.GetSingleAsync<Membership>
-                ("memberships/membership-by-id?id=" + contract.MembershipId,
-                GetPersonId()) ?? new();
-
-            var result = new
-            {
-                technical.ProfileUrl,
-                Membership = membership.Name,
-                technical.SpecialtyId,
-                contract.StartDate,
-                contract.FinalDate,
-                technical.Firstname,
-                technical.Lastname,
-                technical.Age,
-                technical.Email,
-                technical.Phone,
-            };
-
-            return Content(JsonConvert.SerializeObject
-                (result), "application/json");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> InformationConsumer()
-        {
-            var consumer = await baseRequest.GetSingleAsync<Consumer>
-                ("informations/consumer-by-id?id=" +
-                GetPersonId(), GetToken());
-
-            return Content(JsonConvert.SerializeObject
-                (consumer), "application/json");
-        }
-
-        [HttpGet]
         public async Task<IActionResult> ChatByChatRoom()
         {
             var chat = await baseRequest.GetAsync<Chat>
-                ("chats/chat-by-chat-room?chatRoomId=" +
+                ("chats/chats-by-chat-room?chatRoomId=" +
                 _chatRoomId, GetToken());
 
             return Content(JsonConvert.SerializeObject

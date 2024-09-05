@@ -55,7 +55,9 @@
     <input id="iptChatRoomId" type="hidden" value="@ViewBag.ChatRoomId" />
     <input id="iptRole" type="hidden" value="@ViewBag.Role" />
     <input id="iptProfileUrlTechnical" type="hidden" value="@ViewBag.ProfileUrlTechnical" />
+    <input id="iptFirstnameTechnical" type="hidden" value="@ViewBag.FirstnameTechnical" />
     <input id="iptProfileUrlConsumer" type="hidden" value="@ViewBag.ProfileUrlConsumer" />
+    <input id="iptFirstnameConsumer" type="hidden" value="@ViewBag.FirstnameConsumer" />
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -82,23 +84,22 @@
                 information = new FormData();
 
                 information.append('ChatRoomId', $('#iptChatRoomId').val());
-                information.append('Sender', $('#iptRole').val());
                 information.append('Message', $('#txaMessage').val());
 
-                jQuery.ajax({
+                // jQuery.ajax({
 
-                    url: '@Url.Action("SendMessage", "Communications")',
-                    method: 'POST',
-                    data: credentials,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function () { },
-                    error: function () {
+                //     url: '@Url.Action("SendMessage", "Communications")',
+                //     method: 'POST',
+                //     data: credentials,
+                //     cache: false,
+                //     contentType: false,
+                //     processData: false,
+                //     success: function () { },
+                //     error: function () {
 
-                        //window.open('@Url.Action("Error", "Home")', "_self");
-                    }
-                });
+                //         //window.open('@Url.Action("Error", "Home")', "_self");
+                //     }
+                // });
 
                 sendMessage();
 
@@ -124,58 +125,39 @@
 
                 contentHtml = '';
 
+                var profileUrl = '';
+                var firstname = '';
+
                 if ($('#iptRole').val() === 'TECNICO') {
 
-                    jQuery.ajax({
+                    profileUrl = $('#iptProfileUrlConsumer').val();
+                    firstname = $('#iptFirstnameConsumer').val();
 
-                        url: '@Url.Action("InformationConsumer", "Consumers")',
-                        method: 'GET',
-                        dataType: 'json',
-                        contentType: 'application/json; charset=utf-8',
-                        success: function (data) {
-
-                            contentHtml = `
-                                <div class="img_cont">
-                                    <img src="${data.ProfileUrl}" class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>${data.Firstname}</span>
-                                </div>`;
-                        },
-                        error: function () {
-
-                            //window.open('@Url.Action("Error", "Home")', '_self');
-                        }
-                    });
+                    contentHtml = `
+                        <div class="img_cont">
+                            <img src="${profileUrl}" class="rounded-circle user_img">
+                            <span class="online_icon"></span>
+                        </div>
+                        <div class="user_info">
+                            <span>${firstname}</span>
+                        </div>`;
                 }
                 else if ($('#iptRole').val() === 'CONSUMIDOR') {
 
-                    jQuery.ajax({
+                    profileUrl = $('#iptProfileUrlTechnical').val();
+                    firstname = $('#iptFirstnameTechnical').val();
 
-                        url: '@Url.Action("InformationTechnical", "Technicals")',
-                        method: 'GET',
-                        dataType: 'json',
-                        contentType: 'application/json; charset=utf-8',
-                        success: function (data) {
-
-                            contentHtml = `
-                                <div class="img_cont">
-                                    <img src="${data.ProfileUrl}" class="rounded-circle user_img">
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>${data.Firstname}</span>
-                                </div>`;
-                        },
-                        error: function () {
-
-                            //window.open('@Url.Action("Error", "Home")', '_self');
-                        }
-                    });
+                    contentHtml = `
+                        <div class="img_cont">
+                            <img src="${profileUrl}" class="rounded-circle user_img">
+                            <span class="online_icon"></span>
+                        </div>
+                        <div class="user_info">
+                            <span>${firstname}</span>
+                        </div>`;
                 }
             
-                $('#dvProfile').htm(contentHtml);
+                $('#dvProfile').html(contentHtml);
             }
             function loadChatsByChatRoom() {
             
@@ -188,7 +170,7 @@
                     dataType: 'json',
                     contentType: 'application/json; charset=utf-8',
                     success: function (data) {
-
+                        console.log(data);
                         var profileUrl = '';
                         var shippingDate;
             
@@ -309,7 +291,7 @@
 
                         profileUrl = $('#iptProfileUrlTechnical').val();
 
-                        contentHtml = `
+                        contentHtml += `
                             <div class="d-flex justify-content-end mb-4">
                                 <div class="msg_cotainer_send">
                                     ${message.text}
