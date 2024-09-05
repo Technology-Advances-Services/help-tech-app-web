@@ -53,7 +53,7 @@
                     <ul class="navbar-nav">
 
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="modal" data-target="#mdlInformationTechnical"> <i class="bi bi-person-square"></i>Cuenta</a>
+                            <a id="btnInformationTechnical" class="nav-link" data-toggle="modal" data-target="#mdlInformationTechnical"> <i class="bi bi-person-square"></i>Cuenta</a>
                         </li>
 
                         <li class="nav-item">
@@ -396,10 +396,8 @@
 
                 try {
 
-                    await loadSpecialties(),
                     await loadJobsByTechnical(),
-                    await refreshInterfaceData(),
-                    await loadInformationTechnical()
+                    await refreshInterfaceData()
 
                 } catch (error) {
 
@@ -447,15 +445,20 @@
             });
             $('#btnMonthlyReportStatistic').on('click', function () {
 
-                //window.open('@Url.Action("StatisticReport", "Technicals")', '_self');
+                //window.open('@Url.Action("StatisticReport", "Statistics")', '_self');
 
                 return false;
             });
             $('#btnReportReviews').on('click', function () {
 
-                window.open('@Url.Action("ReviewStatisticPdf", "Technicals")', '_self');
+                window.open('@Url.Action("ReviewStatistic", "Statistics")', '_self');
 
                 return false;
+            });
+            $('#btnInformationTechnical').on('click', function() {
+
+                await loadSpecialties();
+                await loadInformationTechnical();
             });
             $('#btnLogout').on('click', function () {
 
