@@ -170,7 +170,7 @@
                     dataType: 'json',
                     contentType: 'application/json; charset=utf-8',
                     success: function (data) {
-                        console.log(data);
+
                         var profileUrl = '';
                         var shippingDate;
             
@@ -367,7 +367,7 @@
                 return `${day}/${mounth}/${year} ${hour}:${minutes}:${seconds}`;
             }
             function isNullOrEmpty(str) {
-                return !str || str.trim() === '';
+                return !str || str === undefined;
             }
         });
     
