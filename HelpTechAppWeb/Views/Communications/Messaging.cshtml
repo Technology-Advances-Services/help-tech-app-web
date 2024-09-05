@@ -83,7 +83,7 @@
 
                 information.append('ChatRoomId', $('#iptChatRoomId').val());
                 information.append('Sender', $('#iptRole').val());
-                information.append('Message', $('#iptMessage').val());
+                information.append('Message', $('#txaMessage').val());
 
                 jQuery.ajax({
 
@@ -279,11 +279,8 @@
             }
             function sendMessage() {
 
-                const role = document.getElementById('iptRole');
-                const message = document.getElementById('txaMessage');
-
-                const user = role.value;
-                const message = message.value;
+                const user = document.getElementById('iptRole').value;
+                const message = document.getElementById('txaMessage').value;
 
                 if (message.trim() !== '') {
 

@@ -8,6 +8,8 @@
 <head>
 
     <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link id="bootstrap-css" rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="~/access/css/register-technical.css" />
@@ -20,6 +22,16 @@
         <form id="frmTechnicianData" class="form-horizontal" role="form" enctype="multipart/form-data">
 
             <h2>Registrar datos</h2>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Membresia:</label>
+
+                <div class="col-sm-9">
+                    <select id="sltMemberships" class="form-control" required> </select>
+                    <a id="btnDetailMembership" class="btn btn-warning" data-toggle="modal" data-target="#mdlDetailMembership">Detalle</a>
+                </div>
+
+            </div>
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">DNI:</label>
@@ -133,12 +145,51 @@
             </div>
 
             <button id="btnRegisterTechnical" type="submit" class="btn btn-primary btn-block">Registrar</button>
-            <button id="btnMembership" type="button" class="btn btn-secondary btn-block">Seleccionar membresia</button>
         </form>
     </div>
 
+        <div id="mdlDetailMembership" class="modal fade" tabindex="-1" aria-labelledby="mdlDetailMembership" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header float-right">
+
+                    <h5>Detalle de membresia</h5>
+
+                    <div class="text-right">
+                        <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                    </div>
+
+                </div>
+
+                <div class="modal-body">
+                    <div>
+                        <div class="box">
+
+                            <span style="color:red">Cualquier membresia que seleccione, tendra una vigencia de 6 meses!</span>
+                            <br />
+
+                            <span id="spnPrice"></span>
+                            <br />
+
+                            <span id="spnPolicies"></span>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js"></script>
@@ -153,6 +204,7 @@
 
                 loadSpecialties();
                 loadDepartments();
+                loadMemberships();
             });
 
             $('#sltDepartments').on('change', function () {
@@ -173,6 +225,26 @@
                         }
 
                         $('#sltDistricts').html(contentHtml);
+                    },
+                    error: function () {
+
+                        // window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            });
+
+            $('#btnDetailMembership').on('click', function () {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("MembershipById", "Access")' + '?id=' + $('#sltMemberships').val(),
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                       $('#spnPrice').text(`Precio: ${data.Price}`);
+                       $('#spnPolicies').text(`Politicas: ${data.Policies}`);
                     },
                     error: function () {
 
@@ -251,6 +323,32 @@
                         }
 
                         $('#sltDepartments').html(contentHtml);
+                    },
+                    error: function () {
+
+                        // window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+
+            function loadMemberships() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("AllMemberships", "Access")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var contentHtml = '';
+
+                        for (const item of data) {
+
+                            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
+                        }
+
+                        $('#sltMemberships').html(contentHtml);
                     },
                     error: function () {
 
