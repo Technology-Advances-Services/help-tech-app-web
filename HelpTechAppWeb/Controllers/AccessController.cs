@@ -144,6 +144,29 @@ namespace HelpTechAppWeb.Controllers
                 (true), "application/json");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AllMemberships()
+        {
+            var memberships = await baseRequest
+                .GetAsync<Membership>
+                ("memberships/all-memberships");
+
+            return Content(JsonConvert.SerializeObject
+                (memberships), "application/json");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MembershipById
+            (int id)
+        {
+            var membership = await baseRequest
+                .GetSingleAsync<Membership>
+                ("memberships/membership-by-id?id=" + id);
+
+            return Content(JsonConvert.SerializeObject
+                (membership), "application/json");
+        }
+
         #endregion
 
         #region FireBase
