@@ -86,6 +86,50 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> InformationTechnical()
+        {
+            var technical = await baseRequest.GetSingleAsync<Technical>
+                ("informations/technical-by-id?id=" +
+                GetPersonId(), GetToken()) ?? new();
+
+            var contract = await baseRequest.GetSingleAsync<Contract>
+                ("contracts/contract-by-technical?technicalId=" +
+                GetPersonId(), GetToken()) ?? new();
+
+            var membership = await baseRequest.GetSingleAsync<Membership>
+                ("memberships/membership-by-id?id=" + contract.MembershipId,
+                GetPersonId()) ?? new();
+
+            var result = new
+            {
+                technical.ProfileUrl,
+                Membership = membership.Name,
+                technical.SpecialtyId,
+                contract.StartDate,
+                contract.FinalDate,
+                technical.Firstname,
+                technical.Lastname,
+                technical.Age,
+                technical.Email,
+                technical.Phone,
+            };
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> InformationConsumer()
+        {
+            var consumer = await baseRequest.GetSingleAsync<Consumer>
+                ("informations/consumer-by-id?id=" +
+                GetPersonId(), GetToken());
+
+            return Content(JsonConvert.SerializeObject
+                (consumer), "application/json");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ChatByChatRoom()
         {
             var chat = await baseRequest.GetAsync<Chat>
