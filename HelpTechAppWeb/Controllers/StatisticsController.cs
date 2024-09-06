@@ -20,8 +20,11 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult DetailedTechnicalStatistic()
+        public IActionResult DetailedTechnicalStatistic
+            (string typeStatistic)
         {
+            ViewBag.TypeStatistic = typeStatistic;
+
             return View();
         }
 

@@ -72,82 +72,85 @@
                     contentType: 'application/json; charset=utf-8',
                     success: function (data) {
 
-                        var myLineChart = new Chart(ctx, {
+                        for (const item of data) {
 
-                            type: 'bar',
-                            data: {
+                            var myLineChart = new Chart(ctx, {
 
-                                labels: ['Resultados'],
+                                type: 'bar',
+                                data: {
 
-                                datasets: [{
+                                    labels: ['Resultados'],
 
-                                    label: 'Promedio de ingresos',
-                                    data: [data.AverageIncome],
-                                    borderColor: getRandomColor(),
-                                    backgroundColor: getRandomColor(),
-                                    fill: false
+                                    datasets: [{
 
-                                }, {
+                                        label: 'Promedio de ingresos',
+                                        data: [item.AverageIncome],
+                                        borderColor: getRandomColor(),
+                                        backgroundColor: getRandomColor(),
+                                        borderWidth: 1
 
-                                    label: 'Ingreso total',
-                                    data: [data.TotalIncome],
-                                    borderColor: getRandomColor(),
-                                    backgroundColor: getRandomColor(),
-                                    fill: true
+                                    }, {
 
-                                }, {
+                                        label: 'Ingreso total',
+                                        data: [item.TotalIncome],
+                                        borderColor: getRandomColor(),
+                                        backgroundColor: getRandomColor(),
+                                        borderWidth: 1
 
-                                    label: 'Total de atenciones',
-                                    data: [data.TotalConsumersServed],
-                                    borderColor: getRandomColor(),
-                                    backgroundColor: getRandomColor(),
-                                    fill: false
+                                    }, {
 
-                                }, {
+                                        label: 'Total de atenciones',
+                                        data: [item.TotalConsumersServed],
+                                        borderColor: getRandomColor(),
+                                        backgroundColor: getRandomColor(),
+                                        borderWidth: 1
 
-                                    label: 'Total de horas',
-                                    data: [data.TotalWorkTime],
-                                    borderColor: getRandomColor(),
-                                    backgroundColor: getRandomColor(),
-                                    fill: true
+                                    }, {
 
-                                }, {
+                                        label: 'Total de horas',
+                                        data: [item.TotalWorkTime],
+                                        borderColor: getRandomColor(),
+                                        backgroundColor: getRandomColor(),
+                                        borderWidth: 1
 
-                                    label: 'Trabajos pendientes',
-                                    data: [data.TotalPendingsJobs],
-                                    borderColor: getRandomColor(),
-                                    backgroundColor: getRandomColor(),
-                                    fill: false
+                                    }, {
 
-                                }, {
+                                        label: 'Trabajos pendientes',
+                                        data: [item.TotalPendingsJobs],
+                                        borderColor: getRandomColor(),
+                                        backgroundColor: getRandomColor(),
+                                        borderWidth: 1
 
-                                    label: 'Promedio de puntaje',
-                                    data: [data.AverageScore],
-                                    borderColor: getRandomColor(),
-                                    backgroundColor: getRandomColor(),
-                                    fill: true
+                                    }, {
 
-                                }, {
+                                        label: 'Promedio de puntaje',
+                                        data: [item.AverageScore],
+                                        borderColor: getRandomColor(),
+                                        backgroundColor: getRandomColor(),
+                                        borderWidth: 1
 
-                                    label: 'Total de reseñas',
-                                    data: [data.TotalReviews],
-                                    borderColor: getRandomColor(),
-                                    backgroundColor: getRandomColor(),
-                                    fill: false
+                                    }, {
 
-                                }]
-                            },
-                            options: {
+                                        label: 'Total de reseñas',
+                                        data: [item.TotalReviews],
+                                        borderColor: getRandomColor(),
+                                        backgroundColor: getRandomColor(),
+                                        borderWidth: 1
 
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                title: {
+                                    }]
+                                },
+                                options: {
 
-                                    display: true,
-                                    text: `Reporte ${typeStatistic}`
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    title: {
+
+                                        display: true,
+                                        text: `Reporte ${typeStatistic}`
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     },
                     error: function () {
 
@@ -160,7 +163,8 @@
 
                 var letters = '0123456789ABCDEF';
                 var color = '#';
-                for (var i = 0; i < 8; i++) {
+
+                for (var i = 0; i < 6; i++) {
 
                     color += letters[Math.floor(Math.random() * 16)];
                 }
