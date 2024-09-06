@@ -1,0 +1,177 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="es-pe">
+<head>
+
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/statistics/css/detailed-technical-statistic.css" />
+    <title>Reporte estadistico - HelpTechAppWeb</title>
+
+</head>
+<body>
+
+    <div id="page-content" class="page-content page-container">
+        <div class="padding">
+            <div class="row">
+                <div class="container-fluid d-flex justify-content-center">
+                    <div class="col-sm-8 col-md-6">
+                        <div class="card">
+                            <div class="card-body" style="height: 420px">
+
+                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+
+                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                                    </div>
+
+                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                    </div>
+
+                                </div>
+                                
+                                <canvas id="chart-line" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input id="iptTypeStatistic" type="hidden" value="@ViewBag.TypeStatistic" />
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(window).on('load', function () {
+
+                loadDetailedTechnicalStatistic($('#iptTypeStatistic').val());
+            });
+
+            function loadDetailedTechnicalStatistic(typeStatistic) {
+
+                var ctx = $("#chart-line");
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("LoadDetailedTechnicalStatistic", "Statistics")' + `?typeStatistic=${typeStatistic}`,
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var myLineChart = new Chart(ctx, {
+
+                            type: 'bar',
+                            data: {
+
+                                labels: ['Resultados'],
+
+                                datasets: [{
+
+                                    label: 'Promedio de ingresos',
+                                    data: [data.AverageIncome],
+                                    borderColor: getRandomColor(),
+                                    backgroundColor: getRandomColor(),
+                                    fill: false
+
+                                }, {
+
+                                    label: 'Ingreso total',
+                                    data: [data.TotalIncome],
+                                    borderColor: getRandomColor(),
+                                    backgroundColor: getRandomColor(),
+                                    fill: true
+
+                                }, {
+
+                                    label: 'Total de atenciones',
+                                    data: [data.TotalConsumersServed],
+                                    borderColor: getRandomColor(),
+                                    backgroundColor: getRandomColor(),
+                                    fill: false
+
+                                }, {
+
+                                    label: 'Total de horas',
+                                    data: [data.TotalWorkTime],
+                                    borderColor: getRandomColor(),
+                                    backgroundColor: getRandomColor(),
+                                    fill: true
+
+                                }, {
+
+                                    label: 'Trabajos pendientes',
+                                    data: [data.TotalPendingsJobs],
+                                    borderColor: getRandomColor(),
+                                    backgroundColor: getRandomColor(),
+                                    fill: false
+
+                                }, {
+
+                                    label: 'Promedio de puntaje',
+                                    data: [data.AverageScore],
+                                    borderColor: getRandomColor(),
+                                    backgroundColor: getRandomColor(),
+                                    fill: true
+
+                                }, {
+
+                                    label: 'Total de reseñas',
+                                    data: [data.TotalReviews],
+                                    borderColor: getRandomColor(),
+                                    backgroundColor: getRandomColor(),
+                                    fill: false
+
+                                }]
+                            },
+                            options: {
+
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                title: {
+
+                                    display: true,
+                                    text: `Reporte ${typeStatistic}`
+                                }
+                            }
+                        });
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+
+            function getRandomColor() {
+
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 8; i++) {
+
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+
+                return color;
+            }
+        });
+
+
+
+    </script>
+
+</body>
+</html>

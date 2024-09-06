@@ -11,11 +11,23 @@ namespace HelpTechAppWeb.Controllers
     {
         private ClaimsPrincipal? _claimsPrincipal;
 
+        #region Views
+
         [HttpGet]
         public IActionResult ReviewStatistic()
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult DetailedTechnicalStatistic()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region Json
 
         [HttpGet]
         public async Task<IActionResult> LoadReviewStatistic()
@@ -29,7 +41,7 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DetailedTechnicalStatisticc
+        public async Task<IActionResult> LoadDetailedTechnicalStatistic
             (string typeStatistic)
         {
             var result = await baseRequest.GetSingleAsync<dynamic>
@@ -39,6 +51,10 @@ namespace HelpTechAppWeb.Controllers
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
         }
+
+        #endregion
+
+        #region Cookie
 
         private string GetToken()
         {
@@ -57,5 +73,7 @@ namespace HelpTechAppWeb.Controllers
                 .FindFirst(ClaimTypes.Name)?
                 .Value.ToString() ?? string.Empty;
         }
+
+        #endregion
     }
 }
