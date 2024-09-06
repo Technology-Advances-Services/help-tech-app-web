@@ -439,13 +439,13 @@
             });
             $('#btnTotalReportStatistic').on('click', function () {
 
-                //window.open('@Url.Action("StatisticReport", "Technicals")', '_self');
+                window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=TOTAL', '_self');
 
                 return false;
             });
             $('#btnMonthlyReportStatistic').on('click', function () {
 
-                //window.open('@Url.Action("StatisticReport", "Statistics")', '_self');
+                window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=MENSUAL', '_self');
 
                 return false;
             });
