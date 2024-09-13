@@ -1,0 +1,205 @@
+﻿@{
+    ViewData["Title"] = "Interfaz consumidor";
+    Layout = "~/Views/Shared/ConsumerLayout.cshtml";
+}
+
+@section Styles {
+
+    <link rel="stylesheet" href="~/consumers/css/interface-consumer.css" />
+}
+
+<div class="container-fluid mt-2 mb-5">
+    <div class="products">
+        <div class="tab-content">
+
+            <div class="tab-pane fade show active">
+
+                <div class="d-flex align-items-center p-3 bg-white mb-3 gap-2">
+
+                    <span>Buscar por departamento:</span>
+                    <select id="sltDepartments" class="form-control-sm"></select>
+
+                    <span>Buscar por distrito:</span>
+                    <select id="sltDistricts" class="form-control-sm"></select>
+
+                    <span>Buscar por esepecialidad:</span>
+                    <select id="sltSpecialties" class="form-control-sm"></select>
+
+                    <a id="btnSearchTechnicalsAvailables" class="btn btn-primary">Buscar</a>
+                </div>
+
+                <div id="dvTechnicalsByAvailability" class="row g-3"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        
+        $(document).ready(function () {
+
+            var specialties = [];
+            var technicals = [];
+
+            $(window).on("load", function () {
+
+                loadDepartments();
+                loadSpecialties();
+                loadTechnicalsByAvailability();
+            });
+
+            $('#sltDepartments').on('change', function () {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("DistrictsByDepartment", "Locations")' + '?departmentId=' + $(this).val(),
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var contentHtml = '';
+
+                        for (const item of data) {
+
+                            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
+                        }
+
+                        $('#sltDistricts').html(contentHtml);
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            });
+
+            function loadDepartments() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("AllDepartments", "Locations")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var contentHtml = '';
+
+                        for (const item of data) {
+
+                            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
+                        }
+
+                        $('#sltDepartments').html(contentHtml);
+                    },
+                    error: function () {
+
+                        // window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+
+            function loadSpecialties() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("AllSpecialties", "Specialties")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        specialties = data;
+
+                        var contentHtml = '';
+
+                        for (const item of data) {
+
+                            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
+                        }
+
+                        $('#sltSpecialties').html(contentHtml);
+                    },
+                    error: function () {
+
+                        // window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+
+            function loadTechnicalsByAvailability() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("TechnicalsByAvailability", "Consumers")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        technicals = data;
+
+                        fillDivTechnicals(technicals);
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+
+            function fillDivTechnicals(listTechnicals) {
+
+                if (listTechnicals.length === 0) {
+
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Busqueda realizada!',
+                        text: 'Al parecer no se encontro lo que usted esta buscando.'
+                    });
+
+                    return;
+                }
+
+                var contentHtml = '';
+
+                for (const item of listTechnicals) {
+
+                    var filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
+
+                    contentHtml += `
+                        <div class="col-md-4">
+                            <div class="card">
+                                <img src="${item.ProfileUrl}" class="card-img-top">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="font-weight-bold">${item.Firstname} ${item.Lastname}</span>
+                                        <span class="font-weight-bold">${item.Phone}</span>
+                                    </div>
+                                    <p class="card-text mb-1 mt-1">${filteredSpecialties}</p>
+                                    <div class="d-flex align-items-center flex-row">
+                                        <img src="https://i.imgur.com/e9VnSng.png" width="20">
+                                        <span class="guarantee">Servicio de calidad</span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="card-body">
+                                    <div class="text-right buttons">
+                                        <button class="btn btn-outline-dark">Ver perfil</button>
+                                        <button class="btn btn-dark">Mas informacion</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+
+                $('#dvTechnicalsByAvailability').html(contentHtml);
+            }
+        });
+    
+    </script>
+}
