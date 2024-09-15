@@ -21,6 +21,7 @@ namespace HelpTechAppWeb.Controllers
 
         #region Json
 
+        [HttpGet]
         public async Task<IActionResult> TechnicalsByAvailability()
         {
             var technicals = await baseRequest.GetAsync<Technical>
@@ -29,6 +30,17 @@ namespace HelpTechAppWeb.Controllers
 
             return Content(JsonConvert.SerializeObject
                 (technicals), "application/json");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> InformationTechnical(int id)
+        {
+            var technical = await baseRequest.GetSingleAsync<Technical>
+                ("informations/technical-by-id?id=" +
+                id, GetToken()) ?? new();
+
+            return Content(JsonConvert.SerializeObject
+                (technical), "application/json");
         }
 
         #endregion
