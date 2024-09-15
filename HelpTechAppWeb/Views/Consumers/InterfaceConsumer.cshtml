@@ -35,6 +35,91 @@
     </div>
 </div>
 
+<div id="mdlInformationTechnical" class="modal fade" tabindex="-1" aria-labelledby="mdlInformationTechnical" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header float-right">
+
+                <h5>Detalles del perfil</h5>
+
+                <div class="text-right">
+                    <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                </div>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div>
+                    <div id="dvInformationTechnical" class="box"></div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="mdlRequestAttention" class="modal fade" tabindex="-1" aria-labelledby="mdlRequestAttention" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header float-right">
+
+                <h5>Solicitud de atencion</h5>
+
+                <div class="text-right">
+                    <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                </div>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div>
+
+                    <div class="form-group" style="display:none;">
+                        <label class="col-sm-3 control-label">Agenda:</label>
+
+                        <div class="col-sm-9">
+                            <input id="iptAgendaId" type="text" class="form-control" required readonly autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Domicilio:</label>
+
+                        <div class="col-sm-9">
+                            <input id="iptAddress" type="text" placeholder="Escriba su domicilio" class="form-control" required autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Descripcion:</label>
+
+                        <div class="col-sm-9">
+                            <input id="iptDescription" type="text" placeholder="Escriba la descripcion" class="form-control" required autocomplete="off">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnRegisterRequestJob" type="button" class="btn btn-primary" data-dismiss="modal">Registrar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @section Scripts {
 
     <script type="text/javascript">
@@ -75,6 +160,38 @@
                         //window.open('@Url.Action("Error", "Home")', '_self');
                     }
                 });
+            });
+
+            $('#dvTechnicalsByAvailability').on('click', '#btnInformationTechnical', function () {
+
+                $(this).parents("div").find("#spnId").each(async function () {
+
+                    await loadInformationTechnical($(this).html());
+                });
+            });
+
+            $('#dvTechnicalsByAvailability').on('click', '#btnRequestAttention', function () {
+
+                $(this).parents("div").find("#spnAgendaId").each(function () {
+
+                    $('#iptAgendaId').val($(this).html());
+                });
+            });
+
+            $('#btnRegisterRequestJob').on('click', async function () {
+
+                var information = new FormData();
+
+                information.append("AgendaId", $("#iptAgendaId").val());
+                information.append("Address", $("#iptAddress").val());
+                information.append("Description", $("#iptDescription").val());
+
+                await registerRequestJob(information);
+            });
+
+            $('#btnReviewsByTechnical').on('click', function () {
+
+                window.open('@Url.Action("ReviewsTechnicals", "Consumers")', '_blank');
             });
 
             function loadDepartments() {
@@ -177,6 +294,8 @@
                                 <img src="${item.ProfileUrl}" class="card-img-top">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
+                                        <span id="spnId" class="font-weight-bold" style="display:none;">${item.Id}</span>
+                                        <span id="spnAgendaId" class="font-weight-bold" style="display:none;">${item.AgendaId}</span>
                                         <span class="font-weight-bold">${item.Firstname} ${item.Lastname}</span>
                                         <span class="font-weight-bold">${item.Phone}</span>
                                     </div>
@@ -189,8 +308,9 @@
                                 <hr>
                                 <div class="card-body">
                                     <div class="text-right buttons">
-                                        <button class="btn btn-outline-dark">Ver perfil</button>
-                                        <button class="btn btn-dark">Mas informacion</button>
+                                        <button id="btnInformationTechnical" class="btn btn-outline-dark" data-toggle="modal" data-target="#mdlInformationTechnical">Ver perfil</button>
+                                        <button id="btnRequestAttention" class="btn btn-dark">Solicitar atencion</button>
+                                        <button id="btnReviewsByTechnical" class="btn btn-dark">Ver reseñas</button>
                                     </div>
                                 </div>
                             </div>
@@ -198,6 +318,87 @@
                 }
 
                 $('#dvTechnicalsByAvailability').html(contentHtml);
+            }
+
+            async function loadInformationTechnical(id) {
+
+                try {
+
+                    var data = await jQuery.ajax({
+
+                        url: '@Url.Action("InformationTechnical", "Consumers")' + `?id=${id}`,
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
+
+                    var filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
+
+                    var contentHtml = `
+                        <div class="img" style="text-align: center;">
+                            <img alt="" src="${data.ProfileUrl}">
+                        </div>
+                        <br>
+                        <p>Especialidad: ${filteredSpecialties.Name}</p>
+                        <br>
+                        <p>Nombres: ${data.Firstname}</p>
+                        <br>
+                        <p>Apellidos: ${data.Lastname}</p>
+                        <br>
+                        <p>Edad: ${data.Age}</p>
+                        <br>
+                        <p>Email: ${data.Email}</p>
+                        <br>
+                        <p>Telefono: ${data.Phone}</p>
+                        <br>`;
+
+                    $('#dvInformationTechnical').html(contentHtml);
+
+                } catch (error) {
+
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
+            }
+
+            async function registerRequestJob(information) {
+
+                try {
+
+                    var data = jQuery.ajax({
+
+                        url: '@Url.Action("RegisterRequestJob", "Attentions")',
+                        method: 'POST',
+                        data: information,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    });
+
+                    if (data === true) {
+
+                        $('#mdlRequestAttention').modal('hide').on('hidden.bs.modal', function () {
+                            $('.modal-backdrop').remove();
+                        });
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Solicitud enviada!',
+                            text: 'La solicitud se ha realizado correctamente.'
+                        });
+
+                    } else {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al enviar solicitud!',
+                            text: 'Se produjo un error al intentar enviar la la solicitud.'
+                        });
+                    }
+                }
+                catch (error) {
+
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
             }
         });
     
