@@ -70,6 +70,21 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> RegisterRequestJob
+            (Job job)
+        {
+            job = new(0, job.AgendaId, GetPersonId(), null,
+                null, job.Address, job.Description, 0, 0, 0,
+                string.Empty);
+
+            var result = await baseRequest.PostAsync
+                ("jobs/register-request-job", GetToken(), job);
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
+        }
+
+        [HttpPost]
         public async Task<IActionResult> AssignJobDetail
             (Job job)
         {
@@ -87,6 +102,18 @@ namespace HelpTechAppWeb.Controllers
 
             return Content(JsonConvert.SerializeObject
                 (true), "application/json");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReviewsByTechnical
+            (int technicalId)
+        {
+            var reviews = await baseRequest.GetAsync<Review>
+                ("reviews/reviews-by-technical?technicalId=" +
+                technicalId, GetToken());
+
+            return Content(JsonConvert.SerializeObject
+                (reviews), "application/json");
         }
 
         #endregion
