@@ -31,10 +31,8 @@ namespace HelpTechAppWeb.Controllers
 
             foreach (var item in chatsMembers)
             {
-                var consumerId = item.ConsumerId;
-
                 var consumer = await baseRequest.GetSingleAsync<Consumer>
-                    ("informations/consumer-by-id?id=" + consumerId,
+                    ("informations/consumer-by-id?id=" + item.ConsumerId,
                     GetToken()) ?? new();
 
                 lock (consumers)
@@ -55,10 +53,61 @@ namespace HelpTechAppWeb.Controllers
                      co.Firstname,
                      co.Lastname,
                      co.Phone,
+                     jo.WorkDate,
                      jo.Address,
                      jo.Description,
                      jo.Time,
+                     jo.LaborBudget,
+                     jo.MaterialBudget,
+                     jo.AmountFinal,
+                     jo.JobState,
+                 });
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> JobsByConsumer()
+        {
+            var jobs = await baseRequest.GetAsync<Job>
+                ("jobs/jobs-by-consumer?consumerId=" +
+                GetPersonId(), GetToken());
+
+            var chatsMembers = await baseRequest.GetAsync<ChatMember>
+                ("chatsmembers/chats-members-by-consumer?consumerId=" +
+                GetPersonId(), GetToken());
+
+            var technicals = new List<Technical>();
+
+            foreach (var item in chatsMembers)
+            {
+                var technical = await baseRequest.GetSingleAsync<Technical>
+                    ("informations/technical-by-id?id=" + item.TechnicalId,
+                    GetToken()) ?? new();
+
+                lock (technicals)
+                    technicals.Add(technical);
+            }
+
+            var result =
+                (from jo in jobs
+                 join te in technicals
+                 on jo.ConsumerId equals te.Id
+                 join cm in chatsMembers
+                 on te.Id equals cm.ConsumerId
+                 select new
+                 {
+                     jo.Id,
+                     cm.ChatRoomId,
+                     TechnicalId = te.Id,
+                     te.Firstname,
+                     te.Lastname,
+                     te.Phone,
                      jo.WorkDate,
+                     jo.Address,
+                     jo.Description,
+                     jo.Time,
                      jo.LaborBudget,
                      jo.MaterialBudget,
                      jo.AmountFinal,
