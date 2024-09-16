@@ -16,6 +16,8 @@ namespace HelpTechAppWeb.Controllers
         #region Views
 
         public IActionResult InterfaceConsumer() => View();
+        
+        public IActionResult AttentionsTechnicals() => View();
 
         #endregion
 
