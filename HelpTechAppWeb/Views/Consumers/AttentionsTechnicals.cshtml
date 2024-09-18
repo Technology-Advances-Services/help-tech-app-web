@@ -13,11 +13,11 @@
     <br />
 
     <span>Seleccion el estado de atencion:</span>
-    <select class="form-control-sm">
-        <option value="COMPLETADO"></option>
-        <option value="PENDIENTE"></option>
-        <option value="EN PROCESO"></option>
-        <option value="DENEGADO"></option>
+    <select id="sltAttentionsStates" class="form-control-sm">
+        <option value="COMPLETADO">COMPLETADO</option>
+        <option value="PENDIENTE">PENDIENTE</option>
+        <option value="EN PROCESO">EN PROCESO</option>
+        <option value="DENEGADO">DENEGADO</option>
     </select>
 
     <div class="row header" style="text-align:center;color:green">
@@ -48,9 +48,7 @@
                 }
             });
 
-            $('#tblAttentions').DataTable();
-
-            $('#sltDepartments').on('change', function () {
+            $('#sltAttentionsStates').on('change', function () {
 
                 var filteredAttentions = attentions.filter(a => a.JobState === $(this).val());
 
@@ -71,7 +69,7 @@
 
                     attentions = data;
 
-                    fillTableAttentions(attentions, 'PENDIENTE');
+                    fillTableAttentions(attentions, 'COMPLETADO');
 
                 } catch (error) {
 
@@ -81,22 +79,22 @@
 
             function fillTableAttentions(listAttentions, attentionsStates) {
 
-                if (listAttentions.length === 0) {
+                // if (listAttentions.length === 0) {
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error al realizar busqueda!',
-                        text: 'Se produjo un error al intentar buscar por estado de atencion!'
-                    });
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Error al realizar busqueda!',
+                //         text: 'Se produjo un error al intentar buscar por estado de atencion!'
+                //     });
 
-                    return;
-                }
+                //     return;
+                // }
 
-                var contentHtml = '';
+                var contentHtml = ``;
 
                 if (attentionsStates === 'PENDIENTE' || attentionsStates === 'COMPLETADO') {
 
-                    contentHtml = `
+                    contentHtml += `
                         <thead>
                             <tr>
                                 <th>Id</th>
@@ -113,7 +111,7 @@
                                 <th>Opciones</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>`;
+                        <tbody>`;
 
                     for (const item of listAttentions) {
 
@@ -140,7 +138,7 @@
                             </tr>`;
                     }
 
-                    contentHtml += `
+                    contentHtml += `</tbody>
                         <tfoot>
                             <tr>
                                 <th>Id</th>
@@ -172,7 +170,7 @@
                                 <th>Opciones</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>`;
+                        <tbody>`;
 
                     for (const item of listAttentions) {
 
@@ -194,7 +192,7 @@
                             </tr>`;
                     }
 
-                    contentHtml += `
+                    contentHtml += `</tbody>
                         <tfoot>
                             <tr>
                                 <th>Id</th>
@@ -209,6 +207,13 @@
                 }
 
                 $('#tblAttentions').html(contentHtml);
+
+                if ($.fn.DataTable.isDataTable('#tblAttentions')) {
+
+                    $('#tblAttentions').DataTable().destroy();
+                }
+
+                $('#tblAttentions').DataTable();
             }
         });
 
