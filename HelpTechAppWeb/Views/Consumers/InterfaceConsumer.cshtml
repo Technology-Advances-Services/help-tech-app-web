@@ -286,7 +286,7 @@
 
                 for (const item of listTechnicals) {
 
-                    var filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
+                    var filteredSpecialties = specialties.find(s => s.Id === item.SpecialtyId);
 
                     contentHtml += `
                         <div class="col-md-4">
@@ -299,7 +299,7 @@
                                         <span class="font-weight-bold">${item.Firstname} ${item.Lastname}</span>
                                         <span class="font-weight-bold">${item.Phone}</span>
                                     </div>
-                                    <p class="card-text mb-1 mt-1">${filteredSpecialties}</p>
+                                    <p class="card-text mb-1 mt-1">${filteredSpecialties.Name}</p>
                                     <div class="d-flex align-items-center flex-row">
                                         <img src="https://i.imgur.com/e9VnSng.png" width="20">
                                         <span class="guarantee">Servicio de calidad</span>
@@ -336,7 +336,7 @@
 
                     var contentHtml = `
                         <div class="img" style="text-align: center;">
-                            <img alt="" src="${data.ProfileUrl}">
+                            <img alt="" src="${data.ProfileUrl}" style="max-width: 100%; height: auto;">
                         </div>
                         <br>
                         <p>Especialidad: ${filteredSpecialties.Name}</p>
