@@ -90,11 +90,11 @@
                 //     return;
                 // }
 
-                var contentHtml = ``;
+                var contentHtml = '';
 
                 if (attentionsStates === 'PENDIENTE' || attentionsStates === 'COMPLETADO') {
 
-                    contentHtml += `
+                    contentHtml = `
                         <thead>
                             <tr>
                                 <th>Id</th>
@@ -111,7 +111,12 @@
                                 <th>Opciones</th>
                             </tr>
                         </thead>
-                        <tbody>`;
+                        <tbody id="tbdAttentions"></tbody>
+                        <tfoot id="tftAttentions"></tfoot>`;
+
+                    $('#tblAttentions').html(contentHtml);
+
+                    contentHtml = '';
 
                     for (const item of listAttentions) {
 
@@ -138,23 +143,27 @@
                             </tr>`;
                     }
 
-                    contentHtml += `</tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Id</th>
-                                <th>DNI</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Contacto</th>
-                                <th>Fecha</th>
-                                <th>Tiempo</th>
-                                <th>Mano de obra</th>
-                                <th>Materiales</th>
-                                <th>Monto final</th>
-                                <th>Estado</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </tfoot>`;
+                    $('#tbdAttentions').html(contentHtml);
+
+                    contentHtml = '';
+
+                    contentHtml = `
+                        <tr>
+                            <th>Id</th>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Contacto</th>
+                            <th>Fecha</th>
+                            <th>Tiempo</th>
+                            <th>Mano de obra</th>
+                            <th>Materiales</th>
+                            <th>Monto final</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>`;
+
+                    $('#tftAttentions').html(contentHtml);
                 }
                 else if (attentionsStates === 'EN PROCESO' || attentionsStates === 'DENEGADO') {
 
@@ -170,7 +179,12 @@
                                 <th>Opciones</th>
                             </tr>
                         </thead>
-                        <tbody>`;
+                        <tbody id="tbdAttentions"></tbody>
+                        <tfoot id="tftAttentions"></tfoot>`;
+
+                    $('#tblAttentions').html(contentHtml);
+
+                    contentHtml = '';
 
                     for (const item of listAttentions) {
 
@@ -192,21 +206,23 @@
                             </tr>`;
                     }
 
-                    contentHtml += `</tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Id</th>
-                                <th>DNI</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Contacto</th>
-                                <th>Estado</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </tfoot>`;
-                }
+                    $('#tbdAttentions').html(contentHtml);
 
-                $('#tblAttentions').html(contentHtml);
+                    contentHtml = '';
+
+                    contentHtml = `
+                        <tr>
+                            <th>Id</th>
+                            <th>DNI</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Contacto</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>`;
+
+                    $('#tftAttentions').html(contentHtml);
+                }
 
                 if ($.fn.DataTable.isDataTable('#tblAttentions')) {
 
