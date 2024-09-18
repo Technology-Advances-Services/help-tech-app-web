@@ -7,7 +7,7 @@ using HelpTechAppWeb.Models;
 
 namespace HelpTechAppWeb.Controllers
 {
-    //[Authorize("CONSUMIDOR")]
+    [Authorize(Roles = "CONSUMIDOR")]
     public class ConsumersController
         (IBaseRequest baseRequest) : Controller
     {
@@ -30,8 +30,35 @@ namespace HelpTechAppWeb.Controllers
                 ("informations/technicals-by-availability?availability=DISPONIBLE",
                 GetToken());
 
+            var agendas = new List<Agenda>();
+
+            foreach (var item in technicals)
+            {
+                var agenda = await baseRequest.GetSingleAsync<Agenda>
+                    ("agendas/agenda-by-technical?technicalId=" +
+                    item.Id, GetToken()) ?? new();
+
+                lock (agenda)
+                    agendas.Add(agenda);
+            }
+
+            var result = 
+                (from te in technicals
+                 join ag in agendas
+                 on te.Id equals ag.TechnicalId
+                 select new
+                 {
+                     te.Id,
+                     AgendaId = ag.Id,
+                     te.SpecialtyId,
+                     te.ProfileUrl,
+                     te.Firstname,
+                     te.Lastname,
+                     te.Phone
+                 });
+
             return Content(JsonConvert.SerializeObject
-                (technicals), "application/json");
+                (result), "application/json");
         }
 
         [HttpGet]

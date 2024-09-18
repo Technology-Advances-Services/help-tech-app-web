@@ -79,6 +79,7 @@ namespace HelpTechAppWeb.Controllers
                 GetPersonId(), GetToken());
 
             var technicals = new List<Technical>();
+            var agendas = new List<Agenda>();
 
             foreach (var item in chatsMembers)
             {
@@ -86,16 +87,25 @@ namespace HelpTechAppWeb.Controllers
                     ("informations/technical-by-id?id=" + item.TechnicalId,
                     GetToken()) ?? new();
 
+                var agenda = await baseRequest.GetSingleAsync<Agenda>
+                    ("agendas/agenda-by-technical?technicalId=" +
+                    item.TechnicalId, GetToken()) ?? new();
+
                 lock (technicals)
                     technicals.Add(technical);
+
+                lock (agendas)
+                    agendas.Add(agenda);
             }
 
             var result =
                 (from jo in jobs
+                 join ag in agendas
+                 on jo.AgendaId equals ag.Id
                  join te in technicals
-                 on jo.ConsumerId equals te.Id
+                 on ag.TechnicalId equals te.Id
                  join cm in chatsMembers
-                 on te.Id equals cm.ConsumerId
+                 on te.Id equals cm.TechnicalId
                  select new
                  {
                      jo.Id,
