@@ -50,6 +50,7 @@ namespace HelpTechAppWeb.Controllers
                  {
                      te.Id,
                      AgendaId = ag.Id,
+                     te.DistrictId,
                      te.SpecialtyId,
                      te.ProfileUrl,
                      te.Firstname,
