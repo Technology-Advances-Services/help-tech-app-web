@@ -194,6 +194,13 @@
                 window.open('@Url.Action("ReviewsTechnicals", "Consumers")', '_blank');
             });
 
+            $('#btnSearchTechnicalsAvailables').on('click', function () {
+
+                var filteredTechnicals = technicals.filter(t => t.SpecialtyId === $('#sltSpecialties').val() && t.DistrictId === $('#sltDistricts').val());
+
+                fillDivTechnicals(filteredTechnicals);
+            });
+
             function loadDepartments() {
 
                 jQuery.ajax({
@@ -278,6 +285,8 @@
                         title: 'Busqueda realizada!',
                         text: 'Al parecer no se encontro lo que usted esta buscando.'
                     });
+
+                    $('#dvTechnicalsByAvailability').html('');
 
                     return;
                 }
