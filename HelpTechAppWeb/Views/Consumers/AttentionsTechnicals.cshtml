@@ -79,16 +79,18 @@
 
             function fillTableAttentions(listAttentions, attentionsStates) {
 
-                // if (listAttentions.length === 0) {
+                if (listAttentions.length === 0) {
 
-                //     Swal.fire({
-                //         icon: 'error',
-                //         title: 'Error al realizar busqueda!',
-                //         text: 'Se produjo un error al intentar buscar por estado de atencion!'
-                //     });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al realizar busqueda!',
+                        text: 'Se produjo un error al intentar buscar por estado de atencion!'
+                    });
 
-                //     return;
-                // }
+                    $('#tblAttentions').html('');
+
+                    return;
+                }
 
                 var contentHtml = '';
 
@@ -115,6 +117,11 @@
                         <tfoot id="tftAttentions"></tfoot>`;
 
                     $('#tblAttentions').html(contentHtml);
+
+                    if ($.fn.DataTable.isDataTable('#tblAttentions')) {
+
+                        $('#tblAttentions').DataTable().destroy();
+                    }
 
                     $('#tblAttentions').DataTable();
 
@@ -186,6 +193,13 @@
 
                     $('#tblAttentions').html(contentHtml);
 
+                    if ($.fn.DataTable.isDataTable('#tblAttentions')) {
+
+                        $('#tblAttentions').DataTable().destroy();
+                    }
+
+                    $('#tblAttentions').DataTable();
+
                     contentHtml = '';
 
                     for (const item of listAttentions) {
@@ -225,8 +239,6 @@
 
                     $('#tftAttentions').html(contentHtml);
                 }
-
-
             }
 
             function getFormattedDate(date) {
