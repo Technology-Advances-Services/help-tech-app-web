@@ -106,6 +106,16 @@
                 });
             });
 
+            $('tblAttentions').on('click', 'btnAttentionDetail', function() {
+
+                $(this).parents("tr").find("#tChatRoomId").each(function () {
+
+                    var chatRoomId = $(this).html();
+
+                    window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
+                });
+            });
+
             async function loadAttentions() {
 
                 try {

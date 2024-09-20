@@ -439,19 +439,19 @@
             });
             $('#btnTotalReportStatistic').on('click', function () {
 
-                window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=TOTAL', '_self');
+                window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=TOTAL', '_blank');
 
                 return false;
             });
             $('#btnMonthlyReportStatistic').on('click', function () {
 
-                window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=MENSUAL', '_self');
+                window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=MENSUAL', '_blank');
 
                 return false;
             });
             $('#btnReportReviews').on('click', function () {
 
-                window.open('@Url.Action("ReviewStatistic", "Statistics")', '_self');
+                window.open('@Url.Action("ReviewStatistic", "Statistics")', '_blank');
 
                 return false;
             });
