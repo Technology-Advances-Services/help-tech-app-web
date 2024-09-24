@@ -99,14 +99,14 @@
 
                     var id = $(this).html();;
 
-                    var filteredAttentions = attentions.filter(a => a.Id === parseInt(id));
+                    var filteredAttentions = attentions.find(a => a.Id === parseInt(id));
 
                     $('#pAddress').text(`Direccion: ${filteredAttentions.Address}`);
                     $('#pDescription').text(`Descripcion: ${filteredAttentions.Description}`);
                 });
             });
 
-            $('tblAttentions').on('click', 'btnAttentionDetail', function() {
+            $('#tblAttentions').on('click', '#btnChat', function () {
 
                 $(this).parents("tr").find("#tChatRoomId").each(function () {
 
@@ -143,9 +143,9 @@
                 if (listAttentions.length === 0) {
 
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Error al realizar busqueda!',
-                        text: 'Se produjo un error al intentar buscar por estado de atencion!'
+                        icon: 'inf',
+                        title: 'No se encontraron resultados!',
+                        text: 'No existen datos al intentar buscar por estado de atencion!'
                     });
 
                     $('#tblAttentions').html('');
@@ -153,152 +153,64 @@
                     return;
                 }
 
-                var contentHtml = '';
+                var columns = [];
 
                 if (attentionsStates === 'PENDIENTE' || attentionsStates === 'COMPLETADO') {
 
-                    contentHtml = `
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>DNI</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Contacto</th>
-                                <th>Fecha</th>
-                                <th>Tiempo</th>
-                                <th>Mano de obra</th>
-                                <th>Materiales</th>
-                                <th>Monto final</th>
-                                <th>Estado</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbdAttentions"></tbody>
-                        <tfoot id="tftAttentions"></tfoot>`;
-
-                    $('#tblAttentions').html(contentHtml);
-
-                    if ($.fn.DataTable.isDataTable('#tblAttentions')) {
-
-                        $('#tblAttentions').DataTable().destroy();
-                    }
-
-                    $('#tblAttentions').DataTable();
-
-                    contentHtml = '';
-
-                    for (const item of listAttentions) {
-
-                        var workDate = new Date(item.WorkDate);
-
-                        contentHtml += `
-                            <tr>
-                                <td id="tId">${item.Id}</td>
-                                <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
-                                <td id="tTechnicalId">${item.TechnicalId}</td>
-                                <td id="tFirstname">${item.Firstname}</td>
-                                <td id="tLastname">${item.Lastname}</td>
-                                <td id="tPhone">${item.Phone}</td>
-                                <td id="tWorkDate">${getFormattedDate(workDate)}</td>
-                                <td id="tTime">${item.Time}</td>
-                                <td id="tLaborBudget">${item.LaborBudget}</td>
-                                <td id="tMaterialBudget">${item.MaterialBudget}</td>
-                                <td id="tAmountFinal">${item.AmountFinal}</td>
-                                <td id="tJobState">${item.JobState}</td>
-                                <td>
-                                    <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
-                                    <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>
-                                </td>
-                            </tr>`;
-                    }
-
-                    $('#tbdAttentions').html(contentHtml);
-
-                    contentHtml = '';
-
-                    contentHtml = `
-                        <tr>
-                            <th>Id</th>
-                            <th>DNI</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Contacto</th>
-                            <th>Fecha</th>
-                            <th>Tiempo</th>
-                            <th>Mano de obra</th>
-                            <th>Materiales</th>
-                            <th>Monto final</th>
-                            <th>Estado</th>
-                            <th>Opciones</th>
-                        </tr>`;
-
-                    $('#tftAttentions').html(contentHtml);
+                    columns = [
+                        { data: 'Id', title: 'Id' },
+                        { data: 'ChatRoomId', title: 'Chat' },
+                        { data: 'TechnicalId', title: 'DNI' },
+                        { data: 'Firstname', title: 'Nombre' },
+                        { data: 'Lastname', title: 'Apellido' },
+                        { data: 'Phone', title: 'Contacto' },
+                        { data: 'WorkDate', title: 'Fecha' },
+                        { data: 'Time', title: 'Tiempo' },
+                        { data: 'LaborBudget', title: 'Mano de obra' },
+                        { data: 'MaterialBudget', title: 'Materiales' },
+                        { data: 'AmountFinal', title: 'Monto final' },
+                        { data: 'JobState', title: 'Estado' }
+                    ];
                 }
-                else if (attentionsStates === 'EN PROCESO' || attentionsStates === 'DENEGADO') {
+                else if (attentionsStates === '') {
 
-                    contentHtml = `
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>DNI</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Contacto</th>
-                                <th>Estado</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbdAttentions"></tbody>
-                        <tfoot id="tftAttentions"></tfoot>`;
+                    columns = [
+                        { data: 'Id', title: 'Id' },
+                        { data: 'ChatRoomId', title: 'Chat' },
+                        { data: 'TechnicalId', title: 'DNI' },
+                        { data: 'Firstname', title: 'Nombre' },
+                        { data: 'Lastname', title: 'Apellido' },
+                        { data: 'Phone', title: 'Contacto' },
+                        { data: 'JobState', title: 'Estado' }
+                    ];
+                }
 
-                    $('#tblAttentions').html(contentHtml);
+                columns.push({
 
-                    if ($.fn.DataTable.isDataTable('#tblAttentions')) {
+                    data: null,
+                    title: "Opciones",
+                    render: function (data, type, row) {
 
-                        $('#tblAttentions').DataTable().destroy();
+                        return `
+                            <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
+                            <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>`;
                     }
+                });
 
-                    $('#tblAttentions').DataTable();
+                if ($.fn.DataTable.isDataTable('#tblAttentions')) {
 
-                    contentHtml = '';
+                    var table = $('#tblAttentions').DataTable();
 
-                    for (const item of listAttentions) {
+                    table.clear().rows.add(listAttentions).draw();
+                } else {
 
-                        var workDate = new Date(item.WorkDate);
-
-                        contentHtml += `
-                            <tr>
-                                <td id="tId">${item.Id}</td>
-                                <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
-                                <td id="tTechnicalId">${item.TechnicalId}</td>
-                                <td id="tFirstname">${item.Firstname}</td>
-                                <td id="tLastname">${item.Lastname}</td>
-                                <td id="tPhone">${item.Phone}</td>
-                                <td id="tJobState">${item.JobState}</td>
-                                <td>
-                                    <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
-                                    <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>
-                                </td>
-                            </tr>`;
-                    }
-
-                    $('#tbdAttentions').html(contentHtml);
-
-                    contentHtml = '';
-
-                    contentHtml = `
-                        <tr>
-                            <th>Id</th>
-                            <th>DNI</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Contacto</th>
-                            <th>Estado</th>
-                            <th>Opciones</th>
-                        </tr>`;
-
-                    $('#tftAttentions').html(contentHtml);
+                    $('#tblAttentions').DataTable({
+                        "data": listAttentions,
+                        "columns": columns,
+                        "searching": true,
+                        "paging": true,
+                        "ordering": true
+                    });
                 }
             }
 
