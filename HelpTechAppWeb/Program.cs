@@ -39,7 +39,7 @@ builder.Services.AddScoped<IBaseRequest, BaseRequest>();
 
 #endregion
 
-var app = builder.Build();
+var app = builder.Build(); ;
 
 app.UseCors(
      b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
