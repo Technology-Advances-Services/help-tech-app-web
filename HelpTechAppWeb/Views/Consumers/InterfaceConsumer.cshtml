@@ -112,7 +112,7 @@
             </div>
 
             <div class="modal-footer">
-                <button id="btnRegisterRequestJob" type="button" class="btn btn-primary" data-dismiss="modal">Registrar</button>
+                <button id="btnRegisterRequestJob" type="button" class="btn btn-primary">Registrar</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
 
@@ -192,6 +192,8 @@
             $('#btnReviewsByTechnical').on('click', function () {
 
                 window.open('@Url.Action("ReviewsTechnicals", "Consumers")', '_blank');
+
+                return false;
             });
 
             $('#btnSearchTechnicalsAvailables').on('click', function () {

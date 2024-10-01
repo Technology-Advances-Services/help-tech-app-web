@@ -359,12 +359,12 @@
                             <div class="row justify-content-center mt-4 px-sm-5  ">
 
                                 <div class="col">
-                                    <button id="btnTotalReportStatistic" type="submit" class="btn btn-warning btn-block  font-weight-bold text-dark text-uppercase" data-dismiss="modal">
+                                    <button id="btnTotalReportStatistic" type="submit" class="btn btn-warning btn-block  font-weight-bold text-dark text-uppercase">
                                         <span class="plan">Reporte total</span>                                     
                                     </button>                                   
                                 </div>
                                 <div class="col">
-                                    <button id="btnMonthlyReportStatistic" type="submit" class="btn btn-primary btn-block  text-dark font-weight-bold text-uppercase" data-dismiss="modal">
+                                    <button id="btnMonthlyReportStatistic" type="submit" class="btn btn-primary btn-block  text-dark font-weight-bold text-uppercase">
                                         <span class="plan">Reporte mensual</span>                                        
                                     </button>                                  
                                 </div>
@@ -439,11 +439,19 @@
             });
             $('#btnTotalReportStatistic').on('click', function () {
 
+                $('#mdlTypeStatistic').modal('hide').on('hidden.bs.modal', function () {
+                    $('.modal-backdrop').remove();
+                });
+
                 window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=TOTAL', '_blank');
 
                 return false;
             });
             $('#btnMonthlyReportStatistic').on('click', function () {
+
+                $('#mdlTypeStatistic').modal('hide').on('hidden.bs.modal', function () {
+                    $('.modal-backdrop').remove();
+                });
 
                 window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=MENSUAL', '_blank');
 
