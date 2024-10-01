@@ -27,7 +27,13 @@ namespace HelpTechAppWeb.Controllers
         public IActionResult Login()
         {
             if (User?.Identity?.IsAuthenticated is true)
-                return RedirectToAction("InterfaceTechnical", "Technicals");
+            {
+                if (User.IsInRole("TECNICO"))
+                    return RedirectToAction("InterfaceTechnical", "Technicals");
+
+                else if (User.IsInRole("CONSUMIDOR"))
+                    return RedirectToAction("InterfaceConsumer", "Consumers");
+            }
 
             return View();
         }
