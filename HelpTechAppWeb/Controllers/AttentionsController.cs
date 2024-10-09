@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
@@ -19,49 +20,54 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> JobsByTechnical()
         {
-            var jobs = await baseRequest.GetAsync<Job>
+            var jobsTask = baseRequest.GetAsync<Job>
                 ("jobs/jobs-by-technical?technicalId=" +
                 GetPersonId(), GetToken());
 
-            var chatsMembers = await baseRequest.GetAsync<ChatMember>
+            var chatsMembersTask = baseRequest.GetAsync<ChatMember>
                 ("chatsmembers/chats-members-by-technical?technicalId=" +
                 GetPersonId(), GetToken());
 
-            var consumers = new List<Consumer>();
+            await Task.WhenAll(jobsTask, chatsMembersTask);
 
-            foreach (var item in chatsMembers)
+            var jobs = await jobsTask;
+            var chatsMembers = await chatsMembersTask;
+
+            var consumers = new ConcurrentBag<Consumer>();
+
+            await Task.WhenAll(chatsMembers.Select(async item =>
             {
-                var consumer = await baseRequest.GetSingleAsync<Consumer>
-                    ("informations/consumer-by-id?id=" + item.ConsumerId,
-                    GetToken()) ?? new();
+                var consumer = await baseRequest
+                .GetSingleAsync<Consumer>
+                ("informations/consumer-by-id?id=" +
+                item.ConsumerId, GetToken()) ?? new();
 
-                lock (consumers)
-                    consumers.Add(consumer);
-            }
+                consumers.Add(consumer);
+            }));
 
             var result =
-                (from jo in jobs
-                 join co in consumers
-                 on jo.ConsumerId equals co.Id
-                 join cm in chatsMembers
-                 on co.Id equals cm.ConsumerId
-                 select new
-                 {
-                     jo.Id,
-                     cm.ChatRoomId,
-                     ConsumerId = co.Id,
-                     co.Firstname,
-                     co.Lastname,
-                     co.Phone,
-                     jo.WorkDate,
-                     jo.Address,
-                     jo.Description,
-                     jo.Time,
-                     jo.LaborBudget,
-                     jo.MaterialBudget,
-                     jo.AmountFinal,
-                     jo.JobState,
-                 });
+                from jo in jobs
+                join co in consumers
+                on jo.ConsumerId equals co.Id
+                join cm in chatsMembers
+                on co.Id equals cm.ConsumerId
+                select new
+                {
+                    jo.Id,
+                    cm.ChatRoomId,
+                    ConsumerId = co.Id,
+                    co.Firstname,
+                    co.Lastname,
+                    co.Phone,
+                    jo.WorkDate,
+                    jo.Address,
+                    jo.Description,
+                    jo.Time,
+                    jo.LaborBudget,
+                    jo.MaterialBudget,
+                    jo.AmountFinal,
+                    jo.JobState,
+                };
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
@@ -70,59 +76,65 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> JobsByConsumer()
         {
-            var jobs = await baseRequest.GetAsync<Job>
+            var jobsTask = baseRequest.GetAsync<Job>
                 ("jobs/jobs-by-consumer?consumerId=" +
                 GetPersonId(), GetToken());
 
-            var chatsMembers = await baseRequest.GetAsync<ChatMember>
+            var chatsMembersTask = baseRequest.GetAsync<ChatMember>
                 ("chatsmembers/chats-members-by-consumer?consumerId=" +
                 GetPersonId(), GetToken());
 
-            var technicals = new List<Technical>();
-            var agendas = new List<Agenda>();
+            await Task.WhenAll(jobsTask, chatsMembersTask);
 
-            foreach (var item in chatsMembers)
+            var jobs = await jobsTask;
+            var chatsMembers = await chatsMembersTask;
+
+            var technicals = new ConcurrentBag<Technical>();
+            var agendas = new ConcurrentBag<Agenda>();
+
+            await Task.WhenAll(chatsMembers.Select(async item =>
             {
-                var technical = await baseRequest.GetSingleAsync<Technical>
-                    ("informations/technical-by-id?id=" + item.TechnicalId,
-                    GetToken()) ?? new();
+                var technical = baseRequest
+                .GetSingleAsync<Technical>
+                ("informations/technical-by-id?id=" +
+                item.TechnicalId, GetToken());
 
-                var agenda = await baseRequest.GetSingleAsync<Agenda>
-                    ("agendas/agenda-by-technical?technicalId=" +
-                    item.TechnicalId, GetToken()) ?? new();
+                var agenda = baseRequest
+                .GetSingleAsync<Agenda>
+                ("agendas/agenda-by-technical?technicalId=" +
+                item.TechnicalId, GetToken());
 
-                lock (technicals)
-                    technicals.Add(technical);
+                await Task.WhenAll(technical, agenda);
 
-                lock (agendas)
-                    agendas.Add(agenda);
-            }
+                technicals.Add(await technical ?? new());
+                agendas.Add(await agenda ?? new());
+            }));
 
             var result =
-                (from jo in jobs
-                 join ag in agendas
-                 on jo.AgendaId equals ag.Id
-                 join te in technicals
-                 on ag.TechnicalId equals te.Id
-                 join cm in chatsMembers
-                 on te.Id equals cm.TechnicalId
-                 select new
-                 {
-                     jo.Id,
-                     cm.ChatRoomId,
-                     TechnicalId = te.Id,
-                     te.Firstname,
-                     te.Lastname,
-                     te.Phone,
-                     jo.WorkDate,
-                     jo.Address,
-                     jo.Description,
-                     jo.Time,
-                     jo.LaborBudget,
-                     jo.MaterialBudget,
-                     jo.AmountFinal,
-                     jo.JobState,
-                 });
+                from jo in jobs
+                join ag in agendas
+                on jo.AgendaId equals ag.Id
+                join te in technicals
+                on ag.TechnicalId equals te.Id
+                join cm in chatsMembers
+                on te.Id equals cm.TechnicalId
+                select new
+                {
+                    jo.Id,
+                    cm.ChatRoomId,
+                    TechnicalId = te.Id,
+                    te.Firstname,
+                    te.Lastname,
+                    te.Phone,
+                    jo.WorkDate,
+                    jo.Address,
+                    jo.Description,
+                    jo.Time,
+                    jo.LaborBudget,
+                    jo.MaterialBudget,
+                    jo.AmountFinal,
+                    jo.JobState,
+                };
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
