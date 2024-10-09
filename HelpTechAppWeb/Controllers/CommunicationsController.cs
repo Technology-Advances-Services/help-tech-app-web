@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
@@ -59,31 +60,28 @@ namespace HelpTechAppWeb.Controllers
                 ("chatsmembers/chats-members-by-technical?technicalId=" +
                 GetPersonId(), GetToken());
 
-            var consumers = new List<Consumer>();
+            var consumers = new ConcurrentBag<Consumer>();
 
-            foreach (var item in chatsMembers)
+            await Task.WhenAll(chatsMembers.Select(async item =>
             {
-                var consumerId = item.ConsumerId;
-
                 var consumer = await baseRequest.GetSingleAsync<Consumer>
-                    ("informations/consumer-by-id?id=" + consumerId,
-                    GetToken()) ?? new();
+                ("informations/consumer-by-id?id=" + item.ConsumerId,
+                GetToken()) ?? new();
 
-                lock (consumers)
-                    consumers.Add(consumer);
-            }
+                consumers.Add(consumer);
+            }));
 
             var result =
-                (from cm in chatsMembers
-                 join co in consumers
-                 on cm.ConsumerId equals co.Id
-                 select new
-                 {
-                     cm.ChatRoomId,
-                     co.ProfileUrl,
-                     co.Firstname,
-                     co.Lastname,
-                 });
+                from cm in chatsMembers
+                join co in consumers
+                on cm.ConsumerId equals co.Id
+                select new
+                {
+                    cm.ChatRoomId,
+                    co.ProfileUrl,
+                    co.Firstname,
+                    co.Lastname,
+                };
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
