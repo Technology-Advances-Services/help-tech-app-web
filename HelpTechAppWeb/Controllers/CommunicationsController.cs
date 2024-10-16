@@ -98,6 +98,20 @@ namespace HelpTechAppWeb.Controllers
                 (chat), "application/json");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SendMessage
+            (List<Chat> chats)
+        {
+            await Task.WhenAll(chats.Select(async item =>
+            {
+                await baseRequest.PostAsync
+                ("chats/send-message", GetToken(), item);
+            }));
+
+            return Content(JsonConvert.SerializeObject
+                (true), "application/json");
+        }
+
         #endregion
 
         #region Cookies
