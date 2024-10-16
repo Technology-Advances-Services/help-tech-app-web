@@ -67,39 +67,47 @@
 
         $(document).ready(function () {
 
+            var listMessages = [];
+            var closeWindow;
             var room = $('#iptChatRoomId').val();
             var webSocket = new WebSocket('wss://localhost:44310/chat?room=' + room);
-            var information = new FormData();
 
             var contentHtml = '';
 
             $(window).on('load', function () {
 
+                closeWindow = 0;
+
                 loadInformation();
                 loadChatsByChatRoom();
             });
 
+            $(window).on('beforeunload', function () {
+
+                closeWindow++;
+
+                if (closeWindow === 2) {
+
+                    jQuery.ajax({
+
+                        url: '@Url.Action("SendMessage", "Communications")',
+                        method: 'POST',
+                        data: listMessages,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function () { },
+                        error: function () {
+
+                            //window.open('@Url.Action("Error", "Home")', "_self");
+                        }
+                    });
+                }
+            });
+
             $('#btnSendMessage').on('click', function () {
 
-                information = new FormData();
-
-                information.append('ChatRoomId', $('#iptChatRoomId').val());
-                information.append('Message', $('#txaMessage').val());
-
-                // jQuery.ajax({
-
-                //     url: '@Url.Action("SendMessage", "Communications")',
-                //     method: 'POST',
-                //     data: credentials,
-                //     cache: false,
-                //     contentType: false,
-                //     processData: false,
-                //     success: function () { },
-                //     error: function () {
-
-                //         //window.open('@Url.Action("Error", "Home")', "_self");
-                //     }
-                // });
+                addMessagesUsers();
 
                 sendMessage();
 
@@ -354,6 +362,15 @@
                 }
 
                 $('#dvChat').html(contentHtml);
+            }
+            function addMessagesUsers() {
+
+                var messagesUsers = new FormData();
+
+                messagesUsers.append('ChatRoomId', $('#iptChatRoomId').val());
+                messagesUsers.append('Message', $('#txaMessage').val());
+
+                listMessages.push(messagesUsers);
             }
             function getFormattedDate(date) {
 
