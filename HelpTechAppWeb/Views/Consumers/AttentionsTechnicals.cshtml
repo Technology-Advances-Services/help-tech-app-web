@@ -27,6 +27,59 @@
     <table id="tblAttentions" class="table table-striped table-bordered" style="width:100%"></table>
 </div>
 
+<div id="mdlRegisterComplaint" class="modal fade" tabindex="-1" aria-labelledby="mdlRegisterComplaint" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header float-right">
+
+                <h5>Registrar queja</h5>
+
+                <div class="text-right">
+                    <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                </div>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div>
+
+                    <div class="form-group" style="display:none;">
+                        <div class="col-sm-9">
+                            <input id="iptId" type="hidden" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Tipo de reporte:</label>
+
+                        <div class="col-sm-9">
+                            <select id="sltTypesComplaints" class="form-control"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Descripcion:</label>
+
+                        <div class="col-sm-9">
+                            <input id="iptDescription" type="text" placeholder="Escriba la descripcion" class="form-control" required autocomplete="off">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="btnRegisterComplaint" type="button" class="btn btn-primary">Enviar reporte</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div id="mdlAttentionDetail" class="modal fade" tabindex="-1" aria-labelledby="mdlAttentionDetail" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -93,6 +146,14 @@
                 fillTableAttentions(filteredAttentions, $(this).val());
             });
 
+            $('#tblAttentions').on('click', '#btnRegisterComplaint', function () {
+
+                $(this).parents("tr").find("#tId").each(function () {
+
+                    $('#iptId').val($(this).html());
+                });
+            });
+
             $('#tblAttentions').on('click', '#btnAttentionDetail', function () {
 
                 $(this).parents("tr").find("#tId").each(function () {
@@ -116,6 +177,22 @@
                 });
             });
 
+            $('#btnRegisterComplaint').on('click', function () {
+
+                loadTypesComplaints();
+            });
+
+            $('#btnRegisterComplaint').on('click', async function () {
+
+                var information = new FormData();
+
+                information.append('TypeComplaintId', $('#sltTypesComplaints').val());
+                information.append('JobId', $('#iptId').val());
+                information.append('Description', $('#iptDescription').val());
+
+                await registerComplaint(information);
+            });
+
             async function loadAttentions() {
 
                 try {
@@ -131,6 +208,52 @@
                     attentions = data;
 
                     fillTableAttentions(attentions, 'COMPLETADO');
+
+                } catch (error) {
+
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
+            }
+
+            function loadTypesComplaints() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("AllTypesComplaints", "Reports")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var contentHtml = '';
+
+                        for (const item of data) {
+
+                            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
+                        }
+
+                        $('#sltTypesComplaints').html(contentHtml);
+                    },
+                    error: function () {
+
+                        //window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+
+            async function registerComplaint(information) {
+
+                try {
+
+                    await jQuery.ajax({
+
+                        url: '@Url.Action("RegisterComplaint", "Reports")',
+                        method: 'POST',
+                        data: information,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                    });
 
                 } catch (error) {
 
@@ -192,6 +315,7 @@
                     render: function (data, type, row) {
 
                         return `
+                            <button id="btnRegisterComplaint" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlRegisterComplaint">Denunciar</button>
                             <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
                             <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>`;
                     }
@@ -202,6 +326,7 @@
                     var table = $('#tblAttentions').DataTable();
 
                     table.clear().rows.add(listAttentions).draw();
+
                 } else {
 
                     $('#tblAttentions').DataTable({
