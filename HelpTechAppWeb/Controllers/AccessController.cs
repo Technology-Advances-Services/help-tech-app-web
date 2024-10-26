@@ -150,6 +150,20 @@ namespace HelpTechAppWeb.Controllers
                 (true), "application/json");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateCredential
+            (Models.User user)
+        {
+            var result = await baseRequest.PostAsync
+                ("access/update-credential", user);
+
+            if (result is false)
+                return RedirectToAction("Error", "Home");
+
+            return Content(JsonConvert.SerializeObject
+                (true), "application/json");
+        }
+
         [HttpGet]
         public async Task<IActionResult> AllMemberships()
         {
