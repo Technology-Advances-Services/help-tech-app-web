@@ -177,7 +177,7 @@ namespace HelpTechAppWeb.Controllers
 
         [HttpGet]
         public async Task<IActionResult> ReviewsByTechnical
-            (int technicalId)
+            (string technicalId)
         {
             var reviews = await baseRequest.GetAsync<Review>
                 ("reviews/reviews-by-technical?technicalId=" +

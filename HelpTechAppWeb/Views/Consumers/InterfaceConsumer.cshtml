@@ -120,6 +120,31 @@
     </div>
 </div>
 
+<div id="mdlReviewsByTechnical" class="modal fade" tabindex="-1" aria-labelledby="mdlReviewsByTechnical" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Reseñas del tecnico</h5>
+                <div class="text-right">
+                    <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="box" style="max-height: 300px; overflow-y: auto;">
+                    <ul id="uReviewsByTechnical" class="list-group"></ul>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @section Scripts {
 
     <script type="text/javascript">
@@ -189,11 +214,12 @@
                 await registerRequestJob(information);
             });
 
-            $('#btnReviewsByTechnical').on('click', function () {
+            $('#dvTechnicalsByAvailability').on('click', '#btnReviewsByTechnical', function () {
 
-                window.open('@Url.Action("ReviewsTechnicals", "Consumers")', '_blank');
+                $(this).parents("div").find("#spnId").each(async function () {
 
-                return false;
+                    await loadReviewsByTechnical($(this).html());
+                });
             });
 
             $('#btnSearchTechnicalsAvailables').on('click', function () {
@@ -320,8 +346,8 @@
                                 <div class="card-body">
                                     <div class="text-right buttons">
                                         <button id="btnInformationTechnical" class="btn btn-outline-dark" data-toggle="modal" data-target="#mdlInformationTechnical">Ver perfil</button>
-                                        <button id="btnRequestAttention" class="btn btn-dark">Solicitar atencion</button>
-                                        <button id="btnReviewsByTechnical" class="btn btn-dark">Ver reseñas</button>
+                                        <button id="btnRequestAttention" class="btn btn-dark" data-toggle="modal" data-target="#mdlRequestAttention">Solicitar atencion</button>
+                                        <button id="btnReviewsByTechnical" class="btn btn-dark" data-toggle="modal" data-target="#mdlReviewsByTechnical">Ver reseñas</button>
                                     </div>
                                 </div>
                             </div>
@@ -407,6 +433,40 @@
                     }
                 }
                 catch (error) {
+
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
+            }
+
+            async function loadReviewsByTechnical(technicalId) {
+
+                try {
+
+                    var data = await jQuery.ajax({
+
+                        url: '@Url.Action("ReviewsByTechnical", "Attentions")' + `?technicalId=${technicalId}`,
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
+
+                    var contentHtml = '';
+
+                    for (const item of data) {
+
+                        const stars = '★'.repeat(item.Score) + '☆'.repeat(5 - item.Score);
+
+                        contentHtml = `
+                            <li class="list-group-item">
+                                <div><small>15/10/2024 15:49 PM</small></div>
+                                <div>${stars}</div>
+                                <div>${item.Opinion}</div>
+                            </li>`;
+                    }
+
+                    $('#uReviewsByTechnical').html(contentHtml);
+
+                } catch (error) {
 
                     // window.open('@Url.Action("Error", "Home")', '_self');
                 }
