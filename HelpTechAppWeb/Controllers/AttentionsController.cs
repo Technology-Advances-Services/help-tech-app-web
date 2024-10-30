@@ -175,6 +175,20 @@ namespace HelpTechAppWeb.Controllers
                 (true), "application/json");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddReviewToJob
+            (Review review)
+        {
+            var result = await baseRequest.PostAsync
+                ("reviews/add-review-to-job", GetToken(), review);
+
+            if (result is false)
+                return RedirectToAction("Error", "Home");
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
+        }
+
         [HttpGet]
         public async Task<IActionResult> ReviewsByTechnical
             (string technicalId)
