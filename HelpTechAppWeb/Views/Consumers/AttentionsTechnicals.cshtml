@@ -27,7 +27,60 @@
     <table id="tblAttentions" class="table table-striped table-bordered" style="width:100%"></table>
 </div>
 
-<div id="mdlRegisterComplaint" class="modal fade" tabindex="-1" aria-labelledby="mdlRegisterComplaint" aria-hidden="true">
+<div id="mdlAddReviewToJob" class="modal fade" tabindex="-1" aria-labelledby="mdlAddReviewToJob" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header float-right">
+
+                <h5>Enviar reseña</h5>
+
+                <div class="text-right">
+                    <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                </div>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div>
+
+                    <div class="form-group" style="display:none;">
+                        <div class="col-sm-9">
+                            <input id="iptTechnicalId" type="hidden" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Puntaje:</label>
+
+                        <div class="col-sm-9">
+                            <input id="iptScore" type="number" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Opinion:</label>
+
+                        <div class="col-sm-9">
+                            <input id="iptOpinion" type="text" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnRegisterReviewToJob" type="button" class="btn btn-primary">Enviar reseña</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="btnAddComplaint" class="modal fade" tabindex="-1" aria-labelledby="btnAddComplaint" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -72,8 +125,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button id="btnRegisterComplaint" type="button" class="btn btn-primary">Enviar reporte</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
 
         </div>
@@ -146,35 +199,35 @@
                 fillTableAttentions(filteredAttentions, $(this).val());
             });
 
+            $('#tblAttentions').on('click', '#btnAddReview', function () {
+
+                var data = table.row($(this).parents('tr')).data();
+
+                $('#iptTechnicalId').val(data.TechnicalId);
+            });
+
             $('#tblAttentions').on('click', '#btnRegisterComplaint', function () {
 
-                $(this).parents("tr").find("#tId").each(function () {
+                var data = table.row($(this).parents('tr')).data();
 
-                    $('#iptId').val($(this).html());
-                });
+                $('#iptId').val(data.Id);
             });
 
             $('#tblAttentions').on('click', '#btnAttentionDetail', function () {
 
-                $(this).parents("tr").find("#tId").each(function () {
+                var data = table.row($(this).parents('tr')).data();
 
-                    var id = $(this).html();;
+                var filteredAttentions = attentions.find(a => a.Id === parseInt(data.Id));
 
-                    var filteredAttentions = attentions.find(a => a.Id === parseInt(id));
-
-                    $('#pAddress').text(`Direccion: ${filteredAttentions.Address}`);
-                    $('#pDescription').text(`Descripcion: ${filteredAttentions.Description}`);
-                });
+                $('#pAddress').text(`Direccion: ${filteredAttentions.Address}`);
+                $('#pDescription').text(`Descripcion: ${filteredAttentions.Description}`);
             });
 
             $('#tblAttentions').on('click', '#btnChat', function () {
 
-                $(this).parents("tr").find("#tChatRoomId").each(function () {
+                var data = table.row($(this).parents('tr')).data();
 
-                    var chatRoomId = $(this).html();
-
-                    window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
-                });
+                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${data.ChatRoomId}`, '_blank');
             });
 
             $('#btnRegisterComplaint').on('click', function () {
@@ -315,7 +368,8 @@
                     render: function (data, type, row) {
 
                         return `
-                            <button id="btnRegisterComplaint" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlRegisterComplaint">Denunciar</button>
+                            <button id="btnAddReviewToJob" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAddReviewToJob">Reseña</button>
+                            <button id="btnAddComplaint" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#btnAddComplaint">Denunciar</button>
                             <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
                             <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>`;
                     }
