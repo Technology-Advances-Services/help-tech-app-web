@@ -212,6 +212,14 @@
                 information.append("Description", $("#iptDescription").val());
 
                 await registerRequestJob(information);
+
+                $("#iptAgendaId").val('');
+                $("#iptAddress").val('');
+                $("#iptDescription").val('');
+
+                $('#mdlRequestAttention').modal('hide').on('hidden.bs.modal', function () {
+                    $('.modal-backdrop').remove();
+                });
             });
 
             $('#dvTechnicalsByAvailability').on('click', '#btnReviewsByTechnical', function () {
@@ -401,7 +409,7 @@
 
                 try {
 
-                    var data = jQuery.ajax({
+                    var data = await jQuery.ajax({
 
                         url: '@Url.Action("RegisterRequestJob", "Attentions")',
                         method: 'POST',
@@ -412,10 +420,6 @@
                     });
 
                     if (data === true) {
-
-                        $('#mdlRequestAttention').modal('hide').on('hidden.bs.modal', function () {
-                            $('.modal-backdrop').remove();
-                        });
 
                         Swal.fire({
                             icon: 'success',

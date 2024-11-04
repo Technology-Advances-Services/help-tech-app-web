@@ -80,7 +80,7 @@
     </div>
 </div>
 
-<div id="btnAddComplaint" class="modal fade" tabindex="-1" aria-labelledby="btnAddComplaint" aria-hidden="true">
+<div id="mdlRegisterComplaint" class="modal fade" tabindex="-1" aria-labelledby="mdlRegisterComplaint" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -201,23 +201,31 @@
 
             $('#tblAttentions').on('click', '#btnAddReview', function () {
 
-                var data = table.row($(this).parents('tr')).data();
+                var table = $('#tblAttentions').DataTable();
 
-                $('#iptTechnicalId').val(data.TechnicalId);
+                var rowData = table.row($(this).closest('tr')).data();
+
+                $('#iptTechnicalId').val(rowData.TechnicalId);
             });
 
-            $('#tblAttentions').on('click', '#btnRegisterComplaint', function () {
+            $('#tblAttentions').on('click', '#btnAddComplaint', function () {
 
-                var data = table.row($(this).parents('tr')).data();
+                var table = $('#tblAttentions').DataTable();
 
-                $('#iptId').val(data.Id);
+                var rowData = table.row($(this).closest('tr')).data();
+
+                $('#iptId').val(rowData.Id);
+
+                loadTypesComplaints();
             });
 
             $('#tblAttentions').on('click', '#btnAttentionDetail', function () {
 
-                var data = table.row($(this).parents('tr')).data();
+                var table = $('#tblAttentions').DataTable();
 
-                var filteredAttentions = attentions.find(a => a.Id === parseInt(data.Id));
+                var rowData = table.row($(this).closest('tr')).data();
+
+                var filteredAttentions = attentions.find(a => a.Id === parseInt(rowData.Id));
 
                 $('#pAddress').text(`Direccion: ${filteredAttentions.Address}`);
                 $('#pDescription').text(`Descripcion: ${filteredAttentions.Description}`);
@@ -225,14 +233,11 @@
 
             $('#tblAttentions').on('click', '#btnChat', function () {
 
-                var data = table.row($(this).parents('tr')).data();
+                var table = $('#tblAttentions').DataTable();
 
-                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${data.ChatRoomId}`, '_blank');
-            });
+                var rowData = table.row($(this).closest('tr')).data();
 
-            $('#btnRegisterComplaint').on('click', function () {
-
-                loadTypesComplaints();
+                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${rowData.ChatRoomId}`, '_blank');
             });
 
             $('#btnRegisterComplaint').on('click', async function () {
@@ -244,6 +249,10 @@
                 information.append('Description', $('#iptDescription').val());
 
                 await registerComplaint(information);
+
+                $('#sltTypesComplaints').val('');
+                $('#iptId').val('');
+                $('#iptDescription').val('');
             });
 
             async function loadAttentions() {
@@ -298,7 +307,7 @@
 
                 try {
 
-                    await jQuery.ajax({
+                    var data = await jQuery.ajax({
 
                         url: '@Url.Action("RegisterComplaint", "Reports")',
                         method: 'POST',
@@ -307,6 +316,23 @@
                         contentType: false,
                         processData: false,
                     });
+
+                    if (data === true) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Queja enviada!',
+                            text: 'El envio de la queja se ha realizado correctamente.'
+                        });
+
+                    } else {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al enviar queja!',
+                            text: 'Se produjo un error al intentar enviar la queja.'
+                        });
+                    }
 
                 } catch (error) {
 
@@ -347,8 +373,22 @@
                         { data: 'AmountFinal', title: 'Monto final' },
                         { data: 'JobState', title: 'Estado' }
                     ];
+
+                    columns.push({
+
+                        data: null,
+                        title: "Opciones",
+                        render: function (data, type, row) {
+
+                            return `
+                                <button id="btnAddReviewToJob" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAddReviewToJob">Reseña</button>
+                                <button id="btnAddComplaint" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlRegisterComplaint">Denunciar</button>
+                                <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
+                                <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>`;
+                        }
+                    });
                 }
-                else if (attentionsStates === '') {
+                else if (attentionsStates === 'EN PROCESO' || attentionsStates === 'DENEGADO') {
 
                     columns = [
                         { data: 'Id', title: 'Id' },
@@ -359,21 +399,19 @@
                         { data: 'Phone', title: 'Contacto' },
                         { data: 'JobState', title: 'Estado' }
                     ];
+
+                    columns.push({
+
+                        data: null,
+                        title: "Opciones",
+                        render: function (data, type, row) {
+
+                            return `
+                                <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
+                                <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>`;
+                        }
+                    });
                 }
-
-                columns.push({
-
-                    data: null,
-                    title: "Opciones",
-                    render: function (data, type, row) {
-
-                        return `
-                            <button id="btnAddReviewToJob" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAddReviewToJob">Reseña</button>
-                            <button id="btnAddComplaint" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#btnAddComplaint">Denunciar</button>
-                            <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
-                            <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>`;
-                    }
-                });
 
                 if ($.fn.DataTable.isDataTable('#tblAttentions')) {
 
