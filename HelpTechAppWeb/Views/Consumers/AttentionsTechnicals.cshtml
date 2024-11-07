@@ -350,8 +350,6 @@
                         text: 'No existen datos al intentar buscar por estado de atencion!'
                     });
 
-                    $('#tblAttentions').html('');
-
                     return;
                 }
 
@@ -415,20 +413,17 @@
 
                 if ($.fn.DataTable.isDataTable('#tblAttentions')) {
 
-                    var table = $('#tblAttentions').DataTable();
+                    $('#tblAttentions').DataTable().clear().destroy();
 
-                    table.clear().rows.add(listAttentions).draw();
-
-                } else {
-
-                    $('#tblAttentions').DataTable({
-                        "data": listAttentions,
-                        "columns": columns,
-                        "searching": true,
-                        "paging": true,
-                        "ordering": true
-                    });
                 }
+
+                $('#tblAttentions').DataTable({
+                    data: listAttentions.filter(a => a.JobState === attentionsStates),
+                    columns: columns,
+                    searching: true,
+                    paging: true,
+                    ordering: true
+                });
             }
 
             function getFormattedDate(date) {
