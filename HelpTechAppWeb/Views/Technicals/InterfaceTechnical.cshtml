@@ -477,9 +477,12 @@
 
             $('#dvSearchJobs').on('click', '#btnSearchJobs', function () {
 
-                var workDate = new Date($('#iptWorkDate').val());
-
-                var filteredJobs = jobs.filter(j => j.WorkDate.split('T')[0] === workDate.toISOString().split('T')[0] && j.JobState === $('#sltJobsStates').val());
+                var workDateFormatted = new Date($('#iptWorkDate').val()).toISOString().split('T')[0];
+                
+                var filteredJobs = jobs.filter(j => {
+                    var jobDate = new Date(j.WorkDate).toISOString().split('T')[0];
+                    return jobDate === workDateFormatted || j.JobState === $('#sltJobsStates').val();
+                });
 
                 fillTableJobs(filteredJobs, $('#sltJobsStates').val());
             });
@@ -559,7 +562,7 @@
 
                     jobs = data;
 
-                    fillTableJobs(jobs, 'PENDIENTE');
+                    fillTableJobs(jobs.filter(j => j.JobState === 'PENDIENTE'), 'PENDIENTE');
 
                 } catch (error) {
 
