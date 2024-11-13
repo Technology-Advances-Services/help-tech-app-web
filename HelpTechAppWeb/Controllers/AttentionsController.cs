@@ -176,6 +176,20 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> CompleteJob
+            (Job job)
+        {
+            var result = await baseRequest.PostAsync
+                ("jobs/update-job-state", GetToken(), job);
+
+            if (result is false)
+                return RedirectToAction("Error", "Home");
+
+            return Content(JsonConvert.SerializeObject
+                (true), "application/json");
+        }
+
+        [HttpPost]
         public async Task<IActionResult> AddReviewToJob
             (Review review)
         {
