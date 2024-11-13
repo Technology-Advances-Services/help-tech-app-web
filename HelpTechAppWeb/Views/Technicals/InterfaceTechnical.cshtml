@@ -411,7 +411,7 @@
 
                 return false;
             });
-            $('#btnRegisterJobDetail').on('click', function () {
+            $('#btnRegisterJobDetail').on('click', async function () {
 
                 var information = new FormData();
 
@@ -422,11 +422,11 @@
                 information.append('MaterialBudget', $('#iptMaterialBudget').val());
                 information.append('JobState', $('#sltJobState').val());
 
-                assignJobDetail(information);
+                console.log($('#iptWorkDate').val());
 
-                var id = $('#iptId').val();
+                await assignJobDetail(information);
 
-                var index = jobs.findIndex(j => j.Id === parseInt(id));
+                var index = jobs.findIndex(j => j.Id === parseInt($('#iptId').val()));
 
                 jobs[index].WorkDate = $('#iptWorkDate').val();
                 jobs[index].Time = $('#iptTime').val();
@@ -435,7 +435,12 @@
                 jobs[index].AmountFinal = parseFloat($('#iptLaborBudget').val()) + parseFloat($('#iptMaterialBudget').val());
                 jobs[index].JobState = $('#sltJobState').val();
 
-                fillTableJobs(jobs, "PENDIENTE");
+                fillTableJobs(jobs.filter(j => j.JobState === 'PENDIENTE'), "PENDIENTE");
+
+                $('#iptWorkDate').val('');
+                $('#iptTime').val('');
+                $('#iptLaborBudget').val('');
+                $('#iptMaterialBudget').val('');
             });
             $('#btnTotalReportStatistic').on('click', function () {
 
@@ -480,7 +485,9 @@
                 var workDateFormatted = new Date($('#iptWorkDate').val()).toISOString().split('T')[0];
                 
                 var filteredJobs = jobs.filter(j => {
+
                     var jobDate = new Date(j.WorkDate).toISOString().split('T')[0];
+
                     return jobDate === workDateFormatted || j.JobState === $('#sltJobsStates').val();
                 });
 
@@ -516,6 +523,51 @@
 
                 return false;
             });
+
+            $('#tblJobs').on('click', '#btnCompleteJob', function () {
+
+                var validation = false;
+
+                $(this).parents("tr").find("#tJobState").each(function () {
+
+                    var jobState = $(this).html();
+
+                    if (jobState === 'COMPLETADO') {
+
+                        validation = true;
+                    }
+                });
+
+                $(this).parents("tr").find("#tId").each(async function () {
+
+                    if (validation !== true) {
+
+                        var id = $(this).html();
+
+                        var information = new FormData();
+
+                        information.append('Id', id);
+                        information.append('JobState', 'COMPLETADO');
+
+                        await completeJob(information);
+
+                        var index = jobs.findIndex(j => j.Id === parseInt(id));
+
+                        jobs[index].JobState = 'COMPLETADO';
+
+                        fillTableJobs(jobs.filter(j => j.JobState === 'PENDIENTE'), "PENDIENTE");
+
+                    } else {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al completar trabajo!',
+                            text: 'No puedes marcar como completado porque el trabajo ya esta completo.'
+                        });
+                    }
+                });
+            });
+
             $('#uChatsMembers').on('click', '#btnChat', function () {
 
                 $(this).parents("li").find("#spnChatRoomId").each(function () {
@@ -563,6 +615,42 @@
                     jobs = data;
 
                     fillTableJobs(jobs.filter(j => j.JobState === 'PENDIENTE'), 'PENDIENTE');
+
+                } catch (error) {
+
+                    // window.open('@Url.Action("Error", "Home")', '_self');
+                }
+            }
+
+            async function completeJob(information) {
+
+                try {
+
+                    var data = await jQuery.ajax({
+
+                        url: '@Url.Action("CompleteJob", "Attentions")',
+                        method: 'POST',
+                        data: information,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    });
+
+                    if (data === true) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Trabajo completado!',
+                            text: 'Se completo el trabajo correctamente.'
+                        });
+                    } else {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al completar trabajo!',
+                            text: 'Se produjo un error al intentar completar el trabajo.'
+                        });
+                    }
 
                 } catch (error) {
 
@@ -773,6 +861,7 @@
                                 <td>
                                     <button id="btnJobDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlJobDetail">Detalle</button>
                                     <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>
+                                    <button id="btnCompleteJob" class="btn btn-sm btn-neutral">Completado</button>
                                 </td>
                             </tr>`;
                     }
