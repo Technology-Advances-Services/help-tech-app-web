@@ -82,28 +82,28 @@
                 loadChatsByChatRoom();
             });
 
-            $(window).on('beforeunload', function () {
+            // $(window).on('beforeunload', function () {
 
-                closeWindow++;
+            //     closeWindow++;
 
-                if (closeWindow === 2) {
+            //     if (closeWindow === 2) {
 
-                    jQuery.ajax({
+            //         jQuery.ajax({
 
-                        url: '@Url.Action("SendMessage", "Communications")',
-                        method: 'POST',
-                        data: listMessages,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        success: function () { },
-                        error: function () {
+            //             url: '@Url.Action("SendMessage", "Communications")',
+            //             method: 'POST',
+            //             data: listMessages,
+            //             cache: false,
+            //             contentType: false,
+            //             processData: false,
+            //             success: function () { },
+            //             error: function () {
 
-                            //window.open('@Url.Action("Error", "Home")', "_self");
-                        }
-                    });
-                }
-            });
+            //                 window.open('@Url.Action("Error", "Home")', "_self");
+            //             }
+            //         });
+            //     }
+            // });
 
             $('#btnSendMessage').on('click', function () {
 
@@ -263,7 +263,7 @@
                     },
                     error: function () {
 
-                        //window.open('@Url.Action("Error", "Home")', "_self");
+                        window.open('@Url.Action("Error", "Home")', "_self");
                     }
                 });
             }
@@ -381,7 +381,7 @@
                 let minutes = String(date.getMinutes()).padStart(2, '0');
                 let seconds = String(date.getSeconds()).padStart(2, '0');
 
-                return `${day}/${mounth}/${year} ${hour}:${minutes}:${seconds}`;
+                return `${day}/${mounth}/${year} ${hour}:${minutes}`;
             }
             function isNullOrEmpty(str) {
                 return !str || str === undefined;

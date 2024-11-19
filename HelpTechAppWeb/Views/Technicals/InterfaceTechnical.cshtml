@@ -237,13 +237,14 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Cambiar membresia</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cambiar membresia</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
 
             </div>
         </div>
     </div>
+
     <div id="mdlJobDetail" class="modal fade" tabindex="-1" aria-labelledby="mdlJobDetail" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -281,6 +282,7 @@
             </div>
         </div>
     </div>
+
     <div id="mdlJobResponse" class="modal fade" tabindex="-1" aria-labelledby="mdlJobResponse" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -324,12 +326,13 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button id="btnRegisterJobDetail" type="button" class="btn btn-primary">Registrar</button>
+                    <button id="btnRegisterJobDetail" type="button" class="btn btn-primary" data-dismiss="modal">Registrar</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
     <div id="mdlTypeStatistic" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered justify-content-center " role="document">
             <div class="modal-content  border-0 mx-3">
@@ -359,12 +362,12 @@
                             <div class="row justify-content-center mt-4 px-sm-5  ">
 
                                 <div class="col">
-                                    <button id="btnTotalReportStatistic" type="submit" class="btn btn-warning btn-block  font-weight-bold text-dark text-uppercase">
+                                    <button id="btnTotalReportStatistic" type="submit" class="btn btn-warning btn-block  font-weight-bold text-dark text-uppercase" data-dismiss="modal">
                                         <span class="plan">Reporte total</span>                                     
                                     </button>                                   
                                 </div>
                                 <div class="col">
-                                    <button id="btnMonthlyReportStatistic" type="submit" class="btn btn-primary btn-block  text-dark font-weight-bold text-uppercase">
+                                    <button id="btnMonthlyReportStatistic" type="submit" class="btn btn-primary btn-block  text-dark font-weight-bold text-uppercase" data-dismiss="modal">
                                         <span class="plan">Reporte mensual</span>                                        
                                     </button>                                  
                                 </div>
@@ -443,10 +446,6 @@
                 $('#iptMaterialBudget').val('');
             });
             $('#btnTotalReportStatistic').on('click', function () {
-
-                $('#mdlTypeStatistic').modal('hide').on('hidden.bs.modal', function () {
-                    $('.modal-backdrop').remove();
-                });
 
                 window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=TOTAL', '_blank');
 
@@ -596,7 +595,7 @@
 
                 } catch (error) {
 
-                    // window.open('@Url.Action("Error", "Home")', '_self');
+                    window.open('@Url.Action("Error", "Home")', '_self');
                 }
             }
 
@@ -618,7 +617,7 @@
 
                 } catch (error) {
 
-                    // window.open('@Url.Action("Error", "Home")', '_self');
+                    window.open('@Url.Action("Error", "Home")', '_self');
                 }
             }
 
@@ -654,7 +653,7 @@
 
                 } catch (error) {
 
-                    // window.open('@Url.Action("Error", "Home")', '_self');
+                    window.open('@Url.Action("Error", "Home")', '_self');
                 }
             }
 
@@ -713,7 +712,7 @@
 
                 } catch (error) {
 
-                    // window.open('@Url.Action("Error", "Home")', '_self');
+                    window.open('@Url.Action("Error", "Home")', '_self');
                 }
             }
 
@@ -755,7 +754,7 @@
 
                 } catch (error) {
 
-                    // window.open('@Url.Action("Error", "Home")', '_self');
+                    window.open('@Url.Action("Error", "Home")', '_self');
                 }
             }
 
@@ -797,7 +796,7 @@
 
                     console.error('Error al asignar el detalle del trabajo:', error);
 
-                    // window.open('@Url.Action("Error", "Home")', "_self");
+                    window.open('@Url.Action("Error", "Home")', "_self");
                 }
             }
 
@@ -921,7 +920,7 @@
                 let minutes = String(date.getMinutes()).padStart(2, '0');
                 let seconds = String(date.getSeconds()).padStart(2, '0');
 
-                return `${day}/${mounth}/${year} ${hour}:${minutes}:${seconds}`;
+                return `${day}/${mounth}/${year} ${hour}:${minutes}`;
             }
         });
 

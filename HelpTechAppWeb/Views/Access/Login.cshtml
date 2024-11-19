@@ -63,7 +63,7 @@
                             <input id="iptNewUsername" type="text" class="form-control" autocomplete="off">
 
                             <label>Password:</label>
-                            <input id="iptNewPassword" type="text" class="form-control" autocomplete="off">
+                            <input id="iptNewPassword" type="password" class="form-control" autocomplete="off">
 
                             <label>Seleccione su roll:</label>
                             <select id="sltNewRoles" class="form-control">
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button id="btnUpdateCredential" type="button" class="btn btn-primary">Actualizar</button>
+                    <button id="btnUpdateCredential" type="button" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -120,8 +120,6 @@
                 credentials.append('Role', $('#sltNewRoles').val());
 
                 updateCredential(credentials);
-
-                return false;
             });
 
             function login(credentials) {
@@ -138,33 +136,11 @@
 
                         if ($('#sltRoles').val() === 'TECNICO' && data === true) {
 
-                            Swal.fire({
-
-                                icon: 'success',
-                                title: 'Credenciales correctas!',
-                                text: 'Se inició sesión correctamente, recuerde que su sesión expira en 1 hora.',
-                                timer: 5000,
-                                timerProgressBar: true,
-                                willClose: () => {
-
-                                    window.open('@Url.Action("InterfaceTechnical", "Technicals")', "_self");
-                                }
-                            });
+                            window.open('@Url.Action("InterfaceTechnical", "Technicals")', "_self");
                         }
                         else if ($('#sltRoles').val() === 'CONSUMIDOR' && data === true) {
 
-                            Swal.fire({
-
-                                icon: 'success',
-                                title: 'Credenciales correctas!',
-                                text: 'Se inició sesión correctamente, recuerde que su sesión expira en 1 hora.',
-                                timer: 5000,
-                                timerProgressBar: true,
-                                willClose: () => {
-
-                                    window.open('@Url.Action("InterfaceConsumer", "Consumers")', "_self");
-                                }
-                            });
+                            window.open('@Url.Action("InterfaceConsumer", "Consumers")', "_self");
                         }
                         else {
 
@@ -178,7 +154,7 @@
                     },
                     error: function () {
 
-                        // window.open('@Url.Action("Error", "Home")', "_self");
+                        window.open('@Url.Action("Error", "Home")', "_self");
                     }
                 });
             }
@@ -222,7 +198,7 @@
                     },
                     error: function () {
 
-                        // window.open('@Url.Action("Error", "Home")', "_self");
+                        window.open('@Url.Action("Error", "Home")', "_self");
                     }
                 });
             }

@@ -5,6 +5,133 @@
 
 @section Styles {
 
+    <style>
+
+        .btn i {
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 5px 8px;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: scale(1.1);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .modern-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            margin: 20px 0;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .modern-table thead {
+            background: linear-gradient(90deg, #2196F3, #42A5F5);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .modern-table tbody tr {
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        /* primer degradado */
+        .modern-table tbody tr:nth-child(odd) {
+            background-color: #FFFFFF;
+        }
+
+        /* segundo degradado */
+        .modern-table tbody tr:nth-child(even) {
+            background-color: #FFFFFF;
+        }
+
+        .modern-table tbody tr:hover {
+            background-color: #90CAF9;
+            transform: scale(1.01);
+            cursor: pointer;
+        }
+
+        .modern-table td, .modern-table th {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .modern-table .btn {
+            border-radius: 4px;
+            font-size: 12px;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .modern-table .btn-primary {
+            background-color: #42A5F5;
+            border-color: #42A5F5;
+            color: white;
+        }
+        
+        .modern-table .btn-danger {
+            background-color: #E57373;
+            border-color: #E57373;
+            color: white;
+        }
+        
+        .modern-table .btn-primary:hover {
+            background-color: #1E88E5;
+            border-color: #1E88E5;
+        }
+        
+        .modern-table .btn-danger:hover {
+            background-color: #D32F2F;
+            border-color: #D32F2F;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            background: #42A5F5;
+            color: white;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #1E88E5;
+            border-color: #1E88E5;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            margin-left: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: #42A5F5;
+            outline: none;
+        }
+
+        .dt-buttons .btn {
+            margin-right: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
 }
 
@@ -24,7 +151,7 @@
         <h3>Atenciones</h3>
     </div>
 
-    <table id="tblAttentions" class="table table-striped table-bordered" style="width:auto"></table>
+    <table id="tblAttentions" class="table table-striped table-hover table-bordered modern-table"></table>
 </div>
 
 <div id="mdlAddReviewToJob" class="modal fade" tabindex="-1" aria-labelledby="mdlAddReviewToJob" aria-hidden="true">
@@ -72,7 +199,7 @@
             </div>
 
             <div class="modal-footer">
-                <button id="btnRegisterReviewToJob" type="button" class="btn btn-primary">Enviar reseña</button>
+                <button id="btnRegisterReviewToJob" type="button" class="btn btn-primary" data-dismiss="modal">Enviar reseña</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
 
@@ -125,7 +252,7 @@
             </div>
 
             <div class="modal-footer">
-                <button id="btnRegisterComplaint" type="button" class="btn btn-primary">Enviar reporte</button>
+                <button id="btnRegisterComplaint" type="button" class="btn btn-primary" data-dismiss="modal">Enviar reporte</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
 
@@ -273,7 +400,7 @@
 
                 } catch (error) {
 
-                    // window.open('@Url.Action("Error", "Home")', '_self');
+                    window.open('@Url.Action("Error", "Home")', '_self');
                 }
             }
 
@@ -298,7 +425,7 @@
                     },
                     error: function () {
 
-                        //window.open('@Url.Action("Error", "Home")', '_self');
+                        window.open('@Url.Action("Error", "Home")', '_self');
                     }
                 });
             }
@@ -336,7 +463,7 @@
 
                 } catch (error) {
 
-                    // window.open('@Url.Action("Error", "Home")', '_self');
+                    window.open('@Url.Action("Error", "Home")', '_self');
                 }
             }
 
@@ -353,68 +480,104 @@
                     return;
                 }
 
-                var columns = [];
-
-                if (attentionsStates === 'PENDIENTE' || attentionsStates === 'COMPLETADO') {
-
-                    columns = [
-                        { data: 'Id', title: 'Id' },
-                        { data: 'ChatRoomId', title: 'Chat' },
-                        { data: 'TechnicalId', title: 'DNI' },
-                        { data: 'Firstname', title: 'Nombre' },
-                        { data: 'Lastname', title: 'Apellido' },
-                        { data: 'Phone', title: 'Contacto' },
-                        { data: 'WorkDate', title: 'Fecha' },
-                        { data: 'Time', title: 'Tiempo' },
-                        { data: 'LaborBudget', title: 'Mano de obra' },
-                        { data: 'MaterialBudget', title: 'Materiales' },
-                        { data: 'AmountFinal', title: 'Monto final' },
-                        { data: 'JobState', title: 'Estado' }
-                    ];
-
-                    columns.push({
-
+                var columns = [
+                    { data: 'Id', title: 'Id', visible: false }, //0
+                    { data: 'ChatRoomId', title: 'Chat', visible: false }, //1
+                    { data: 'TechnicalId', title: 'DNI', visible: false }, //2
+                    { data: 'Firstname', title: 'Nombre' }, //3
+                    { data: 'Lastname', title: 'Apellido' }, //4
+                    { data: 'Phone', title: 'Contacto' }, //5
+                    { data: 'WorkDate', title: 'Fecha' }, //6
+                    { data: 'Time', title: 'Tiempo' }, //7
+                    { data: 'LaborBudget', title: 'Mano de obra' }, //8
+                    { data: 'MaterialBudget', title: 'Materiales' }, //9
+                    { data: 'AmountFinal', title: 'Monto final' }, //10
+                    { //11
                         data: null,
-                        title: "Opciones",
-                        render: function (data, type, row) {
-
+                        title: 'Opinar',
+                        render: function() {
                             return `
-                                <button id="btnAddReviewToJob" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAddReviewToJob">Reseña</button>
-                                <button id="btnAddComplaint" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlRegisterComplaint">Denunciar</button>
-                                <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
-                                <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>`;
+                                <button id="btnAddReviewToJob" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#mdlAddReviewToJob">
+                                    <i class="fa fa-star"></i>
+                                </button>`;
                         }
-                    });
+                    },
+                    { //12
+                        data: null,
+                        title: 'Queja',
+                        render: function() {
+                            return `
+                                <button id="btnAddComplaint" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#mdlRegisterComplaint">
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                </button>`;
+                        }
+                    },
+                    { //13
+                        data: null,
+                        title: 'Ver',
+                        render: function() {
+                            return `
+                                <button id="btnAttentionDetail" class="btn btn-sm btn-success" data-toggle="modal" data-target="#mdlAttentionDetail">
+                                    <i class="fa fa-info-circle"></i>
+                                </button>`;
+                        }
+                    },
+                    { //14
+                        data: null,
+                        title: 'Chat',
+                        render: function() {
+                            return `
+                                <button id="btnChat" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-comment"></i>
+                                </button>`;
+                        }
+                    }
+                ];
+
+                switch(attentionsStates) {
+                    case 'PENDIENTE':
+                    case 'COMPLETADO':
+                        columns[11].visible = true;
+                        columns[12].visible = true;
+                        columns[13].visible = true;
+                        columns[14].visible = true;
+                        break;
+                    case 'EN PROCESO':
+                    case 'DENEGADO':
+                        columns[6].visible = false;
+                        columns[7].visible = false;
+                        columns[8].visible = false;
+                        columns[9].visible = false;
+                        columns[10].visible = false;
+                        columns[11].visible = false;
+                        columns[12].visible = false;
+                        columns[13].visible = true;
+                        columns[14].visible = true;
+                        break;
+                    default:
+                        columns[11].visible = false;
+                        columns[12].visible = false;
+                        columns[13].visible = false;
+                        columns[14].visible = false;
+                        break;
                 }
-                else if (attentionsStates === 'EN PROCESO' || attentionsStates === 'DENEGADO') {
 
-                    columns = [
-                        { data: 'Id', title: 'Id' },
-                        { data: 'ChatRoomId', title: 'Chat' },
-                        { data: 'TechnicalId', title: 'DNI' },
-                        { data: 'Firstname', title: 'Nombre' },
-                        { data: 'Lastname', title: 'Apellido' },
-                        { data: 'Phone', title: 'Contacto' },
-                        { data: 'JobState', title: 'Estado' }
-                    ];
+                for (var i = 0; i < listAttentions.length; ++i) {
 
-                    columns.push({
+                    if (listAttentions[i].WorkDate !== null) {
 
-                        data: null,
-                        title: "Opciones",
-                        render: function (data, type, row) {
+                        var workDate = new Date(listAttentions[i].WorkDate);
+                        listAttentions[i].WorkDate = getFormattedDate(workDate);
+                    }
+                    else {
 
-                            return `
-                                <button id="btnAttentionDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlAttentionDetail">Detalle</button>
-                                <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>`;
-                        }
-                    });
+                        listAttentions[i].WorkDate = null;
+                    }
                 }
 
                 if ($.fn.DataTable.isDataTable('#tblAttentions')) {
 
                     $('#tblAttentions').DataTable().clear().destroy();
-
                 }
 
                 $('#tblAttentions').DataTable({
@@ -422,7 +585,8 @@
                     columns: columns,
                     searching: true,
                     paging: true,
-                    ordering: true
+                    ordering: true,
+                    responsive: true
                 });
             }
 
@@ -435,7 +599,7 @@
                 let minutes = String(date.getMinutes()).padStart(2, '0');
                 let seconds = String(date.getSeconds()).padStart(2, '0');
 
-                return `${day}/${mounth}/${year} ${hour}:${minutes}:${seconds}`;
+                return `${day}/${mounth}/${year} ${hour}:${minutes}`;
             }
         });
 
