@@ -63,11 +63,11 @@ namespace HelpTechAppWeb.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> InformationTechnical(int id)
+        public async Task<IActionResult> InformationConsumer()
         {
-            var technical = await baseRequest.GetSingleAsync<Technical>
-                ("informations/technical-by-id?id=" +
-                id, GetToken()) ?? new();
+            var technical = await baseRequest.GetSingleAsync<Consumer>
+                ("informations/consumer-by-id?id=" +
+                GetConsumerId(), GetToken()) ?? new();
 
             return Content(JsonConvert.SerializeObject
                 (technical), "application/json");
@@ -76,6 +76,15 @@ namespace HelpTechAppWeb.Controllers
         #endregion
 
         #region Cookies
+
+        private string GetConsumerId()
+        {
+            _claimsPrincipal = HttpContext.User;
+
+            return _claimsPrincipal
+                .FindFirst(ClaimTypes.Name)?
+                .Value.ToString() ?? string.Empty;
+        }
 
         private string GetToken()
         {

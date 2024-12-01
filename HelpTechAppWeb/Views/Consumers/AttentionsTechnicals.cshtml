@@ -182,7 +182,7 @@
                         <label class="col-sm-3 control-label">Puntaje:</label>
 
                         <div class="col-sm-9">
-                            <input id="iptScore" type="number" class="form-control">
+                            <input id="iptScore" type="number" min="1" max="5" class="form-control" required autocomplete="off">
                         </div>
                     </div>
 
@@ -190,7 +190,7 @@
                         <label class="col-sm-3 control-label">Opinion:</label>
 
                         <div class="col-sm-9">
-                            <input id="iptOpinion" type="text" class="form-control">
+                            <input id="iptOpinion" type="text" class="form-control" required autocomplete="off">
                         </div>
                     </div>
 
@@ -326,7 +326,7 @@
                 fillTableAttentions(filteredAttentions, $(this).val());
             });
 
-            $('#tblAttentions').on('click', '#btnAddReview', function () {
+            $('#tblAttentions').on('click', '#btnAddReviewToJob', function () {
 
                 var table = $('#tblAttentions').DataTable();
 
@@ -365,6 +365,21 @@
                 var rowData = table.row($(this).closest('tr')).data();
 
                 window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${rowData.ChatRoomId}`, '_blank');
+            });
+
+            $('#btnRegisterReviewToJob').on('click', async function() {
+
+                var information = new FormData();
+
+                information.append('TechnicalId', $('#iptTechnicalId').val());
+                information.append('Score', $('#iptScore').val());
+                information.append('Opinion', $('#iptOpinion').val());
+
+                await registerReview(information);
+
+                $('#iptTechnicalId').val('');
+                $('#iptScore').val('');
+                $('#iptOpinion').val('');
             });
 
             $('#btnRegisterComplaint').on('click', async function () {
@@ -428,6 +443,43 @@
                         window.open('@Url.Action("Error", "Home")', '_self');
                     }
                 });
+            }
+
+            async function registerReview(information) {
+
+                try {
+
+                    var data = await jQuery.ajax({
+
+                        url: '@Url.Action("AddReviewToJob", "Attentions")',
+                        method: 'POST',
+                        data: information,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                    });
+
+                    if (data === true) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Reseña enviada!',
+                            text: 'El envio de la reseña se ha realizado correctamente.'
+                        });
+
+                    } else {
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al enviar reseña!',
+                            text: 'Se produjo un error al intentar enviar la reseña.'
+                        });
+                    }
+
+                } catch (error) {
+
+                    window.open('@Url.Action("Error", "Home")', '_self');
+                }
             }
 
             async function registerComplaint(information) {
@@ -566,8 +618,7 @@
 
                     if (listAttentions[i].WorkDate !== null) {
 
-                        var workDate = new Date(listAttentions[i].WorkDate);
-                        listAttentions[i].WorkDate = getFormattedDate(workDate);
+                        listAttentions[i].WorkDate = getFormattedDate(listAttentions[i].WorkDate);
                     }
                     else {
 
@@ -590,16 +641,25 @@
                 });
             }
 
-            function getFormattedDate(date) {
+            function getFormattedDate(tempDate) {
 
-                let day = String(date.getDate()).padStart(2, '0');
-                let mounth = String(date.getMonth() + 1).padStart(2, '0');
-                let year = date.getFullYear();
-                let hour = String(date.getHours()).padStart(2, '0');
-                let minutes = String(date.getMinutes()).padStart(2, '0');
-                let seconds = String(date.getSeconds()).padStart(2, '0');
+                const regex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/;
 
-                return `${day}/${mounth}/${year} ${hour}:${minutes}`;
+                if (!regex.test(tempDate)) {
+
+                    var date = new Date(tempDate);
+
+                    let day = String(date.getDate()).padStart(2, '0');
+                    let mounth = String(date.getMonth() + 1).padStart(2, '0');
+                    let year = date.getFullYear();
+                    let hour = String(date.getHours()).padStart(2, '0');
+                    let minutes = String(date.getMinutes()).padStart(2, '0');
+                    let seconds = String(date.getSeconds()).padStart(2, '0');
+
+                    return `${day}/${mounth}/${year} ${hour}:${minutes}`;
+                }
+
+                return tempDate;
             }
         });
 

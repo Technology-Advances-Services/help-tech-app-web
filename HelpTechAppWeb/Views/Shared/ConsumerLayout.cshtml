@@ -49,7 +49,7 @@
                 </ul>
                 <ul class="navbar-nav ">
                     <li class="nav-item">
-                        <a id ="btnInformationConsumers" class="nav-link" href="#">
+                        <a id="btnInformationConsumers" class="nav-link" data-toggle="modal" data-target="#mdlInformationConsumer">
                             <i class="fa fa-user"></i>
                             Cuenta
                         </a>
@@ -71,12 +71,96 @@
         </main>
     </div>
 
+    <div id="mdlInformationConsumer" class="modal fade" tabindex="-1" aria-labelledby="mdlInformationConsumer" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header float-right">
+
+                    <h5>Detalles del perfil</h5>
+
+                    <div class="text-right">
+                        <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                    </div>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div>
+                        <div id="dvInformationConsumer" class="box"></div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.4/dist/sweetalert2.all.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $(window).on('load', async function () {
+
+                try {
+
+                    await loadInformationConsumer();
+
+                } catch (error) {
+
+                    console.error('Error durante la carga de datos: ', error);
+                }
+            });
+
+            async function loadInformationConsumer() {
+
+                try {
+
+                    var data = await jQuery.ajax({
+
+                        url: '@Url.Action("InformationConsumer", "Consumers")',
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
+
+                    var contentHtml = `
+                        <div class="img" style="text-align: center;" width="400" height="400">
+                            <img alt="" src="${data.ProfileUrl}">
+                        </div>
+                        <br>
+                        <p>Nombres: ${data.Firstname}</p>
+                        <br>
+                        <p>Apellidos: ${data.Lastname}</p>
+                        <br>
+                        <p>Edad: ${data.Age}</p>
+                        <br>
+                        <p>Email: ${data.Email}</p>
+                        <br>
+                        <p>Telefono: ${data.Phone}</p>
+                        <br>`;
+
+                    $('#dvInformationConsumer').html(contentHtml);
+
+                } catch (error) {
+
+                    window.open('@Url.Action("Error", "Home")', '_self');
+                }
+            }
+        });
+
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

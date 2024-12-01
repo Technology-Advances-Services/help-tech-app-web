@@ -194,7 +194,9 @@ namespace HelpTechAppWeb.Controllers
             (Review review)
         {
             var result = await baseRequest.PostAsync
-                ("reviews/add-review-to-job", GetToken(), review);
+                ("reviews/add-review-to-job", GetToken(),
+                new Review(review.TechnicalId, GetPersonId(),
+                review.Score, review.Opinion));
 
             if (result is false)
                 return RedirectToAction("Error", "Home");

@@ -18,14 +18,12 @@
         }
         public Review
             (string technicalId, string consumerId,
-            int score, string opinion,
-            string reviewState)
+            int score, string opinion)
         {
             this.TechnicalId = technicalId;
             this.ConsumerId = consumerId;
             this.Score = score;
             this.Opinion = opinion;
-            this.ReviewState = reviewState;
         }
     }
 }
