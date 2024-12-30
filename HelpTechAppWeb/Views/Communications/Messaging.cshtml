@@ -68,7 +68,6 @@
         $(document).ready(function () {
 
             var listMessages = [];
-            var closeWindow;
             var room = $('#iptChatRoomId').val();
             var webSocket = new WebSocket('wss://localhost:44310/chat?room=' + room);
 
@@ -76,42 +75,30 @@
 
             $(window).on('load', function () {
 
-                closeWindow = 0;
-
                 loadInformation();
                 loadChatsByChatRoom();
             });
 
-            // $(window).on('beforeunload', function () {
+            $(window).on('beforeunload', function () {
 
-            //     closeWindow++;
+                jQuery.ajax({
 
-            //     if (closeWindow === 2) {
+                    url: '@Url.Action("SendMessage", "Communications")',
+                    method: 'POST',
+                    data: JSON.stringify(listMessages),
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
 
-            //         jQuery.ajax({
-
-            //             url: '@Url.Action("SendMessage", "Communications")',
-            //             method: 'POST',
-            //             data: listMessages,
-            //             cache: false,
-            //             contentType: false,
-            //             processData: false,
-            //             success: function () { },
-            //             error: function () {
-
-            //                 window.open('@Url.Action("Error", "Home")', "_self");
-            //             }
-            //         });
-            //     }
-            // });
+                listMessages = [];
+            });
 
             $('#btnSendMessage').on('click', function () {
 
                 addMessagesUsers();
 
                 sendMessage();
-
-                return false;
             });
 
             webSocket.onopen = function (event) {
@@ -269,16 +256,16 @@
             }
             function sendMessage() {
 
-                const user = document.getElementById('iptRole').value;
-                const message = document.getElementById('txaMessage').value;
+                const user = document.getElementById('iptRole');
+                const message = document.getElementById('txaMessage');
 
-                if (message.trim() !== '') {
+                if (message.value.trim() !== '') {
 
                     const messageObject = {
 
                         room: room,
-                        user: user,
-                        text: message
+                        user: user.value,
+                        text: message.value
                     };
 
                     webSocket.send(JSON.stringify(messageObject));
@@ -365,12 +352,13 @@
             }
             function addMessagesUsers() {
 
-                var messagesUsers = new FormData();
+                var messageUser = {
 
-                messagesUsers.append('ChatRoomId', $('#iptChatRoomId').val());
-                messagesUsers.append('Message', $('#txaMessage').val());
+                    ChatRoomId: $('#iptChatRoomId').val(),
+                    Message: $('#txaMessage').val()
+                };
 
-                listMessages.push(messagesUsers);
+                listMessages.push(messageUser);
             }
             function getFormattedDate(date) {
 

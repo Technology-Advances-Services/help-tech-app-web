@@ -100,13 +100,16 @@ namespace HelpTechAppWeb.Controllers
 
         [HttpPost]
         public async Task<IActionResult> SendMessage
-            (List<Chat> chats)
+            (IEnumerable<Chat> chats)
         {
-            await Task.WhenAll(chats.Select(async item =>
+            if (chats.Any())
             {
-                await baseRequest.PostAsync
-                ("chats/send-message", GetToken(), item);
-            }));
+                await Task.WhenAll(chats.Select(async item =>
+                {
+                    await baseRequest.PostAsync
+                    ("chats/send-message", GetToken(), item);
+                }));
+            }
 
             return Content(JsonConvert.SerializeObject
                 (true), "application/json");

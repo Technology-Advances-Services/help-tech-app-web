@@ -24,6 +24,7 @@
             this.ConsumerId = consumerId;
             this.Score = score;
             this.Opinion = opinion;
+            this.ReviewState = string.Empty;
         }
     }
 }
