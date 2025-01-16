@@ -67,7 +67,6 @@
 
         $(document).ready(function () {
 
-            var listMessages = [];
             var room = $('#iptChatRoomId').val();
             var webSocket = new WebSocket('wss://localhost:44310/chat?room=' + room);
 
@@ -79,24 +78,9 @@
                 loadChatsByChatRoom();
             });
 
-            $(window).on('beforeunload', function () {
+            $('#btnSendMessage').on('click', async function () {
 
-                jQuery.ajax({
-
-                    url: '@Url.Action("SendMessage", "Communications")',
-                    method: 'POST',
-                    data: JSON.stringify(listMessages),
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-
-                listMessages = [];
-            });
-
-            $('#btnSendMessage').on('click', function () {
-
-                addMessagesUsers();
+                await addMessagesUsers();
 
                 sendMessage();
             });
@@ -350,15 +334,23 @@
 
                 $('#dvChat').html(contentHtml);
             }
-            function addMessagesUsers() {
+            async function addMessagesUsers() {
 
-                var messageUser = {
+                var information = new FormData();
 
-                    ChatRoomId: $('#iptChatRoomId').val(),
-                    Message: $('#txaMessage').val()
-                };
+                information.append('ChatRoomId', $('#iptChatRoomId').val());
+                information.append('Sender', $('#iptRole').val());
+                information.append('Message', $('#txaMessage').val());
 
-                listMessages.push(messageUser);
+                var data = await jQuery.ajax({
+
+                    url: '@Url.Action("SendMessage", "Communications")',
+                    method: 'POST',
+                    data: information,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
             }
             function getFormattedDate(date) {
 
