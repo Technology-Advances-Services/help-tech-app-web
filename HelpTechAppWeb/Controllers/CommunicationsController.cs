@@ -103,7 +103,9 @@ namespace HelpTechAppWeb.Controllers
             (Chat chat)
         {
             var result = await baseRequest.PostAsync
-                ("chats/send-message", GetToken(), chat);
+                ("chats/send-message", GetToken(),
+                new Chat(chat.ChatRoomId, GetPersonId(),
+                DateTime.Now, chat.Sender, chat.Message));
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");

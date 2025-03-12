@@ -80,6 +80,13 @@
 
             $('#btnSendMessage').on('click', async function () {
 
+                var result = await sendMessageToApi();
+
+                if (result !== false) {
+
+                    sendMessageToSocket();
+                }
+
                 await addMessagesUsers();
 
                 sendMessage();
@@ -135,11 +142,33 @@
                             <span>${firstname}</span>
                         </div>`;
                 }
-            
+
                 $('#dvProfile').html(contentHtml);
             }
+
+            async function sendMessageToApi() {
+
+                var information = new FormData();
+
+                information.append('ChatRoomId', room);
+                information.append('Sender', $('#iptRole').val());
+                information.append('Message', $('#txaMessage').val());
+
+                var result = await jQuery.ajax({
+
+                    url: '@Url.Action("SendMessage", "Communications")',
+                    method: 'POST',
+                    data: information,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+                return result;
+            }
+
             function loadChatsByChatRoom() {
-            
+
                 contentHtml = '';
 
                 jQuery.ajax({
@@ -152,17 +181,17 @@
 
                         var profileUrl = '';
                         var shippingDate;
-            
+
                         if ($('#iptRole').val() === 'TECNICO') {
-            
+
                             for (const item of data) {
 
                                 shippingDate = new Date(item.ShippingDate);
-            
+
                                 if (!isNullOrEmpty(item.TechnicalId)) {
 
                                     profileUrl = $('#iptProfileUrlTechnical').val();
-            
+
                                     contentHtml += `
                                         <div class="d-flex justify-content-end mb-4">
                                             <div class="msg_cotainer_send">
@@ -177,7 +206,7 @@
                                 else if (!isNullOrEmpty(item.ConsumerId)) {
 
                                     profileUrl = $('#iptProfileUrlConsumer').val();
-            
+
                                     contentHtml += `
                                         <div class="d-flex justify-content-start mb-4">
                                             <div class="img_cont_msg">
@@ -192,15 +221,15 @@
                             }
                         }
                         else if ($('#iptRole').val() === 'CONSUMIDOR') {
-            
+
                             for (const item of data) {
-            
+
                                 shippingDate = new Date(item.ShippingDate);
-            
+
                                 if (!isNullOrEmpty(item.TechnicalId)) {
 
                                     profileUrl = $('#iptProfileUrlTechnical').val();
-            
+
                                     contentHtml += `
                                         <div class="d-flex justify-content-start mb-4">
                                             <div class="img_cont_msg">
@@ -215,7 +244,7 @@
                                 else if (!isNullOrEmpty(item.ConsumerId)) {
 
                                     profileUrl = $('#iptProfileUrlConsumer').val();
-            
+
                                     contentHtml += `
                                         <div class="d-flex justify-content-end mb-4">
                                             <div class="msg_cotainer_send">
@@ -229,7 +258,7 @@
                                 }
                             }
                         }
-            
+
                         $('#dvChat').html(contentHtml);
                     },
                     error: function () {
@@ -238,7 +267,8 @@
                     }
                 });
             }
-            function sendMessage() {
+
+            function sendMessageToSocket() {
 
                 const user = document.getElementById('iptRole');
                 const message = document.getElementById('txaMessage');
@@ -259,6 +289,7 @@
                     message.value = '';
                 }
             }
+
             function displayMessage(message) {
 
                 var profileUrl = '';
@@ -334,6 +365,7 @@
 
                 $('#dvChat').html(contentHtml);
             }
+
             async function addMessagesUsers() {
 
                 var information = new FormData();
@@ -352,6 +384,7 @@
                     processData: false
                 });
             }
+
             function getFormattedDate(date) {
 
                 let day = String(date.getDate()).padStart(2, '0');
@@ -363,11 +396,12 @@
 
                 return `${day}/${mounth}/${year} ${hour}:${minutes}`;
             }
+
             function isNullOrEmpty(str) {
                 return !str || str === undefined;
             }
         });
-    
+
     </script>
 
 </body>
