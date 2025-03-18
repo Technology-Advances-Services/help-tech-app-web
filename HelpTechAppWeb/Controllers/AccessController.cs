@@ -65,25 +65,28 @@ namespace HelpTechAppWeb.Controllers
             var result = await baseRequest.PostAsync
                 ("access/login", user);
 
-            if (string.IsNullOrEmpty(result))
-                return RedirectToAction("Error", "Home");
+            if (!string.IsNullOrEmpty(result))
+            {
+                List<Claim> claims =
+                [
+                    new(ClaimTypes.Hash, result),
+                    new(ClaimTypes.Role, user.Role),
+                    new(ClaimTypes.Name, user.Username.ToString())
+                ];
 
-            List<Claim> claims =
-            [
-                new(ClaimTypes.Hash, result),
-                new(ClaimTypes.Role, user.Role),
-                new(ClaimTypes.Name, user.Username.ToString())
-            ];
+                result = true;
 
-            ClaimsIdentity claimsIdentity = new(claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsIdentity claimsIdentity = new(claims,
+                    CookieAuthenticationDefaults.AuthenticationScheme);
 
-            await HttpContext.SignInAsync
-                (CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+                await HttpContext.SignInAsync
+                    (CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+            }
+            else result = false;
 
             return Content(JsonConvert.SerializeObject
-                (true),"application/json");
+                (result), "application/json");
         }
 
         [HttpPost]
