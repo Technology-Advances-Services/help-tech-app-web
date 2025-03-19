@@ -36,7 +36,8 @@
             <hr />
 
             <input id="iptLogin" type="submit" />
-            <a href="" data-toggle="modal" data-target="#mdlUpdateCredential">Olvidaste tu contraseña?</a>
+            <a href="" style="color:aqua"  data-toggle="modal" data-target="#mdlUpdateCredential">Olvidaste tu contraseña?</a>
+            <a href="" style="color:greenyellow" data-toggle="modal" data-target="#mdlUpdateContract">Renovar membresia?</a>
 
         </form>
     </div>
@@ -60,10 +61,10 @@
                         <div class="box">
 
                             <label>Username:</label>
-                            <input id="iptNewUsername" type="text" class="form-control" autocomplete="off">
+                            <input id="iptNewUsername" type="text" class="form-control" required autocomplete="off">
 
                             <label>Password:</label>
-                            <input id="iptNewPassword" type="password" class="form-control" autocomplete="off">
+                            <input id="iptNewPassword" type="password" class="form-control" required autocomplete="off">
 
                             <label>Seleccione su roll:</label>
                             <select id="sltNewRoles" class="form-control">
@@ -83,6 +84,62 @@
         </div>
     </div>
 
+    <div id="mdlUpdateContract" class="modal fade" tabindex="-1" aria-labelledby="mdlUpdateContract" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header float-right">
+
+                    <h5>Renovar membresia</h5>
+
+                    <div class="text-right">
+                        <i data-dismiss="modal" aria-label="Close" class="fa fa-close"></i>
+                    </div>
+
+                </div>
+
+                <div class="modal-body">
+                    <div>
+                        <div class="box">
+
+                            <label>DNI:</label>
+                            <input id="iptPersonId" type="text" class="form-control" placeholder="Escriba su dni" required autocomplete="off">
+                            <br />
+
+                            <label>Roll:</label>
+                            <br />
+                            <select id="sltPersonRoles">
+                                <option selected>TECNICO</option>
+                                <option>CONSUMIDOR</option>
+                            </select>
+                            <br />
+
+                            <label>Membresias:</label>
+                            <br />
+                            <select id="sltMemberships"></select>
+
+                            <br />
+                            <span style="color:red">Cualquier membresia que seleccione, tendra una vigencia de 6 meses!</span>
+                            <br />
+
+                            <span id="spnPrice"></span>
+                            <br />
+
+                            <span id="spnPolicies"></span>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="btnUpdateContract" type="button" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -94,6 +151,14 @@
 
             $('#iptLogin').prop('disabled', false);
             $('#iptLogin').val('Ingresar');
+
+            $(window).on('load', function () {
+
+                $('#iptLogin').prop('disabled', false);
+                $('#iptLogin').val('Ingresar');
+
+                loadMemberships();
+            });
 
             $('#frmCredentials').on('submit', function () {
 
@@ -120,6 +185,44 @@
                 credentials.append('Role', $('#sltNewRoles').val());
 
                 updateCredential(credentials);
+            });
+
+            $('#btnUpdateContract').on('click', function () {
+
+                var information = new FormData();
+
+                information.append('MembershipId', $('#sltMemberships').val());
+                
+                if ($('#sltPersonRoles').val() === 'TECNICO') {
+
+                    information.append('TechnicalId', $('#iptPersonId').val());
+                }
+                else if ($('#sltPersonRoles').val() === 'CONSUMIDOR') {
+
+                    information.append('ConsumerId', $('#iptPersonId').val());
+                }
+
+                updateContract(information);
+            });
+
+            $('#sltMemberships').on('change', function () {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("MembershipById", "Access")' + '?id=' + $(this).val(),
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                       $('#spnPrice').text(`Precio: S/${data.Price}`);
+                       $('#spnPolicies').text(`Politicas: ${data.Policies}`);
+                    },
+                    error: function () {
+
+                        window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
             });
 
             function login(credentials) {
@@ -151,7 +254,7 @@
 
                                 icon: 'error',
                                 title: 'Credenciales incorrectas!',
-                                text: 'Ocurrio un error al validar sus credenciales, vuelva a escribir.'
+                                text: 'Ocurrio un error al validar sus credenciales, asegurese de estar con una membresia vigente o en todo caso digite nuevamente sus credenciales.'
                             });
                         }
                     },
@@ -205,6 +308,77 @@
                     }
                 });
             }
+
+            function updateContract(information) {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("CreateContract", "Access")',
+                    method: 'POST',
+                    data: information,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+
+                        if (data === true) {
+
+                            Swal.fire({
+
+                                icon: 'success',
+                                title: 'Contrato actualizado correctamente!',
+                                text: 'Tu contrato se actualizo, recuerde que su vence en 6 meses.',
+                                timer: 5000,
+                                timerProgressBar: true,
+                                willClose: () => {
+
+                                    window.open('@Url.Action("Login", "Access")', "_self");
+                                }
+                            });
+                        }
+                        else {
+
+                            Swal.fire({
+
+                                icon: 'error',
+                                title: 'Error al actualizar contrato!',
+                                text: 'Se produjo un error al intentar actualizar su contrato, verifique si su contrato sigue vigente iniciando sesion.'
+                            });
+                        }
+                    },
+                    error: function () {
+
+                        window.open('@Url.Action("Error", "Home")', "_self");
+                    }
+                });
+            }
+
+            function loadMemberships() {
+
+                jQuery.ajax({
+
+                    url: '@Url.Action("AllMemberships", "Access")',
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        var contentHtml = '';
+
+                        for (const item of data) {
+
+                            contentHtml += `<option value="${item.Id}">${item.Name}</option>`;
+                        }
+
+                        $('#sltMemberships').html(contentHtml);
+                    },
+                    error: function () {
+
+                        window.open('@Url.Action("Error", "Home")', '_self');
+                    }
+                });
+            }
+
         });
 
     </script>

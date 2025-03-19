@@ -160,11 +160,8 @@ namespace HelpTechAppWeb.Controllers
             var result = await baseRequest.PostAsync
                 ("access/update-credential", user);
 
-            if (result is false)
-                return RedirectToAction("Error", "Home");
-
             return Content(JsonConvert.SerializeObject
-                (true), "application/json");
+                (result), "application/json");
         }
 
         [HttpGet]
@@ -188,6 +185,55 @@ namespace HelpTechAppWeb.Controllers
 
             return Content(JsonConvert.SerializeObject
                 (membership), "application/json");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateContract
+            (Contract contract)
+        {
+            var membership = await baseRequest
+                .GetSingleAsync<Membership>
+                ("memberships/membership-by-id?id=" + contract.MembershipId) ?? new();
+
+            contract = new(0, contract.MembershipId, contract.TechnicalId, contract.ConsumerId,
+                membership.Name, membership.Price, membership.Policies,
+                DateTime.Now, DateTime.Now, string.Empty);
+
+            dynamic? result;            
+
+            if (!string.IsNullOrEmpty(contract.TechnicalId))
+                result = await baseRequest.PostAsync
+                    ("contracts/create-technical-contract", contract);
+            else
+                result = await baseRequest.PostAsync
+                    ("contracts/create-consumer-contract", contract);
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
+        }
+
+        // IMPLEMENTAR METODO EN SU RESPECTIVO CONTROLADOR.
+        [HttpGet]
+        public async Task<IActionResult> ContractByPersonId
+            (string personId, string role)
+        {
+            dynamic result = role switch
+            {
+                "TECNICO" => await baseRequest.GetAsync<Contract>
+                ("contracts/contract-by-technical?technicalId=" + personId) ?? [],
+                "CONSUMIDOR" => await baseRequest.GetAsync<Contract>
+                ("contracts/contract-by-consumer?consumerId=" + personId) ?? [],
+                _ => []
+            };
+
+            foreach (var item in result)
+            {
+                if (result.FinalDate > DateTime.Now) result = true;
+                else result = false;
+            }
+
+            return Content(JsonConvert.SerializeObject
+                (result), "application/json");
         }
 
         #endregion
