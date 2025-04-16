@@ -448,6 +448,10 @@
             });
             $('#btnTotalReportStatistic').on('click', function () {
 
+                $('#mdlTypeStatistic').modal('hide').on('hidden.bs.modal', function () {
+                    $('.modal-backdrop').remove();
+                });
+
                 window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=TOTAL', '_blank');
 
                 return false;
