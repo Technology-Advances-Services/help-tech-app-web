@@ -157,8 +157,15 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> UpdateCredential
             (Models.User user)
         {
+            dynamic obj = new
+            {
+                user.Username,
+                Code = user.Password,
+                user.Role
+            };
+
             var result = await baseRequest.PostAsync
-                ("access/update-credential", user);
+                ("access/update-credential", obj);
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
