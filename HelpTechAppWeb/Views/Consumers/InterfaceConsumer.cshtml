@@ -225,7 +225,7 @@
 
             $('#btnSearchTechnicalsAvailables').on('click', function () {
 
-                var filteredTechnicals = technicals.filter(t => t.SpecialtyId === $('#sltSpecialties').val() && t.DistrictId === $('#sltDistricts').val());
+                var filteredTechnicals = technicals.filter(t => t.SpecialtyId === parseInt($('#sltSpecialties').val()) && t.DistrictId === parseInt($('#sltDistricts').val()));
 
                 fillDivTechnicals(filteredTechnicals);
             });

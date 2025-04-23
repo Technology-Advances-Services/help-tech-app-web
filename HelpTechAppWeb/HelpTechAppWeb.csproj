@@ -21,4 +21,8 @@
     <PackageReference Include="PuppeteerSharp" Version="19.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\consumers\images\" />
+  </ItemGroup>
+
 </Project>
