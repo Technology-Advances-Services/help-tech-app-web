@@ -51,6 +51,7 @@ namespace HelpTechAppWeb.Controllers
                 on jo.ConsumerId equals co.Id
                 join cm in chatsMembers
                 on co.Id equals cm.ConsumerId
+                orderby jo.RegistrationDate descending
                 select new
                 {
                     jo.Id,
@@ -59,6 +60,7 @@ namespace HelpTechAppWeb.Controllers
                     co.Firstname,
                     co.Lastname,
                     co.Phone,
+                    jo.RegistrationDate,
                     jo.WorkDate,
                     jo.Address,
                     jo.Description,
@@ -118,6 +120,7 @@ namespace HelpTechAppWeb.Controllers
                 on ag.TechnicalId equals te.Id
                 join cm in chatsMembers
                 on te.Id equals cm.TechnicalId
+                orderby jo.RegistrationDate descending
                 select new
                 {
                     jo.Id,
@@ -126,6 +129,7 @@ namespace HelpTechAppWeb.Controllers
                     te.Firstname,
                     te.Lastname,
                     te.Phone,
+                    jo.RegistrationDate,
                     jo.WorkDate,
                     jo.Address,
                     jo.Description,

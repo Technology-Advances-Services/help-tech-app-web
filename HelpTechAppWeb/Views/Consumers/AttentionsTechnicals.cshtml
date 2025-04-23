@@ -539,11 +539,12 @@
                     { data: 'Firstname', title: 'Nombre' }, //3
                     { data: 'Lastname', title: 'Apellido' }, //4
                     { data: 'Phone', title: 'Contacto' }, //5
-                    { data: 'WorkDate', title: 'Fecha' }, //6
-                    { data: 'Time', title: 'Tiempo' }, //7
-                    { data: 'LaborBudget', title: 'Mano de obra' }, //8
-                    { data: 'MaterialBudget', title: 'Materiales' }, //9
-                    { data: 'AmountFinal', title: 'Monto final' }, //10
+                    { data: 'RegistrationDate', title: 'Emision' }, //6
+                    { data: 'WorkDate', title: 'Fecha' }, //7
+                    { data: 'Time', title: 'Tiempo' }, //8
+                    { data: 'LaborBudget', title: 'Mano de obra' }, //9
+                    { data: 'MaterialBudget', title: 'Materiales' }, //10
+                    { data: 'AmountFinal', title: 'Monto final' }, //11
                     { //11
                         data: null,
                         title: 'Opinar',
@@ -596,7 +597,6 @@
                         break;
                     case 'EN PROCESO':
                     case 'DENEGADO':
-                        columns[6].visible = false;
                         columns[7].visible = false;
                         columns[8].visible = false;
                         columns[9].visible = false;
@@ -616,12 +616,13 @@
 
                 for (var i = 0; i < listAttentions.length; ++i) {
 
+                    listAttentions[i].RegistrationDate = getFormattedDate(listAttentions[i].RegistrationDate);
+
                     if (listAttentions[i].WorkDate !== null) {
 
                         listAttentions[i].WorkDate = getFormattedDate(listAttentions[i].WorkDate);
                     }
                     else {
-
                         listAttentions[i].WorkDate = null;
                     }
                 }
@@ -636,8 +637,8 @@
                     columns: columns,
                     searching: true,
                     paging: true,
-                    ordering: true,
-                    responsive: true
+                    responsive: true,
+                    order: []
                 });
             }
 

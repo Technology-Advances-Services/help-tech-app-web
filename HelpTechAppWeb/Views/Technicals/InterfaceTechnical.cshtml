@@ -490,9 +490,19 @@
                 
                 var filteredJobs = jobs.filter(j => {
 
-                    var jobDate = new Date(j.WorkDate).toISOString().split('T')[0];
+                    var jobDate;
 
-                    return jobDate === workDateFormatted || j.JobState === $('#sltJobsStates').val();
+                    if ($('#sltJobsStates').val() !== 'EN PROCESO') {
+
+                        jobDate = new Date(j.WorkDate).toISOString().split('T')[0];
+
+                    } else {
+
+                        jobDate = new Date(j.RegistrationDate).toISOString().split('T')[0];
+                    }
+
+
+                    return jobDate === workDateFormatted && j.JobState === $('#sltJobsStates').val();
                 });
 
                 fillTableJobs(filteredJobs, $('#sltJobsStates').val());
@@ -736,8 +746,8 @@
                     var filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
 
                     var contentHtml = `
-                        <div class="img" style="text-align: center;">
-                            <img alt="" src="${data.ProfileUrl}">
+                        <div class="text-center">
+                            <img src="${data.ProfileUrl}" alt="Imagen de perfil" class="img-fluid rounded" style="max-height: 400px;">
                         </div>
                         <br>
                         <p>Membresia: ${data.Membership}</p>
@@ -829,7 +839,8 @@
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Apellido</th>
                                 <th scope="col">Contacto</th>
-                                <th scope="col">Fecha</th>
+                                <th scope="col">Contacto</th>
+                                <th scope="col">Emision</th>
                                 <th scope="col">Tiempo</th>
                                 <th scope="col">Mano de obra</th>
                                 <th scope="col">Materiales</th>
@@ -847,6 +858,7 @@
                     for (const item of listJobs) {
 
                         var workDate = new Date(item.WorkDate);
+                        var registrationDate = new Date(item.RegistrationDate);
 
                         contentHtml += `
                             <tr>
@@ -856,6 +868,7 @@
                                 <td id="tFirstname">${item.Firstname}</td>
                                 <td id="tLastname">${item.Lastname}</td>
                                 <td id="tPhone">${item.Phone}</td>
+                                <td id="tRegistrationDate">${getFormattedDate(registrationDate)}</td>
                                 <td id="tWorkDate">${getFormattedDate(workDate)}</td>
                                 <td id="tTime">${item.Time}</td>
                                 <td id="tLaborBudget">${item.LaborBudget}</td>
@@ -876,6 +889,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">Id</th>
+                                <th scope="col">Emision</th>
                                 <th scope="col">DNI</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Apellido</th>
@@ -892,11 +906,12 @@
 
                     for (const item of listJobs) {
 
-                        var workDate = new Date(item.WorkDate);
+                        var registrationDate = new Date(item.RegistrationDate);
 
                         contentHtml += `
                             <tr>
                                 <td id="tId">${item.Id}</td>
+                                <td id="tRegistrationDate">${getFormattedDate(registrationDate)}</td>
                                 <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
                                 <td id="tConsumerId">${item.ConsumerId}</td>
                                 <td id="tFirstname">${item.Firstname}</td>

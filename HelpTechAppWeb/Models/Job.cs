@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public int AgendaId { get; set; }
         public string ConsumerId { get; set; }
+        public DateTime RegistrationDate { get; set; }
         public DateTime? AnswerDate { get; set; }
         public DateTime? WorkDate { get; set; }
         public string Address { get; set; }
