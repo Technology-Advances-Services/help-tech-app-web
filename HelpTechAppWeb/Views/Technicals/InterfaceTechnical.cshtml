@@ -363,12 +363,12 @@
                             <div class="row justify-content-center mt-4 px-sm-5  ">
 
                                 <div class="col">
-                                    <button id="btnTotalReportStatistic" type="submit" class="btn btn-warning btn-block  font-weight-bold text-dark text-uppercase" data-dismiss="modal">
+                                    <button id="btnTotalReportStatistic" type="button" class="btn btn-warning btn-block  font-weight-bold text-dark text-uppercase">
                                         <span class="plan">Reporte total</span>                                     
                                     </button>                                   
                                 </div>
                                 <div class="col">
-                                    <button id="btnMonthlyReportStatistic" type="submit" class="btn btn-primary btn-block  text-dark font-weight-bold text-uppercase" data-dismiss="modal">
+                                    <button id="btnMonthlyReportStatistic" type="button" class="btn btn-primary btn-block  text-dark font-weight-bold text-uppercase">
                                         <span class="plan">Reporte mensual</span>                                        
                                     </button>                                  
                                 </div>
@@ -446,21 +446,18 @@
                 $('#iptLaborBudget').val('');
                 $('#iptMaterialBudget').val('');
             });
-            $('#btnTotalReportStatistic').on('click', function () {
 
-                $('#mdlTypeStatistic').modal('hide').on('hidden.bs.modal', function () {
-                    $('.modal-backdrop').remove();
-                });
+            $('#mdlTypeStatistic').on('hidden.bs.modal', function () {
+
+                forceCloseStatisticModal();
+            });
+            $('#btnTotalReportStatistic').on('click', function () {
 
                 window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=TOTAL', '_blank');
 
                 return false;
             });
             $('#btnMonthlyReportStatistic').on('click', function () {
-
-                $('#mdlTypeStatistic').modal('hide').on('hidden.bs.modal', function () {
-                    $('.modal-backdrop').remove();
-                });
 
                 window.open('@Url.Action("DetailedTechnicalStatistic", "Statistics")' + '?typeStatistic=MENSUAL', '_blank');
 
@@ -829,7 +826,60 @@
 
                 var contentHtml = '';
 
-                if (jobsStates === 'PENDIENTE' || jobsStates === 'COMPLETADO') {
+                if (jobsStates === 'COMPLETADO') {
+
+                    contentHtml = `
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">DNI</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Contacto</th>
+                                <th scope="col">Emision</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Tiempo</th>
+                                <th scope="col">Mano de obra</th>
+                                <th scope="col">Materiales</th>
+                                <th scope="col">Monto final</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbdJobs"></tbody>`;
+
+                    $('#tblJobs').html(contentHtml);
+
+                    contentHtml = '';
+
+                    for (const item of listJobs) {
+
+                        var workDate = new Date(item.WorkDate);
+                        var registrationDate = new Date(item.RegistrationDate);
+
+                        contentHtml += `
+                            <tr>
+                                <td id="tId">${item.Id}</td>
+                                <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
+                                <td id="tConsumerId">${item.ConsumerId}</td>
+                                <td id="tFirstname">${item.Firstname}</td>
+                                <td id="tLastname">${item.Lastname}</td>
+                                <td id="tPhone">${item.Phone}</td>
+                                <td id="tRegistrationDate">${getFormattedDate(registrationDate)}</td>
+                                <td id="tWorkDate">${getFormattedDate(workDate)}</td>
+                                <td id="tTime">${item.Time}</td>
+                                <td id="tLaborBudget">${item.LaborBudget}</td>
+                                <td id="tMaterialBudget">${item.MaterialBudget}</td>
+                                <td id="tAmountFinal">${item.AmountFinal}</td>
+                                <td id="tJobState">${item.JobState}</td>
+                                <td>
+                                    <button id="btnJobDetail" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#mdlJobDetail">Detalle</button>
+                                    <button id="btnChat" class="btn btn-sm btn-neutral">Mensaje</button>
+                                </td>
+                            </tr>`;
+                    }
+                }
+                else if (jobsStates === 'PENDIENTE') {
 
                     contentHtml = `
                         <thead class="thead-light">
@@ -929,6 +979,27 @@
 
                 $('#tbdJobs').html(contentHtml);
                 $('#spnTableMessage').text(`Se está mostrando las citas ${jobsStates}.`);
+            }
+
+            function forceCloseStatisticModal() {
+
+                const modal = document.getElementById('mdlTypeStatistic');
+
+                if (modal) {
+                    $(modal).modal('hide');
+                }
+
+                document.body.classList.remove('modal-open');
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            }
+
+            function fixModalBeforeOpen() {
+
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open');
+
+
+                $('#mdlTypeStatistic').removeClass('show').hide();
             }
 
             function getFormattedDate(date) {
