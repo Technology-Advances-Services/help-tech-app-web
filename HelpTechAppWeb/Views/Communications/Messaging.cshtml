@@ -68,7 +68,7 @@
         $(document).ready(function () {
 
             var room = $('#iptChatRoomId').val();
-            var webSocket = new WebSocket('wss://localhost:44310/chat?room=' + room);
+            var webSocket = new WebSocket('ws://helptechwebapp.runasp.net/chat?room=' + room);
 
             var contentHtml = '';
 
