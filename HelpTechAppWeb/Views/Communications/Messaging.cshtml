@@ -86,10 +86,6 @@
 
                     sendMessageToSocket();
                 }
-
-                await addMessagesUsers();
-
-                sendMessage();
             });
 
             webSocket.onopen = function (event) {
@@ -364,25 +360,6 @@
                 }
 
                 $('#dvChat').html(contentHtml);
-            }
-
-            async function addMessagesUsers() {
-
-                var information = new FormData();
-
-                information.append('ChatRoomId', $('#iptChatRoomId').val());
-                information.append('Sender', $('#iptRole').val());
-                information.append('Message', $('#txaMessage').val());
-
-                var data = await jQuery.ajax({
-
-                    url: '@Url.Action("SendMessage", "Communications")',
-                    method: 'POST',
-                    data: information,
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
             }
 
             function getFormattedDate(date) {
