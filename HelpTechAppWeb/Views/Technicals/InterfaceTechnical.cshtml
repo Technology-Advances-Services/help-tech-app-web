@@ -525,9 +525,17 @@
             });
             $('#tblJobs').on('click', '#btnChat', function () {
 
-                $(this).parents("tr").find("#tChatRoomId").each(function () {
+                $(this).parents("tr").find("#tConsumerId").each(async function () {
 
-                    var chatRoomId = $(this).html();
+                    var consumerId = $(this).html();
+
+                    var chatRoomId = await jQuery.ajax({
+
+                        url: '@Url.Action("GetChatRoomId", "Communications")' + `?personId=${consumerId}`,
+                        method: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    });
 
                     window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
                 });
@@ -706,14 +714,14 @@
                                 <a id="btnChat" class="nav-link d-flex align-items-center">
                                     <div class="me-4">
                                         <div class="position-relative d-inline-block text-white">
-                                            <img alt="image" src="${item.ProfileUrl}" class="avatar rounded-circle">
+                                            <img alt="image" src="${item.profileUrl}" class="avatar rounded-circle">
                                             <span class="position-absolute bottom-2 end-2 transform translate-x-1/2 translate-y-1/2 border-2 border-solid border-current w-3 h-3 bg-success rounded-circle"></span>
                                         </div>
                                     </div>
                                     <div>
-                                        <span id="spnChatRoomId" style="display:none;">${item.ChatRoomId}</span>
-                                        <span class="d-block text-sm font-semibold">${item.Firstname}</span>
-                                        <span class="d-block text-xs text-muted font-regular">${item.Lastname}</span>
+                                        <span id="spnChatRoomId" style="display:none;">${item.chatRoomId}</span>
+                                        <span class="d-block text-sm font-semibold">${item.firstname}</span>
+                                        <span class="d-block text-xs text-muted font-regular">${item.lastname}</span>
                                     </div>
                                     <div class="ms-auto"> <i class="bi bi-chat"></i> </div>
                                 </a>
@@ -746,8 +754,6 @@
                         <div class="text-center">
                             <img src="${data.ProfileUrl}" alt="Imagen de perfil" class="img-fluid rounded" style="max-height: 400px;">
                         </div>
-                        <br>
-                        <p>Membresia: ${data.Membership}</p>
                         <br>
                         <p>Especialidad: ${filteredSpecialties.Name}</p>
                         <br>
@@ -816,7 +822,7 @@
 
                 if (listJobs.length === 0) {
 
-                    $('#spnTableMessage').text('Usted no cuenta con citas pendientes.');
+                    $('#spnTableMessage').text('Usted no cuenta con citas.');
 
                     $('#tblJobs').html('');
                     $('#tbdJobs').html('');
@@ -860,10 +866,9 @@
                         contentHtml += `
                             <tr>
                                 <td id="tId">${item.Id}</td>
-                                <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
-                                <td id="tConsumerId">${item.ConsumerId}</td>
-                                <td id="tFirstname">${item.Firstname}</td>
-                                <td id="tLastname">${item.Lastname}</td>
+                                <td id="tConsumerId">${item.PersonId}</td>
+                                <td id="tFirstname">${item.FirstName}</td>
+                                <td id="tLastname">${item.LastName}</td>
                                 <td id="tPhone">${item.Phone}</td>
                                 <td id="tRegistrationDate">${getFormattedDate(registrationDate)}</td>
                                 <td id="tWorkDate">${getFormattedDate(workDate)}</td>
@@ -913,10 +918,9 @@
                         contentHtml += `
                             <tr>
                                 <td id="tId">${item.Id}</td>
-                                <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
-                                <td id="tConsumerId">${item.ConsumerId}</td>
-                                <td id="tFirstname">${item.Firstname}</td>
-                                <td id="tLastname">${item.Lastname}</td>
+                                <td id="tConsumerId">${item.PersonId}</td>
+                                <td id="tFirstname">${item.FirstName}</td>
+                                <td id="tLastname">${item.LastName}</td>
                                 <td id="tPhone">${item.Phone}</td>
                                 <td id="tRegistrationDate">${getFormattedDate(registrationDate)}</td>
                                 <td id="tWorkDate">${getFormattedDate(workDate)}</td>
@@ -962,8 +966,7 @@
                             <tr>
                                 <td id="tId">${item.Id}</td>
                                 <td id="tRegistrationDate">${getFormattedDate(registrationDate)}</td>
-                                <td id="tChatRoomId" style="display:none;">${item.ChatRoomId}</td>
-                                <td id="tConsumerId">${item.ConsumerId}</td>
+                                <td id="tConsumerId">${item.PersonId}</td>
                                 <td id="tFirstname">${item.Firstname}</td>
                                 <td id="tLastname">${item.Lastname}</td>
                                 <td id="tPhone">${item.Phone}</td>
