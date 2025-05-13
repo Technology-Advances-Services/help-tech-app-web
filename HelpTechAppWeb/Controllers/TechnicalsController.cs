@@ -46,30 +46,8 @@ namespace HelpTechAppWeb.Controllers
                 ("informations/technical-by-id?id=" +
                 GetTechnicalId(), GetToken()) ?? new();
 
-            var contract = await baseRequest.GetSingleAsync<Contract>
-                ("contracts/contract-by-technical?technicalId=" +
-                GetTechnicalId(), GetToken()) ?? new();
-
-            var membership = await baseRequest.GetSingleAsync<Membership>
-                ("memberships/membership-by-id?id=" + contract.MembershipId,
-                GetTechnicalId()) ?? new();
-
-            var result = new
-            {
-                technical.ProfileUrl,
-                Membership = membership.Name,
-                technical.SpecialtyId,
-                contract.StartDate,
-                contract.FinalDate,
-                technical.Firstname,
-                technical.Lastname,
-                technical.Age,
-                technical.Email,
-                technical.Phone,
-            };
-
             return Content(JsonConvert.SerializeObject
-                (result), "application/json");
+                (technical), "application/json");
         }
 
         [HttpGet]

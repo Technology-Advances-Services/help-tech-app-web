@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Collections.Concurrent;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
@@ -21,30 +20,20 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> Messaging
             (int chatRoomId)
         {
-            var chatMember = await baseRequest.GetSingleAsync<ChatMember>
+            var chatMember = await baseRequest.GetSingleAsync<dynamic>
                 ("chatsmembers/chat-member-by-chat-room?chatRoomId=" +
-                chatRoomId, GetToken()) ?? new();
-
-            var technical = await baseRequest
-                .GetSingleAsync<Technical>
-                ("informations/technical-by-id?id=" +
-                chatMember.TechnicalId, GetToken()) ?? new();
-
-            var consumer = await baseRequest
-                .GetSingleAsync<Consumer>
-                ("informations/consumer-by-id?id=" +
-                chatMember.ConsumerId, GetToken()) ?? new();
+                chatRoomId, GetToken());
 
             _chatRoomId = chatRoomId;
 
             ViewBag.ChatRoomId = chatRoomId;
             ViewBag.Role = GetRole();
 
-            ViewBag.ProfileUrlTechnical = technical.ProfileUrl;
-            ViewBag.FirstnameTechnical = technical.Firstname;
+            ViewBag.ProfileUrlTechnical = chatMember!.technical.profileUrl;
+            ViewBag.FirstnameTechnical = chatMember!.technical.firstname;
 
-            ViewBag.ProfileUrlConsumer = consumer.ProfileUrl;
-            ViewBag.FirstnameConsumer = consumer.Firstname;
+            ViewBag.ProfileUrlConsumer = chatMember!.consumer.profileUrl;
+            ViewBag.FirstnameConsumer = chatMember!.consumer.firstname;
 
             return View();
         }
@@ -56,31 +45,18 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> ChatsMembersByTechnical()
         {
-            var chatsMembers = await baseRequest.GetAsync<ChatMember>
+            var chatsMembers = await baseRequest.GetAsync<dynamic>
                 ("chatsmembers/chats-members-by-technical?technicalId=" +
                 GetPersonId(), GetToken());
 
-            var consumers = new ConcurrentBag<Consumer>();
-
-            await Task.WhenAll(chatsMembers.Select(async item =>
-            {
-                var consumer = await baseRequest.GetSingleAsync<Consumer>
-                ("informations/consumer-by-id?id=" + item.ConsumerId,
-                GetToken()) ?? new();
-
-                consumers.Add(consumer);
-            }));
-
             var result =
                 from cm in chatsMembers
-                join co in consumers
-                on cm.ConsumerId equals co.Id
                 select new
                 {
-                    cm.ChatRoomId,
-                    co.ProfileUrl,
-                    co.Firstname,
-                    co.Lastname,
+                    cm.chatRoomId,
+                    cm.consumer.profileUrl,
+                    cm.consumer.firstname,
+                    cm.consumer.lastname
                 };
 
             return Content(JsonConvert.SerializeObject
@@ -109,6 +85,37 @@ namespace HelpTechAppWeb.Controllers
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetChatRoomId(string personId)
+        {
+            dynamic? chats;
+            dynamic chatRoomId = 0;
+
+            if (GetRole() == "TECNICO")
+            {
+                chats = await baseRequest.GetSingleAsync<dynamic>
+                    ("chatsmembers/chats-members-by-technical?technicalId=" + GetPersonId(),
+                    GetToken());
+
+                foreach (var item in chats!)
+                    if (item.consumerId == personId)
+                        chatRoomId = item.chatRoomId;
+            }
+            else if (GetRole() == "CONSUMIDOR")
+            {
+                chats = await baseRequest.GetSingleAsync<dynamic>
+                    ("chatsmembers/chats-members-by-consumer?consumerId=" + GetPersonId(),
+                    GetToken());
+
+                foreach (var item in chats!)
+                    if (item.technicalId == personId)
+                        chatRoomId = item.chatRoomId;
+            }
+
+            return Content(JsonConvert.SerializeObject
+                (chatRoomId), "application/json");
         }
 
         #endregion

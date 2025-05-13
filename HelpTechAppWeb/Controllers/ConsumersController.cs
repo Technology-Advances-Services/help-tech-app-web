@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Collections.Concurrent;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
@@ -31,46 +30,19 @@ namespace HelpTechAppWeb.Controllers
                 ("informations/technicals-by-availability?availability=DISPONIBLE",
                 GetToken());
 
-            var agendas = new ConcurrentBag<Agenda>();
-
-            await Task.WhenAll(technicals.Select(async item =>
-            {
-                var agenda = await baseRequest.GetSingleAsync<Agenda>
-                ("agendas/agenda-by-technical?technicalId=" + item.Id,
-                GetToken()) ?? new();
-
-                agendas.Add(agenda);
-            }));
-
-            var result =
-                from te in technicals
-                join ag in agendas
-                on te.Id equals ag.TechnicalId
-                select new
-                {
-                    te.Id,
-                    AgendaId = ag.Id,
-                    te.DistrictId,
-                    te.SpecialtyId,
-                    te.ProfileUrl,
-                    te.Firstname,
-                    te.Lastname,
-                    te.Phone
-                };
-
             return Content(JsonConvert.SerializeObject
-                (result), "application/json");
+                (technicals), "application/json");
         }
 
         [HttpGet]
         public async Task<IActionResult> InformationConsumer()
         {
-            var technical = await baseRequest.GetSingleAsync<Consumer>
+            var consumer = await baseRequest.GetSingleAsync<Consumer>
                 ("informations/consumer-by-id?id=" +
                 GetConsumerId(), GetToken()) ?? new();
 
             return Content(JsonConvert.SerializeObject
-                (technical), "application/json");
+                (consumer), "application/json");
         }
 
         #endregion

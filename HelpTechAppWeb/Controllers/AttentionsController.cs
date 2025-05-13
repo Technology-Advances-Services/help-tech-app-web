@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Collections.Concurrent;
 using System.Security.Claims;
 using HelpTechAppWeb.Configurations.Interfaces;
 using HelpTechAppWeb.Models;
@@ -20,56 +19,30 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> JobsByTechnical()
         {
-            var jobsTask = baseRequest.GetAsync<Job>
+            var jobs = await baseRequest.GetAsync<dynamic>
                 ("jobs/jobs-by-technical?technicalId=" +
                 GetPersonId(), GetToken());
 
-            var chatsMembersTask = baseRequest.GetAsync<ChatMember>
-                ("chatsmembers/chats-members-by-technical?technicalId=" +
-                GetPersonId(), GetToken());
-
-            await Task.WhenAll(jobsTask, chatsMembersTask);
-
-            var jobs = await jobsTask;
-            var chatsMembers = await chatsMembersTask;
-
-            var consumers = new ConcurrentBag<Consumer>();
-
-            await Task.WhenAll(chatsMembers.Select(async item =>
-            {
-                var consumer = await baseRequest
-                .GetSingleAsync<Consumer>
-                ("informations/consumer-by-id?id=" +
-                item.ConsumerId, GetToken()) ?? new();
-
-                consumers.Add(consumer);
-            }));
-
             var result =
-                from jo in jobs
-                join co in consumers
-                on jo.ConsumerId equals co.Id
-                join cm in chatsMembers
-                on co.Id equals cm.ConsumerId
-                orderby jo.RegistrationDate descending
-                select new
-                {
-                    jo.Id,
-                    cm.ChatRoomId,
-                    ConsumerId = co.Id,
-                    co.Firstname,
-                    co.Lastname,
-                    co.Phone,
-                    jo.RegistrationDate,
-                    jo.WorkDate,
-                    jo.Address,
-                    jo.Description,
-                    jo.Time,
-                    jo.LaborBudget,
-                    jo.MaterialBudget,
-                    jo.AmountFinal,
-                    jo.JobState,
-                };
+                (from jb in jobs
+                 select new Job
+                 {
+                     Id = jb.id,
+                     AgendaId = jb.agendaId,
+                     RegistrationDate = jb.registrationDate,
+                     PersonId = jb.consumer.id,
+                     FirstName = jb.consumer.firstname,
+                     LastName = jb.consumer.lastname,
+                     Phone = jb.consumer.phone,
+                     WorkDate = jb.workDate,
+                     Address = jb.address,
+                     Description = jb.description,
+                     Time = jb.time,
+                     LaborBudget = jb.laborBudget,
+                     MaterialBudget = jb.materialBudget,
+                     AmountFinal = jb.amountFinal,
+                     JobState = jb.jobState
+                 }).ToList();
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
@@ -78,67 +51,30 @@ namespace HelpTechAppWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> JobsByConsumer()
         {
-            var jobsTask = baseRequest.GetAsync<Job>
+            var jobs = await baseRequest.GetAsync<dynamic>
                 ("jobs/jobs-by-consumer?consumerId=" +
                 GetPersonId(), GetToken());
 
-            var chatsMembersTask = baseRequest.GetAsync<ChatMember>
-                ("chatsmembers/chats-members-by-consumer?consumerId=" +
-                GetPersonId(), GetToken());
-
-            await Task.WhenAll(jobsTask, chatsMembersTask);
-
-            var jobs = await jobsTask;
-            var chatsMembers = await chatsMembersTask;
-
-            var technicals = new ConcurrentBag<Technical>();
-            var agendas = new ConcurrentBag<Agenda>();
-
-            await Task.WhenAll(chatsMembers.Select(async item =>
-            {
-                var technical = baseRequest
-                .GetSingleAsync<Technical>
-                ("informations/technical-by-id?id=" +
-                item.TechnicalId, GetToken());
-
-                var agenda = baseRequest
-                .GetSingleAsync<Agenda>
-                ("agendas/agenda-by-technical?technicalId=" +
-                item.TechnicalId, GetToken());
-
-                await Task.WhenAll(technical, agenda);
-
-                technicals.Add(await technical ?? new());
-                agendas.Add(await agenda ?? new());
-            }));
-
             var result =
-                from jo in jobs
-                join ag in agendas
-                on jo.AgendaId equals ag.Id
-                join te in technicals
-                on ag.TechnicalId equals te.Id
-                join cm in chatsMembers
-                on te.Id equals cm.TechnicalId
-                orderby jo.RegistrationDate descending
-                select new
-                {
-                    jo.Id,
-                    cm.ChatRoomId,
-                    TechnicalId = te.Id,
-                    te.Firstname,
-                    te.Lastname,
-                    te.Phone,
-                    jo.RegistrationDate,
-                    jo.WorkDate,
-                    jo.Address,
-                    jo.Description,
-                    jo.Time,
-                    jo.LaborBudget,
-                    jo.MaterialBudget,
-                    jo.AmountFinal,
-                    jo.JobState,
-                };
+                (from jb in jobs
+                 select new Job
+                 {
+                     Id = jb.id,
+                     AgendaId = jb.agendaId,
+                     RegistrationDate = jb.registrationDate,
+                     PersonId = jb.technical.id,
+                     FirstName = jb.technical.firstname,
+                     LastName = jb.technical.lastname,
+                     Phone = jb.technical.phone,
+                     WorkDate = jb.workDate,
+                     Address = jb.address,
+                     Description = jb.description,
+                     Time = jb.time,
+                     LaborBudget = jb.laborBudget,
+                     MaterialBudget = jb.materialBudget,
+                     AmountFinal = jb.amountFinal,
+                     JobState = jb.jobState
+                 }).ToList();
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
@@ -219,6 +155,17 @@ namespace HelpTechAppWeb.Controllers
 
             return Content(JsonConvert.SerializeObject
                 (reviews), "application/json");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAgendaId(string technicalId)
+        {
+            var agenda = await baseRequest.GetSingleAsync<Agenda>
+                ("agendas/agenda-by-technical?technicalId=" + technicalId,
+                GetToken()) ?? new();
+
+            return Content(JsonConvert.SerializeObject
+                (agenda.Id), "application/json");
         }
 
         #endregion
