@@ -81,10 +81,10 @@
                 <div>
 
                     <div class="form-group" style="display:none;">
-                        <label class="col-sm-3 control-label">Agenda:</label>
+                        <label class="col-sm-3 control-label">Id:</label>
 
                         <div class="col-sm-9">
-                            <input id="iptAgendaId" type="text" class="form-control" required readonly autocomplete="off">
+                            <input id="iptTechnicalId" type="text" class="form-control" required readonly autocomplete="off">
                         </div>
                     </div>
 
@@ -194,9 +194,9 @@
 
             $('#dvTechnicalsByAvailability').on('click', '#btnRequestAttention', function () {
 
-                $(this).parents("div").find("#spnAgendaId").each(function () {
+                $(this).parents("div").find("#spnId").each(function () {
 
-                    $('#iptAgendaId').val($(this).html());
+                    $('#iptTechnicalId').val($(this).html());
                 });
             });
 
@@ -204,7 +204,17 @@
 
                 var information = new FormData();
 
-                information.append("AgendaId", $("#iptAgendaId").val());
+                var technicalId = $("#iptTechnicalId").val();
+
+               var agendaId = await jQuery.ajax({
+
+                   url: '@Url.Action("GetAgendaId", "Attentions")' + `?technicalId=${technicalId}`,
+                   method: 'GET',
+                   dataType: 'json',
+                   contentType: 'application/json; charset=utf-8'
+               });
+
+                information.append("AgendaId", agendaId);
                 information.append("Address", $("#iptAddress").val());
                 information.append("Description", $("#iptDescription").val());
 
@@ -333,7 +343,6 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between">
                                         <span id="spnId" class="font-weight-bold" style="display:none;">${item.Id}</span>
-                                        <span id="spnAgendaId" class="font-weight-bold" style="display:none;">${item.AgendaId}</span>
                                         <span class="font-weight-bold">${item.Firstname} ${item.Lastname}</span>
                                         <span class="font-weight-bold">${item.Phone}</span>
                                     </div>
@@ -358,44 +367,31 @@
                 $('#dvTechnicalsByAvailability').html(contentHtml);
             }
 
-            async function loadInformationTechnical(id) {
+            function loadInformationTechnical(id) {
 
-                try {
+                var filteredTechnical = technicals.find(t => t.Id === id);
 
-                    var data = await jQuery.ajax({
+                var filteredSpecialties = specialties.find(s => s.Id === filteredTechnical.SpecialtyId);
 
-                        url: '@Url.Action("InformationTechnical", "Consumers")' + `?id=${id}`,
-                        method: 'GET',
-                        dataType: 'json',
-                        contentType: 'application/json; charset=utf-8'
-                    });
+                var contentHtml = `
+                    <div class="img" style="text-align: center;">
+                        <img alt="" src="${filteredTechnical.ProfileUrl}" style="max-width: 100%; height: auto;">
+                    </div>
+                    <br>
+                    <p>Especialidad: ${filteredSpecialties.Name}</p>
+                    <br>
+                    <p>Nombres: ${filteredTechnical.Firstname}</p>
+                    <br>
+                    <p>Apellidos: ${filteredTechnical.Lastname}</p>
+                    <br>
+                    <p>Edad: ${filteredTechnical.Age}</p>
+                    <br>
+                    <p>Email: ${filteredTechnical.Email}</p>
+                    <br>
+                    <p>Telefono: ${filteredTechnical.Phone}</p>
+                    <br>`;
 
-                    var filteredSpecialties = specialties.find(s => s.Id === data.SpecialtyId);
-
-                    var contentHtml = `
-                        <div class="img" style="text-align: center;">
-                            <img alt="" src="${data.ProfileUrl}" style="max-width: 100%; height: auto;">
-                        </div>
-                        <br>
-                        <p>Especialidad: ${filteredSpecialties.Name}</p>
-                        <br>
-                        <p>Nombres: ${data.Firstname}</p>
-                        <br>
-                        <p>Apellidos: ${data.Lastname}</p>
-                        <br>
-                        <p>Edad: ${data.Age}</p>
-                        <br>
-                        <p>Email: ${data.Email}</p>
-                        <br>
-                        <p>Telefono: ${data.Phone}</p>
-                        <br>`;
-
-                    $('#dvInformationTechnical').html(contentHtml);
-
-                } catch (error) {
-
-                    window.open('@Url.Action("Error", "Home")', '_self');
-                }
+                $('#dvInformationTechnical').html(contentHtml);
             }
 
             async function registerRequestJob(information) {
@@ -453,7 +449,7 @@
 
                         const stars = '★'.repeat(item.Score) + '☆'.repeat(5 - item.Score);
 
-                        contentHtml = `
+                        contentHtml += `
                             <li class="list-group-item">
                                 <div><small>15/10/2024 15:49 PM</small></div>
                                 <div>${stars}</div>

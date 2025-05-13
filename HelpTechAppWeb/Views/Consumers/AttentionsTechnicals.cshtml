@@ -358,13 +358,21 @@
                 $('#pDescription').text(`Descripcion: ${filteredAttentions.Description}`);
             });
 
-            $('#tblAttentions').on('click', '#btnChat', function () {
+            $('#tblAttentions').on('click', '#btnChat', async function () {
 
                 var table = $('#tblAttentions').DataTable();
 
                 var rowData = table.row($(this).closest('tr')).data();
 
-                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${rowData.ChatRoomId}`, '_blank');
+                var chatRoomId = await jQuery.ajax({
+
+                    url: '@Url.Action("GetChatRoomId", "Communications")' + `?personId=${rowData.PersonId}`,
+                    method: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8'
+                });
+
+                window.open('@Url.Action("Messaging", "Communications")' + `?chatRoomId=${chatRoomId}`, '_blank');
             });
 
             $('#btnRegisterReviewToJob').on('click', async function() {
@@ -534,17 +542,16 @@
 
                 var columns = [
                     { data: 'Id', title: 'Id', visible: false }, //0
-                    { data: 'ChatRoomId', title: 'Chat', visible: false }, //1
-                    { data: 'TechnicalId', title: 'DNI', visible: false }, //2
-                    { data: 'Firstname', title: 'Nombre' }, //3
-                    { data: 'Lastname', title: 'Apellido' }, //4
-                    { data: 'Phone', title: 'Contacto' }, //5
-                    { data: 'RegistrationDate', title: 'Emision' }, //6
-                    { data: 'WorkDate', title: 'Fecha' }, //7
-                    { data: 'Time', title: 'Tiempo' }, //8
-                    { data: 'LaborBudget', title: 'Mano de obra' }, //9
-                    { data: 'MaterialBudget', title: 'Materiales' }, //10
-                    { data: 'AmountFinal', title: 'Monto final' }, //11
+                    { data: 'PersonId', title: 'DNI', visible: false }, //1
+                    { data: 'FirstName', title: 'Nombre' }, //2
+                    { data: 'LastName', title: 'Apellido' }, //3
+                    { data: 'Phone', title: 'Contacto' }, //4
+                    { data: 'RegistrationDate', title: 'Emision' }, //5
+                    { data: 'WorkDate', title: 'Fecha' }, //6
+                    { data: 'Time', title: 'Tiempo' }, //7
+                    { data: 'LaborBudget', title: 'Mano de obra' }, //8
+                    { data: 'MaterialBudget', title: 'Materiales' }, //9
+                    { data: 'AmountFinal', title: 'Monto final' }, //10
                     { //11
                         data: null,
                         title: 'Opinar',
@@ -589,6 +596,11 @@
 
                 switch(attentionsStates) {
                     case 'PENDIENTE':
+                        columns[11].visible = false;
+                        columns[12].visible = false;
+                        columns[13].visible = true;
+                        columns[14].visible = true;
+                        break;
                     case 'COMPLETADO':
                         columns[11].visible = true;
                         columns[12].visible = true;
@@ -597,6 +609,7 @@
                         break;
                     case 'EN PROCESO':
                     case 'DENEGADO':
+                        columns[6].visible = false;
                         columns[7].visible = false;
                         columns[8].visible = false;
                         columns[9].visible = false;
