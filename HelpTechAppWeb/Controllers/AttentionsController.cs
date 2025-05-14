@@ -84,12 +84,16 @@ namespace HelpTechAppWeb.Controllers
         public async Task<IActionResult> RegisterRequestJob
             (Job job)
         {
-            job = new(0, job.AgendaId, GetPersonId(), null,
-                null, job.Address, job.Description, 0, 0, 0,
-                string.Empty);
+            dynamic obj = new
+            {
+                job.AgendaId,
+                ConsumerId = GetPersonId(),
+                job.Address,
+                job.Description
+            };
 
             var result = await baseRequest.PostAsync
-                ("jobs/register-request-job", GetToken(), job);
+                ("jobs/register-request-job", GetToken(), obj);
 
             return Content(JsonConvert.SerializeObject
                 (result), "application/json");
