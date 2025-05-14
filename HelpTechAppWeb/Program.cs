@@ -68,7 +68,6 @@ app.Map("/chat", webSocketHandler.HandleWebSocketAsync);
 
 #endregion
 
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
