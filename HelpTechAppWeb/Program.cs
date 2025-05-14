@@ -41,15 +41,17 @@ builder.Services.AddScoped<IBaseRequest, BaseRequest>();
 
 var app = builder.Build();
 
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
 app.UseCors(
      b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
 );
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+app.UseAuthentication();
+app.UseAuthorization();
 
 #region Socket Configuration
 
@@ -66,13 +68,12 @@ app.Map("/chat", webSocketHandler.HandleWebSocketAsync);
 
 #endregion
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
 
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
 
 app.MapControllerRoute(
     name: "default",

@@ -80,8 +80,7 @@ namespace HelpTechAppWeb.Configurations.Sockets
             {
                 foreach (var socket in sockets)
                 {
-                    if (socket != senderWebSocket &&
-                        socket.State == WebSocketState.Open)
+                    if (socket.State == WebSocketState.Open)
                         await socket.SendAsync(new ArraySegment<byte>
                             (messageBuffer), WebSocketMessageType.Text,
                             true, CancellationToken.None);
